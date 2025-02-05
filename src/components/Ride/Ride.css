@@ -1,0 +1,44 @@
+:root{
+    --main-color:#fe5b3d;
+    --second-color:#ffac38;
+    --text-color:#444;
+    --gradient:linear-gradient(#fe5b3d, #ffac38);
+}
+.ride-container{
+    display: grid;
+    align-items: center;
+    grid-template-columns: repeat(auto-fit,minmax(250px,auto));
+    gap: 1rem;
+    margin-top: 2rem;
+    padding: 10px;
+}
+.ride-container .box{
+    text-align: center;
+    padding: 20px;
+    box-shadow: 1px 4px 41px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    transition: transform 0.5s;
+}
+.ride-container .box svg{
+    width: 25%;
+    height: 8vh;
+    padding: 10px;
+    background: #eeeff1;
+    border-radius: 0.5rem;
+    fill: var(--main-color);
+    transition: transform 0.5s;
+}
+.ride-container .box h2{
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin: 1.4rem 0 0.5rem;
+    color: var(--second-color);
+}
+.ride-container .box svg:hover, .ride-container svg .location-dot{
+    background: var(--gradient);
+    fill: #fff;
+    transform: translateY(-10px);
+}
+#ride{
+    padding: 40px;
+}

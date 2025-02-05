@@ -1,0 +1,43 @@
+#home{
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    background: url("https://i.ibb.co/cgTSb4t/3a4710e0-3277-4472-9b76-51da529b7bc0.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    display: grid;
+    align-items: center;
+    grid-template-columns: repeat(2,1fr);
+    border-radius: 40px;
+}
+.text{
+    padding: 10px 80px;
+}
+.text h1{
+    font-size: 4rem;
+    letter-spacing: 5px;
+}
+.text h2{
+    font-size: 1.8rem;
+    padding-top: 10px;
+    line-height: 1.5;
+}
+.text span{
+    color: #fe5b3d;
+}
+.text p{
+    margin: 00.5rem 0 1rem;
+    padding-top: 2px;
+    padding-left: 1px;
+}
+.heading{
+    text-align: center;
+}
+.heading span{
+    font-weight: 500;
+    color: #ffac38;
+}
+.heading h1{
+    font-size: 2rem;
+}

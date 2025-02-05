@@ -1,0 +1,25 @@
+:root{
+    --main-color:#fe5b3d;
+    --second-color:#ffac38;
+    --text-color:#444;
+    --gradient:linear-gradient(#fe5b3d, #ffac38);
+}
+
+.heading h1{
+    color: var(--text-color);
+    font-size: 50px;
+}
+.heading span{
+    color: var(--second-color);
+    padding: 10px;
+    font-size: 2rem;
+}
+.cars-display{
+    margin-top: 30px;
+}
+.car-display-list{
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(300px,auto));
+    gap: 1rem;
+    margin-top: 2rem;
+}

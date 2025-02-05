@@ -1,0 +1,59 @@
+:root{
+    --main-color:#fe5b3d;
+    --second-color:#ffac38;
+    --text-color:#444;
+    --gradient:linear-gradient(#fe5b3d, #ffac38);
+}
+.car-item{
+    width: 100%;
+    margin: auto;
+    padding: 10px;
+    border-radius: 1rem;
+    box-shadow: 1px 4px 41px rgba(0,0,0,0.1);
+}
+.car-item-img{
+    width: 100%;
+    height: 200px;
+    border-radius: 1rem;
+    object-fit: cover;
+    object-position: center;
+}
+.car-item-info{
+    padding: 20px;
+}
+.car-item-name-rating{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.car-item-name-rating p{
+    font-size: 20px;
+    font-weight: 500;
+}
+.car-item-name-rating img{
+    width: 90px;
+}
+.food-item-description{
+    color: var(--text-color);
+    font-size: 12px;
+}
+.food-item-price{
+    color: var(--text-color);
+    font-size: 22px;
+    font-weight: 500;
+    margin: 10px 0px;
+}
+.food-item-price span{
+    color: var(--second-color);
+}
+.car-item-btn button{
+    background: #474fa0;
+    color: #fff;
+    border-radius: 1rem;
+    padding: 10px 20px;
+    width: 100%;
+}
+.car-item-btn button:hover{
+    background: linear-gradient(#fe5b3d, #ffac38);
+}

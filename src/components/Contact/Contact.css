@@ -1,0 +1,51 @@
+.own-rev{
+    background: linear-gradient(to top right,#ffac38,#fe5b3d);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 40vh;
+    padding: 100px;
+}
+.own-rev h2{
+    color: #fff;
+    font-size: 2rem;
+    padding: 8px;
+}
+own-rev .box{
+    margin-top: 1rem;
+    background: #fff;
+    border-radius: 0.5rem;
+    padding: 4px 8px;
+    width: 350px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.own-rev .box{
+    color: #fff;
+    padding: 8px 20px;
+    border-radius: 0.5rem;
+    margin-left: 10px;
+}
+.own-rev .box svg{
+    width: 100%;
+    height: 3vh;
+}
+.own-rev .box .email{
+    padding-bottom:10px ;
+    display: inline-flex;
+    fill: #444;
+}
+.own-rev .box .email .icon1{
+    padding-right: 15px;
+}
+.own-rev .box .phone{
+    padding-bottom:10px ;
+    display: inline-flex;
+    fill: #444;
+}
+.own-rev .box .phone .icon2{
+    padding-right: 15px;
+}
