@@ -59,20 +59,19 @@ const CarsDisplay = ({ category }) => {
   const { car_list } = useContext(StoreContext);
   return (
     <div
-      className="cars-display flex w-full"
-      id="cars-display"
+      className="cars-display flex w-full "
       style={{ marginTop: "80px" }}
     >
-      <div className="heading w-3/12 shadow-2xl flex">
+      <div className="heading w-3/12 shadow-2xl flex h-screen fixed top-0 left-0" style={{marginTop:"80px"}}>
         <div className="w-[99%]">
-          {" "}
           <Filters />
         </div>
         <div className="w-[1%] relative left-1">
-          <div className="h-screen w-[1px] bg-gray-500"></div>
+          <div className="h-full w-[1px] bg-gray-400"></div>
         </div>
       </div>
-      <div className=" flex w-9/12 ">
+
+      <div className=" flex w-9/12 fixed  " style={{marginLeft:"27%"}}>
         {carList.map((item, index) => {
           return (
             <CarItem

@@ -18,12 +18,12 @@ const Filters = () => {
     });
   };
   return (
-    <div className="">
+    <div className="h-full">
       <div
-        className="flex justify-between items-center w-full "
-        style={{ padding: "10px" }}
+        className="flex justify-between items-center  w-full "
+        style={{ padding: "10px", paddingTop:"15px" }}
       >
-        <div>
+        <div className="" >
           <p className="text-xl font-semibold">Filter </p>
         </div>
         <div>
@@ -39,17 +39,21 @@ const Filters = () => {
       </div>
       <div
         className="w-full h-[1px] bg-gray-300"
-        style={{ margin: "10px 0px" }}
+        style={{ margin: "5px 0px" }}
       ></div>
       <SearchForm fromWhere="insideCars" />
+      <div
+        className="w-full h-[1px] bg-gray-300"
+        style={{ margin: "10px 0px" }}
+      > </div>
       <div className="flex flex-col space-y-2">
         <p
           className="text-start text-lg font-semibold"
-          style={{ margin: "10px" }}
+          style={{ margin: "10px" , marginTop:"5px"}}
         >
           Vehicle Models{" "}
         </p>
-        <div style={{ margin: "10px 10px" }}>
+        <div className="no-scrollbar m-2  h-[230px] overflow-y-auto bg-white rounded-2xl shadow-xl p-2" style={{padding:"15px 20px", margin:"0px 10px"}}>
           {[
             "Maruti Suzuki Swift",
             "Hyundai i20",
@@ -59,26 +63,24 @@ const Filters = () => {
             "Maruti Suzuki Baleno",
             "Toyota Innova Crysta",
           ].map((option, index) => (
-            <label
-              key={index}
-              className="flex items-center"
-              style={{ margin: "0px 10px" }}
-            >
+            <label key={index} className="flex items-center m-2" style={{marginTop:"0px"}}>
               <input
                 type="checkbox"
                 value={option}
                 checked={selectedOptions.includes(option)}
                 onChange={handleChange}
-                className="mr-2"
-                style={{ marginRight: "14px", transform: "scale(1.5)" }}
+                className="mr-3 scale-150 h-8 w-3"
               />
-
-              {option}
+             <p className="" style={{marginLeft:"10px"}}> {option}</p>
             </label>
           ))}
         </div>
-        <div className="flex items-center justify-center" style={{marginTop:"20px"}}>
-        <button
+
+        <div
+          className="flex items-center justify-center"
+          style={{ marginTop: "10px" }}
+        >
+          <button
             className="w-[180px] py-2 h-[40px] text-sm bg-[#6f82c6] font-medium border border-[#6f82c6] text-white rounded-lg shadow-md transition-all duration-300 ease-in-out 
   hover:bg-[#5a6bab] hover:border-[#5a6bab] hover:shadow-lg hover:scale-105 
   active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#6f82c6]"

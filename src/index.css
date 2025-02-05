@@ -9,6 +9,24 @@
 body{
   min-height: 100vh;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.fromScrollBar::-webkit-scrollbar {
+  display: none;
+}
+
+.fromScrollBar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* a{
   text-decoration: none;
   color: inherit;
