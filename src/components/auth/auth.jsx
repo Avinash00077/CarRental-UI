@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
+import arrow from "../../assets/arrow.png"
 
 const AuthModal = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -403,8 +404,8 @@ const AuthModal = () => {
                 onClick={() => restpasswordBack()}
                 className="cursor-pointer"
               >
-                {" "}
-                &lt; <span style={{ marginLeft: "5px" }}>Back</span>{" "}
+                <div className="flex  items-center">                <img src={arrow} className="w-5 h-5"/>
+                <span style={{ marginLeft: "5px" }}>Back</span>{" "}</div>
               </p>
               <h2
                 className="text-lg font-semibold text-gray-800 text-center"
