@@ -5,7 +5,7 @@ import SearchForm from "../SearchForm/SearchForm";
 import "./Header.css";
 const Header = () => {
   return (
-    <div
+    <div 
       className="w-full flex flex-col-reverse md:flex-row mb-10 md:mb-0 justify-center items-center"
       style={{ marginTop: "85px", marginLeft: "0px", marginBottom: "10px" }}
     >

@@ -1,8 +1,8 @@
 :root{
-    --main-color:#fe5b3d;
-    --second-color:#ffac38;
+    --main-color:#6f82c6;
+    --second-color:#6f82c6;
     --text-color:#444;
-    --gradient:linear-gradient(#fe5b3d, #ffac38);
+    --gradient:linear-gradient(#6f82c6, #6f82c6);
 }
 .about-container{
     display: grid;
@@ -10,7 +10,10 @@
     gap: 1rem;
     margin-top: 2rem;
 }
-#about{
+#aboutUsId{
+    color: #6f82c6;
+}
+.aboutpadding{
     padding: 40px;
 }
 .about-container .box{
@@ -33,7 +36,6 @@
     transition: transform 0.5s;    
 }
 .about-container .box svg:hover, .ride-container svg .user{
-    background: var(--gradient);
     fill: #fff;
     transform: translateY(-8px);   
 }

@@ -26,12 +26,18 @@ const Navbar = () => {
     setUserName(null);
     alert("You have been logged out.");
     navigate("/");
+    location.reload()
   };
+  const handleMenu= (item)=>{
+    console.log(item)
+    setMenu(item)
+    document.getElementById(item)?.scrollIntoView({ behavior: "smooth" });
+  } 
 
   return (
     <div
       className="navbar flex items-center justify-between bg-gray-50 fixed top-0 left-0 right-0 z-50"
-      style={{ padding: "5px 80px" }}
+      style={{ padding: "5px 15px" }}
     >
       <div className="logo">
         <img
@@ -41,11 +47,11 @@ const Navbar = () => {
         />
       </div>
       <div>
-        <ul className="navbar-menu flex gap-8">
+        {!userName && (   <ul className="navbar-menu flex gap-8">
           {["Home", "About-Us", "Book-A-Car", "Ride", "Reviews"].map((item) => (
             <li
-              key={item}
-              onClick={() => setMenu(item)}
+              key={item}  
+              onClick={() => handleMenu(item)}
               className={`cursor-pointer text-[17px] font-[500] transition-all duration-300 ${
                 menu === item
                   ? "text-[#4a4a8c] border-b-3 font-semibold border-[#4a4a73] pb-[10px]"
@@ -55,7 +61,8 @@ const Navbar = () => {
               {item}
             </li>
           ))}
-        </ul>
+        </ul>)}
+
       </div>
       <div className="navbar-right flex items-center">
         {userName ? (

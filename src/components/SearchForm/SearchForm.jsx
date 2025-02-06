@@ -28,20 +28,8 @@ const SearchForm = ({ fromWhere }) => {
     "04:00 PM",
     "05:00 PM",
   ];
-  console.log(fromWhere, " Inside the filters how wecan handle");
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(
-      "Pick Up Date: ",
-      pickUpDate,
-      "Pick Up Time: ",
-      pickUpTime,
-      "Drop Off Date: ",
-      dropOffDate,
-      "Drop Off Time: ",
-      dropOffTime
-    );
-
     if (pickUpDate !== "" && pickUpTime !== "") {
       navigate(
         `/viewCars?pickUpDate=${pickUpDate}&toDate=${dropOffDate}&location=${selectedLocation}`

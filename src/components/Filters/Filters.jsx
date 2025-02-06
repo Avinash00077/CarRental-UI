@@ -53,7 +53,7 @@ const Filters = () => {
         >
           Vehicle Models{" "}
         </p>
-        <div className="no-scrollbar m-2  h-[230px] overflow-y-auto bg-white rounded-2xl shadow-xl p-2" style={{padding:"15px 20px", margin:"0px 10px"}}>
+        <div className="no-scrollbar m-2  h-[200px] overflow-y-auto bg-white rounded-2xl shadow-xl p-2" style={{padding:"15px 20px", margin:"0px 10px"}}>
           {[
             "Maruti Suzuki Swift",
             "Hyundai i20",

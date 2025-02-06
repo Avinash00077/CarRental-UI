@@ -1,11 +1,11 @@
-.own-rev{
+/* .own-rev{
     background: linear-gradient(to top right,#ffac38,#fe5b3d);
     border-radius: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    height: 40vh;
+    height: 20vh;
     padding: 100px;
 }
 .own-rev h2{
@@ -48,4 +48,4 @@ own-rev .box{
 }
 .own-rev .box .phone .icon2{
     padding-right: 15px;
-}
+} */

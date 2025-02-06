@@ -14,6 +14,7 @@ const CarItem = ({
   registration_number,
   image_ext,
   location,
+  onBookNow 
 }) => {
   const isBase64 = typeof image === "string" && image.startsWith("data:image");
   const base64String = btoa(
@@ -27,6 +28,11 @@ const CarItem = ({
   useEffect(() => {
     setCarsLeft(Math.floor(Math.random() * 6) + 1);
   }, []);
+
+  const onBookNowClick  = (id) => {
+    console.log(id, model_year, registration_number, daily_rent)
+    onBookNow(id);
+  }
 
   return (
     <div
@@ -89,7 +95,7 @@ const CarItem = ({
             className="w-[140px] py-2 h-[40px] text-sm bg-[#6f82c6] font-medium border border-[#6f82c6] text-white rounded-lg shadow-md transition-all duration-300 ease-in-out 
   hover:bg-[#5a6bab] hover:border-[#5a6bab] hover:shadow-lg hover:scale-105 
   active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#6f82c6]"
-          >
+           onClick={() => onBookNowClick (id)}>
             Book Now
           </button>
         </div>

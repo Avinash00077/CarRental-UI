@@ -5,7 +5,7 @@ const Reviews = () => {
     <div>
       <div id="reviews">
         <div class="heading">
-          <span>Reviews</span>
+          <span style={{color:"#6f82c6"}}>Reviews</span>
           <h1>What Our Coustmer Says</h1>
         </div>
         <div className="reviews-container">

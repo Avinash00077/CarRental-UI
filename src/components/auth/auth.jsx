@@ -20,7 +20,6 @@ const AuthModal = () => {
   const [openResetPassword, setOpenResetPassword] = useState(false);
   const [ispasswordReset, setPasswordReset] = useState(false);
   const [authStatus,setAuthStatus] =useState("auth")
-  const [otp,setOtp]= useState(null)
   const navigate = useNavigate();
   const location = useLocation();
   useEffect(() => {
@@ -51,7 +50,7 @@ const AuthModal = () => {
   };
   const handleRestInputChange = (e) => {
     const { name, value } = e.target;
-    setResetFormData({ ...formData, [name]: value });
+    setResetFormData({ ...resetformData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -181,7 +180,7 @@ const AuthModal = () => {
           }
         );        
         console.log(response.data.data," response value is ")
-        setOtp(response.data.data)
+        // setOtp(response.data.data)
         setIsLoaderOpen(false)
       } catch (error) {
         setIsModalOpen(true);
@@ -196,7 +195,7 @@ const AuthModal = () => {
           `${constants.API_BASE_URL}/user/password-reset/confirm`,
           {
             "email": formData.email,
-            "otp": otp,
+            "otp": resetformData.otp,
             "password": resetformData.password
         }
         );        
@@ -448,7 +447,7 @@ const AuthModal = () => {
                         <input
                           type="text"
                           name="otp"
-                          value={otp}
+                          value={resetformData.otp}
                           onChange={handleRestInputChange}
                           placeholder="Enter Your Otp"
                           className="w-full text-sm bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none"
