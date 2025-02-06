@@ -1,5 +1,5 @@
 import React from "react";
-import Courosel from "../courosel/courosel";
+import Courosel from "../courosel/courosel.jsx";
 import SearchForm from "../SearchForm/SearchForm";
 
 import "./Header.css";
