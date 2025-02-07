@@ -7,7 +7,7 @@ const MyBookings = () => {
       <div className="text-center">
         <Loader2 className="animate-spin text-blue-500 mx-auto" size={50} style={{marginLeft:"100px",marginBottom:"30px"}} />
         <h1 className="mt-4 text-lg font-semibold text-gray-700" style={{marginLeft:"00px"}}>
-          This page is a work in progress...
+        The bookings page is currently being worked on...
         </h1>
       </div>
     </div>

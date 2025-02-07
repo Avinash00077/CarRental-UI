@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import constants from "../../config/constants";
+import Loader from "../../components/Loader/Loader"
 
 const BookingModel = ({ carInfo, closeModal }) => {
   const [startDate, setStartDate] = useState("");
@@ -8,6 +9,7 @@ const BookingModel = ({ carInfo, closeModal }) => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [totalDays, setTotalDays] = useState(0);
   const token = localStorage.getItem("authToken");
+  const [isLoaderOpen,setLoaderOpen] = useState(false);
 
   // Function to calculate total days and amount
   const handleDateChange = () => {
@@ -91,15 +93,14 @@ const BookingModel = ({ carInfo, closeModal }) => {
         console.log("Payment Successful:", response);
 
         // Update Booking Status
-        const updateResponse = await updateBookingStatus(
+        setLoaderOpen(true)
+        await updateBookingStatus(
           bookingId,
           response.razorpay_payment_id
         );
-        console.log(updateResponse);
-        if (response) {
+        setLoaderOpen(false);
           // Redirect User to Success Page
           window.location.href = "/myBookings";
-        }
       },
       prefill: {
         name: userDetails.email.split("@")[0],
@@ -117,6 +118,7 @@ const BookingModel = ({ carInfo, closeModal }) => {
 
   // Function to handle the booking API call
   const postBooking = async () => {
+    setLoaderOpen(true)
     console.log("Initiating booking...");
 
     const payload = {
@@ -144,6 +146,7 @@ const BookingModel = ({ carInfo, closeModal }) => {
           "Booking successful! Opening Razorpay...",
           response.data.data
         );
+        setLoaderOpen(false)
         startRazorpayPayment(response.data.data.booking_id, totalAmount);
       } else {
         console.error("Booking failed: Invalid response format", response);
@@ -163,6 +166,7 @@ const BookingModel = ({ carInfo, closeModal }) => {
         >
           &times;
         </button>
+        {isLoaderOpen && <Loader/>}
 
         {/* Car Details */}
         <div className="text-center">
