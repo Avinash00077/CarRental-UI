@@ -6,7 +6,7 @@ import CarsDisplay from "../../components/CarsDisplay/CarsDisplay";
 import Ride from "../../components/Ride/Ride";
 import Reviews from "../../components/Reviews/Reviews";
 import Contact from "../../components/Contact/Contact";
-import SideBar from "../../components/sideBar";
+//import SideBar from "../../components/sideBar";
 import Footer from "../../components/Footer/Footer";
 
 const Home = () => {

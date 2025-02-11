@@ -6,7 +6,7 @@ import Auth from "./components/auth/auth";
 import CarsDisplay from "./components/CarsDisplay/CarsDisplay";
 import AdminAuth from "./components/admin/AdminAuth";
 import PlaceOrder from "./pages/PlaceOrder/PlaceOrder";
-import SideBar from "./components/sideBar";
+import SideBar from "./components/SideBar";
 import MyBookings from "./components/MyBookings";
 import PaymentPage from "./components/PaymentPage/PaymentPage";
 import UserProfile from "./components/UserProfile";
