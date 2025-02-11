@@ -4,11 +4,13 @@ import constants from "../../config/constants";
 import { Pencil } from "lucide-react";
 import Loader from "../Loader/Loader";
 import FileUpload from "../FileUpload";
+import { data } from "jquery";
 
 const UserProfile = () => {
   const [userDeatils, setUserDeatils] = useState(null);
   const [imageSrc, setImageSrc] = useState("");
   const [drivingLicenceImage, setDrivingLicence] = useState("");
+  const [aadharImage,setAadharImage] = useState("")
   const [activeTab, setActiveTab] = useState("details");
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
@@ -30,6 +32,13 @@ const UserProfile = () => {
       );
 
       setImageSrc(`data:image/png;base64,${base64String}`);
+    }
+    if (userDeatils?.aadhar_image.data) {
+      const base64String = btoa(
+        String.fromCharCode(...userDeatils.aadhar_image.data)
+      );
+
+      setAadharImage(`data:image/png;base64,${base64String}`);
     }
     if (userDeatils?.driving_license_image.data) {
       const base64String = btoa(
@@ -114,15 +123,26 @@ const UserProfile = () => {
     }
   };
 
-  const handleUploadImage = async (file,img_type,profile_type) => {
-    if (!file) {
+  const handleUploadImage = async (data, img_type, profile_type) => {
+    console.log(data, " Inside Submit form");
+    console.log(data.LisenceValue);
+    // console.log(expiry)
+    if (!data) {
       alert("No file selected.");
       return;
     }
 
     const formData = new FormData();
     formData.append("image_type", img_type);
-    formData.append(profile_type, file);
+    formData.append(profile_type, data.selectedFile);
+    if (data.type == "Licence") {
+      formData.append("driving_license_number", data.LisenceValue);
+      formData.append("driving_license_expiry", data.expiryDate);
+    }
+    if (data.type == "Aaadhar") {
+      formData.append("aadhar_number", data.aadharNumber);
+    }
+    console.log(formData, " Formdtaa value is ");
 
     try {
       const response = await fetch(
@@ -293,8 +313,13 @@ const UserProfile = () => {
                 src={imageSrc}
                 className="w-full h-[290px] object-cover rounded-lg"
               />
-              <div className="absolute bottom-4 right-4 flex p-3 rounded-full shadow-md cursor-pointer"><FileUpload onUpload={(file)=>handleUploadImage(file,"profile","profile_image")} /></div>
-              
+              <div className="absolute bottom-4 right-4 flex p-3 rounded-full shadow-md cursor-pointer">
+                <FileUpload
+                  onUpload={(data) =>
+                    handleUploadImage(data, "profile", "profile_image")
+                  }
+                />
+              </div>
             </div>
 
             <div className="rounded-lg" style={{ padding: "10px" }}>
@@ -412,11 +437,56 @@ const UserProfile = () => {
             )}
             {activeTab === "documents" && (
               <div>
-                <h2 className="text-xl font-semibold mb-2 text-[#6f82c6]" style={{margin:"10px 0px"}}>User Documents</h2>
+                <h2
+                  className="text-xl font-semibold mb-2 text-[#6f82c6]"
+                  style={{ margin: "10px 0px" }}
+                >
+                  User Documents
+                </h2>
                 <div className="flex justify-start items-center">
-                  <p style={{margin:"0px 10px"}} className="text-lg">Drivers Licence:</p>
-                  <img src={drivingLicenceImage} className="w-32 h-20 rounded-lg" style={{margin:"10px"}}></img>
-                  <FileUpload onUpload={(file)=>handleUploadImage(file,"driving_license","driving_license_image")}/>
+                  <div className="flex justify-start items-center">
+                    <p style={{ margin: "0px 10px" }} className="text-lg">
+                      Drivers Licence:
+                    </p>
+                    <img
+                      src={drivingLicenceImage}
+                      className="w-48 h-20 rounded-lg"
+                      style={{ margin: "10px" }}
+                    ></img>
+                    <FileUpload
+                      onUpload={(data) =>
+                        handleUploadImage(
+                          data,
+                          "driving_license",
+                          "driving_license_image"
+                        )
+                      }
+                      type="Licence"
+                    />
+                  </div>
+                  <div
+                    className="flex justify-start items-center"
+                    style={{ margin: "0px 40px" }}
+                  >
+                    <p style={{ margin: "0px 10px" }} className="text-lg">
+                      Aadhar Card :
+                    </p>
+                    <img
+                      src={aadharImage}
+                      className="w-48 h-20 rounded-lg"
+                      style={{ margin: "10px" }}
+                    ></img>
+                    <FileUpload
+                      onUpload={(data) =>
+                        handleUploadImage(
+                          data,
+                          "aadhar",
+                          "aadhar_image"
+                        )
+                      }
+                      type="Aaadhar"
+                    />
+                  </div>
                 </div>
               </div>
             )}

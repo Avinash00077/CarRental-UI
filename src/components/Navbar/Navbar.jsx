@@ -10,8 +10,9 @@ const Navbar = () => {
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
     if (authToken) {
-      const { email } = JSON.parse(userDetails);
-      setUserName(email.split('@')[0]);
+      const { email, user_name } = JSON.parse(userDetails);
+      //setUserName(email.split('@')[0]);
+      setUserName(user_name)
     }
   }, []);
 
