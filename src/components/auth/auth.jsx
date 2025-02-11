@@ -7,19 +7,21 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Confetti from "react-confetti";
 import { useWindowSize } from "react-use";
-import arrow from "../../assets/arrow.png"
+import arrow from "../../assets/arrow.png";
+import { Calendar } from "primereact/calendar";
+import { Dropdown } from "primereact/dropdown";
 
 const AuthModal = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
   const [modalType, setModalType] = useState("success");
-  const [modalMessage, setModalMessage] = useState("Hello, World!");
+  const [modalMessage, setModalMessage] = useState("");
   const { width, height } = useWindowSize();
   const [showConfetti, setShowConfetti] = useState(false);
   const [openResetPassword, setOpenResetPassword] = useState(false);
   const [ispasswordReset, setPasswordReset] = useState(false);
-  const [authStatus,setAuthStatus] =useState("auth")
+  const [authStatus, setAuthStatus] = useState("auth");
   const navigate = useNavigate();
   const location = useLocation();
   useEffect(() => {
@@ -29,16 +31,19 @@ const AuthModal = () => {
     }
   }, [location.state]);
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "avinashreddytummuri77@gmail.com",
-    password: "Avinash77",
-    phone: "",
-    confirmPassword: "",
+    userName: "lokeshreddy",
+    firstName: "avinash",
+    lastName: "tummuri",
+    email: "reddyjlokesh@gmail.com",
+    password: "lokesh@0508",
+    phone: "6303896539",
+    confirmPassword: "Avinash77",
+    gender: "",
+    dob: "",
   });
 
   const [resetformData, setResetFormData] = useState({
-    otp:"",
+    otp: "",
     password: "",
     confirmPassword: "",
   });
@@ -46,6 +51,7 @@ const AuthModal = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    console.log(name, value);
     setFormData({ ...formData, [name]: value });
   };
   const handleRestInputChange = (e) => {
@@ -55,10 +61,10 @@ const AuthModal = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.email || !formData.password) {
+    if (!formData.userName || !formData.password) {
       setIsModalOpen(true);
       setIsLoaderOpen(false);
-      setModalMessage("Please enter a valid email and password.");
+      setModalMessage("Please enter a valid username and password.");
       setModalType("failure");
       return;
     }
@@ -89,7 +95,7 @@ const AuthModal = () => {
           `${constants.API_BASE_URL}/user/auth`,
           {
             headers: {
-              email: formData.email,
+              user_name: formData.userName,
               password: formData.password,
             },
           }
@@ -111,7 +117,7 @@ const AuthModal = () => {
         setIsModalOpen(true);
         setIsLoaderOpen(false);
         setModalType("failure");
-        setModalMessage("Login failed. Please check your credentials.");
+        setModalMessage(error?.response?.data?.message || "Login failed. Please check your credentials.");
         setFormData({ ...formData, password: "", email: "" });
       }
     }
@@ -124,11 +130,14 @@ const AuthModal = () => {
         const response = await axios.post(
           `${constants.API_BASE_URL}/user/add`,
           {
+            user_name: formData.userName,
             first_name: formData.firstName,
             last_name: formData.lastName,
             email: formData.email,
             phone_number: formData.phone,
             password: formData.password,
+            dob: formData.dob,
+            gender: formData.gender,
           }
         );
         setShowConfetti(true);
@@ -146,10 +155,13 @@ const AuthModal = () => {
         // Handle signup success (e.g., redirect to login, show success message, etc.)
       } catch (error) {
         console.error("Signup failed", error);
+        console.log(error.response.data.message, " Helo");
         setIsModalOpen(true);
         setIsLoaderOpen(false);
         setModalType("failure");
-        setModalMessage("Signup failed. Please try again later.");
+        setModalMessage(
+          error?.response?.data?.message || " Something Went Wrong"
+        );
       }
     }
   };
@@ -157,60 +169,60 @@ const AuthModal = () => {
     setIsModalOpen(false);
     isLoaderOpen(false);
   };
-  const handleResetPassword = ()=>{
-    setAuthStatus("verifyEmail")
-    setPasswordReset(true)
-    setOpenResetPassword(false)
-  }
-  const handlesubmitMail = async(e) => {
+  const handleResetPassword = () => {
+    setAuthStatus("verifyEmail");
+    setPasswordReset(true);
+    setOpenResetPassword(false);
+  };
+  const handlesubmitMail = async (e) => {
     e.preventDefault();
-    console.log(authStatus)
-    setIsLoaderOpen(true)
-    if(authStatus === "verifyEmail"){
-      setAuthStatus("submitPassword")
+    console.log(authStatus);
+    setIsLoaderOpen(true);
+    if (authStatus === "verifyEmail") {
+      setAuthStatus("submitPassword");
       setOpenResetPassword(!openResetPassword);
-      console.log(formData.email)
+      console.log(formData.email);
       try {
         const response = await axios.get(
           `${constants.API_BASE_URL}/user/password-reset/otp`,
           {
             headers: {
-              'email': formData.email, // Send email in headers
-            }
+              user_name: formData.userName, // Send email in headers
+            },
           }
-        );        
-        console.log(response.data.data," response value is ")
+        );
+        console.log(response.data.data, " response value is ");
         // setOtp(response.data.data)
-        setIsLoaderOpen(false)
+        setIsLoaderOpen(false);
       } catch (error) {
         setIsModalOpen(true);
         setIsLoaderOpen(false);
         setModalType("failure");
       }
     }
-    if(authStatus === "submitPassword"){
-      console.log(resetformData)
+    if (authStatus === "submitPassword") {
+      console.log(resetformData);
       try {
         const response = await axios.put(
           `${constants.API_BASE_URL}/user/password-reset/confirm`,
           {
-            "email": formData.email,
-            "otp": resetformData.otp,
-            "password": resetformData.password
-        }
-        );        
-        setIsLoaderOpen(false)
-        console.log(response.data.data," response value is ")
+            user_name: formData.userName,
+            otp: resetformData.otp,
+            password: resetformData.password,
+          }
+        );
+        setIsLoaderOpen(false);
+        console.log(response.data.data, " response value is ");
         setIsModalOpen(true);
         setModalType("success");
-        setShowConfetti(true)
-        setTimeout(()=>{
-          setShowConfetti(false)
+        setShowConfetti(true);
+        setTimeout(() => {
+          setShowConfetti(false);
           setIsModalOpen(false);
-          setPasswordReset(false)
-        },2000)
+          setPasswordReset(false);
+        }, 2000);
       } catch (error) {
-        setIsLoaderOpen(false)
+        setIsLoaderOpen(false);
         setIsModalOpen(true);
         setModalType("failure");
       }
@@ -218,18 +230,28 @@ const AuthModal = () => {
     console.log("Hello ia m omwne");
   };
 
-  const  restpasswordBack = ()=>{
-    console.log("Back is clicked")
-    if(authStatus ==="submitPassword"){
-      console.log("Hello chil")
-      setAuthStatus("verifyEmail")
+  const restpasswordBack = () => {
+    console.log("Back is clicked");
+    if (authStatus === "submitPassword") {
+      console.log("Hello chil");
+      setAuthStatus("verifyEmail");
       setOpenResetPassword(false);
-    }else if(authStatus =="verifyEmail"){
-      setPasswordReset(false)
+    } else if (authStatus == "verifyEmail") {
+      setPasswordReset(false);
     }
     // setOpenResetPassword(!openResetPassword)
-  }
+  };
 
+  const handleDOB = (e) => {
+    console.log(e, " Value is ");
+    const convertDOB = new Date(e.value);
+    console.log(convertDOB);
+    const year = convertDOB.getFullYear();
+    const month = (convertDOB.getMonth() + 1).toString().padStart(2, "0");
+    const day = convertDOB.getDate().toString().padStart(2, "0");
+    const formattedDOB = `${year}-${month}-${day}`;
+    setFormData({ ...formData, dob: formattedDOB });
+  };
 
   return (
     <div
@@ -323,30 +345,83 @@ const AuthModal = () => {
                   </div>
                 </div>
               )}
-              <div>
-                <label className="block text-sm mb-1">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="Type your email"
-                  className="w-full text-sm bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none"
-                  style={{ padding: "8px", margin: "4px 0px" }}
-                />
-              </div>
-              {!isLogin && (
-                <div>
-                  <label className="block text-sm mb-1">Phone Number</label>
+              
+               
+                
+              <div className="w-full flex" style={{ marginTop: "10px" }}>
+              <div className={`${isLogin && "w-full"}`}>
+                  <label className="block text-sm mb-1">UserName</label>
                   <input
-                    type="phone"
-                    name="phone"
-                    value={formData.phone}
+                    type="text"
+                    name="userName"
+                    value={formData.userName}
                     onChange={handleInputChange}
-                    placeholder="Enter Your Phone Number"
+                    placeholder="Type your UserName"
                     className="w-full text-sm bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none"
                     style={{ padding: "8px", margin: "4px 0px" }}
                   />
+                </div>
+              {!isLogin && (
+                <div className={`${isLogin && "w-full"}`}>
+                  <label className="block text-sm mb-1">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="Type your email"
+                    className="w-full text-sm bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none"
+                    style={{ padding: "8px", margin: "4px 0px" }}
+                  />
+                </div>
+              )}
+
+          {!isLogin && (
+                  <div style={{ marginLeft: "10px" }}>
+                    <label className="block text-sm mb-1">Phone Number</label>
+                    <input
+                      type="phone"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      placeholder="Enter Your Phone Number"
+                      className="w-full text-sm bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none"
+                      style={{ padding: "8px", margin: "4px 0px" }}
+                    />
+                  </div>
+                )}
+              </div>
+              {!isLogin && (
+                <div
+                  className="w-full flex justify-center items-center"
+                  style={{ marginTop: "10px" }}
+                >
+                  <div className="w-1/2">
+                    <label className="block text-sm mb-1">Date Of Birth</label>
+                    <Calendar
+                      className={`${"w-full h-9 text-xs"}`}
+                      id="buttondisplay"
+                      value={formData.dob}
+                      placeholder="Select Your DOB"
+                      onChange={handleDOB}
+                      style={{ padding: "1px" }}
+                      showIcon
+                    />
+                  </div>
+                  <div className="w-1/2" style={{ marginLeft: "10px" }}>
+                    <label className="block text-sm mb-1">Gender</label>
+                    <Dropdown
+                      value={formData.gender}
+                      onChange={(e) =>
+                        setFormData({ ...formData, gender: e.value })
+                      }
+                      options={["Male", "Female", "Other"]}
+                      optionLabel="gender"
+                      placeholder="pickup Time"
+                      className="w-full h-9 text-xs flex justify-center items-center"
+                      style={{ paddingLeft: "10px" }}
+                    />
+                  </div>
                 </div>
               )}
               <div>
@@ -399,12 +474,12 @@ const AuthModal = () => {
             </form>
           ) : (
             <div style={{ padding: "10px" }} className="w-1/2">
-              <p
-                onClick={() => restpasswordBack()}
-                className="cursor-pointer"
-              >
-                <div className="flex  items-center">                <img src={arrow} className="w-5 h-5"/>
-                <span style={{ marginLeft: "5px" }}>Back</span>{" "}</div>
+              <p onClick={() => restpasswordBack()} className="cursor-pointer">
+                <div className="flex  items-center">
+                  {" "}
+                  <img src={arrow} className="w-5 h-5" />
+                  <span style={{ marginLeft: "5px" }}>Back</span>{" "}
+                </div>
               </p>
               <h2
                 className="text-lg font-semibold text-gray-800 text-center"
@@ -425,12 +500,12 @@ const AuthModal = () => {
                     className="flex items-center justify-start space-x-1"
                     style={{ marginLeft: "3%", marginBottom: "10px" }}
                   >
-                    <label className="text-sm w-24">Email : </label>
+                    <label className="text-sm w-24">UserName : </label>
                     <input
-                      type="email"
-                      name="email"
-                      value={formData.email}
-                      placeholder="Type your email"
+                      type="text"
+                      name="userName"
+                      value={formData.userName}
+                      placeholder="Type your user name"
                       className="text-sm  h-10 w-full bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none w-full"
                       disabled
                     />
@@ -501,7 +576,7 @@ const AuthModal = () => {
                     type="submit"
                     className="bg-[#6e81c7] w-5/12 hover:bg-[#5a6aa1] text-medium py-2 px-5 rounded-full text-white  shadow-lg transition-colors duration-300"
                   >
-                    {authStatus=="verifyEmail"? "Send Otp" :"Submit"} 
+                    {authStatus == "verifyEmail" ? "Send Otp" : "Submit"}
                   </button>
                 </div>
               </form>

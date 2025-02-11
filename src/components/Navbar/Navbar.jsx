@@ -5,10 +5,10 @@ const Navbar = () => {
   const [menu, setMenu] = useState("Home");
   const [userName, setUserName] = useState(null);
   const navigate = useNavigate();
+  const  userDetails= localStorage.getItem("userDetails");
 
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
-    const  userDetails= localStorage.getItem("userDetails");
     if (authToken) {
       const { email } = JSON.parse(userDetails);
       setUserName(email.split('@')[0]);
@@ -47,7 +47,7 @@ const Navbar = () => {
         />
       </div>
       <div>
-        {!userName && (   <ul className="navbar-menu flex gap-8">
+        {!(userName || userDetails?.admin_id) && (   <ul className="navbar-menu flex gap-8">
           {["Home", "About-Us", "Book-A-Car", "Ride", "Reviews"].map((item) => (
             <li
               key={item}  

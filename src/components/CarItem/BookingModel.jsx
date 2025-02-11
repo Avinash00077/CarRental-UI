@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import constants from "../../config/constants";
-import Loader from "../../components/Loader/Loader"
+import Loader from "../../components/Loader/Loader";
 
 const BookingModel = ({ carInfo, closeModal }) => {
   const [startDate, setStartDate] = useState("");
@@ -9,7 +9,7 @@ const BookingModel = ({ carInfo, closeModal }) => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [totalDays, setTotalDays] = useState(0);
   const token = localStorage.getItem("authToken");
-  const [isLoaderOpen,setLoaderOpen] = useState(false);
+  const [isLoaderOpen, setLoaderOpen] = useState(false);
 
   // Function to calculate total days and amount
   const handleDateChange = () => {
@@ -83,24 +83,18 @@ const BookingModel = ({ carInfo, closeModal }) => {
     }
 
     const options = {
-      key: "rzp_test_tmfpOEiEDlAApc", // Replace with your Razorpay Key
-      amount: amount * 100, // Razorpay expects amount in paise
+      key: "rzp_test_tmfpOEiEDlAApc",
+      amount: amount * 100,
       currency: "INR",
       name: "Car Rental Service",
       description: "Booking Payment",
       image: "/logo.png",
       handler: async function (response) {
         console.log("Payment Successful:", response);
-
-        // Update Booking Status
-        setLoaderOpen(true)
-        await updateBookingStatus(
-          bookingId,
-          response.razorpay_payment_id
-        );
+        setLoaderOpen(true);
+        await updateBookingStatus(bookingId, response.razorpay_payment_id);
         setLoaderOpen(false);
-          // Redirect User to Success Page
-          window.location.href = "/myBookings";
+        window.location.href = "/myBookings";
       },
       prefill: {
         name: userDetails.email.split("@")[0],
@@ -118,7 +112,7 @@ const BookingModel = ({ carInfo, closeModal }) => {
 
   // Function to handle the booking API call
   const postBooking = async () => {
-    setLoaderOpen(true)
+    setLoaderOpen(true);
     console.log("Initiating booking...");
 
     const payload = {
@@ -146,7 +140,7 @@ const BookingModel = ({ carInfo, closeModal }) => {
           "Booking successful! Opening Razorpay...",
           response.data.data
         );
-        setLoaderOpen(false)
+        setLoaderOpen(false);
         startRazorpayPayment(response.data.data.booking_id, totalAmount);
       } else {
         console.error("Booking failed: Invalid response format", response);
@@ -157,8 +151,8 @@ const BookingModel = ({ carInfo, closeModal }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-neutral-900 text-black dark:text-white rounded-lg shadow-xl w-full max-w-lg p-6 space-y-6 relative">
+    <div className="fixed inset-0 flex items-center justify-center z-50" >
+      <div className="bg-white dark:bg-neutral-900 text-black dark:text-white rounded-lg shadow-xl w-full max-w-lg p-6 space-y-6 relative" style={{padding:"20px"}}>
         {/* Close Button */}
         <button
           className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 dark:hover:text-gray-300 text-2xl"
@@ -166,11 +160,11 @@ const BookingModel = ({ carInfo, closeModal }) => {
         >
           &times;
         </button>
-        {isLoaderOpen && <Loader/>}
+        {isLoaderOpen && <Loader />}
 
         {/* Car Details */}
         <div className="text-center">
-          <h2 className="text-2xl font-bold">{carInfo[0].name}</h2>
+          <h2 className="text-2xl font-bold" style={{padding:"10px"}}>{carInfo[0].name}</h2>
           <p className="text-gray-500 dark:text-gray-400">
             {carInfo[0].brand} - {carInfo[0].model_year}
           </p>
@@ -185,7 +179,7 @@ const BookingModel = ({ carInfo, closeModal }) => {
         {/* Booking Form */}
         <div className="space-y-4 dark:bg-neutral-800 p-4 rounded-lg">
           <div>
-            <label className="block text-sm font-semibold">
+            <label className="block text-medium " style={{padding:"10px"}}>
               Booking Start Date
             </label>
             <input
@@ -194,11 +188,12 @@ const BookingModel = ({ carInfo, closeModal }) => {
               onChange={(e) => setStartDate(e.target.value)}
               className="w-full px-4 py-2 border rounded-sm mt-2"
               onBlur={handleDateChange}
+              style={{padding:"5px"}}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold">
+            <label className="block " style={{padding:"10px"}}>
               Booking End Date
             </label>
             <input
@@ -207,6 +202,7 @@ const BookingModel = ({ carInfo, closeModal }) => {
               onChange={(e) => setEndDate(e.target.value)}
               className="w-full px-4 py-2 border rounded-lg mt-2"
               onBlur={handleDateChange}
+              style={{padding:"5px"}}
             />
           </div>
         </div>
@@ -222,10 +218,11 @@ const BookingModel = ({ carInfo, closeModal }) => {
         )}
 
         {/* Next to Pay Button */}
-        <div className="mt-6">
+        <div className="mt-6" style={{padding:"10px",paddingTop:"20px"}}>
           <button
             onClick={postBooking}
-            className="w-full text-white p-2 text-lg bg-[#6f82c6] font-medium border-[#6f82c6] rounded-full hover:bg-gray-100 hover:text-black hover:border-[#6f82c6] transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md hover:shadow-lg"
+            style={{padding:"7px"}}
+            className="w-full text-white p-2 text-lg bg-[#6f82c6] font-medium border-[#6f82c6] rounded-lg hover:bg-gray-100 hover:text-black hover:border-[#6f82c6] transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md hover:shadow-lg"
           >
             Next to Pay
           </button>

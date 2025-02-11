@@ -8,16 +8,18 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Filters from "../Filters/Filters";
 import Loader from "../Loader/Loader";
+import Modal from "../Modal/Modal";
 import BookingModel from "../CarItem/BookingModel";
 
-const CarsDisplay = ({ category, }) => {
+const CarsDisplay = ({ category }) => {
   const [carList, setCarList] = useState([]);
   const [searchParams] = useSearchParams();
   const pickUpDateString = searchParams.get("pickUpDate");
   const dropOffDate = searchParams.get("toDate");
   const userLocation = searchParams.get("location");
-  const [isLoaderOpen,setIsLoderOpen] = useState(false);
+  const [isLoaderOpen, setIsLoderOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [selectedCar, setSelectedCar] = useState([]);
 
@@ -44,7 +46,7 @@ const CarsDisplay = ({ category, }) => {
       "0"
     )}-${String(pickUpDate.getDate()).padStart(2, "0")}`;
   useEffect(() => {
-    setIsLoderOpen(true)
+    setIsLoderOpen(true);
     const fetchData = async () => {
       const token = localStorage.getItem("authToken");
 
@@ -60,22 +62,56 @@ const CarsDisplay = ({ category, }) => {
         });
 
         setCarList(response.data.data);
-        setIsLoderOpen(false)
+        setIsLoderOpen(false);
       } catch (error) {
         console.error("Error fetching car list:", error);
-        setIsLoderOpen(false)
+        setIsModalOpen(true);
+        setIsLoderOpen(false);
       }
     };
     fetchData();
   }, []);
   const handleBookNow = (id) => {
-    const currentItems = carList.filter(x=>x.car_id==id)
+    const currentItems = carList.filter((x) => x.car_id == id);
     setIsBookingOpen(!isBookingOpen);
     setSelectedCar(currentItems);
   };
+  const closeModal = () => {
+    console.log("Clicked");
+  };
   return (
     <div>
-      <div className="w-full"> {isBookingOpen && <BookingModel carInfo={selectedCar} closeModal={()=>setIsBookingOpen(false)} />}  {isLoaderOpen &&<Loader/>} </div>
+      <div className="w-full">
+        {isBookingOpen && (
+          <BookingModel
+            carInfo={selectedCar}
+            closeModal={() => setIsBookingOpen(false)}
+          />
+        )}
+        {isLoaderOpen && (
+          <div
+            className="fixed inset- w-full flex items-center justify-center z-10"
+            style={{ marginTop: "10%", marginLeft: "5%" }}
+          >
+            <div
+              className="bg-white dark:bg-neutral-950 relative rounded-lg shadow-2xl w-full max-w-[240px] h-[150px] mx-4 md:mx-0 p-8 space-y-8"
+              style={{ padding: "40px 40px" }}
+            >
+              <div className="inset-0 flex flex-col items-center justify-center z-10">
+                <div className="w-12 h-12 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+                <div className="text-lg font-semibold" style={{marginTop:"20px"}}><h1>Loading</h1></div>
+              </div>
+            </div>
+          </div>
+        )}
+        {isModalOpen && (
+          <Modal
+            typeOfModal="failure"
+            message="Something went wrong"
+            closeModal={closeModal}
+          />
+        )}
+      </div>
       <div
         className={`cars-display flex ${
           isLogin ? "w-[85%]" : "w-full"

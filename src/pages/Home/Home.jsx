@@ -20,11 +20,6 @@ const Home = () => {
   return (
     <div className="w-full">
       <div className="flex w-full" style={{ marginTop: "1%" }}>
-        {isLogin && (
-          <div className="fixed w-2/12 bg-pink-400">
-            <SideBar />
-          </div>
-        )}
         <div
           className={`${isLogin ? "w-full" : "w-full"}`}
           style={isLogin ? { marginLeft: "0%" } : undefined}
