@@ -597,7 +597,7 @@ const AuthModal = () => {
               </form>
             </div>
           ) : (
-            <div style={{ padding: "10px" }} className="w-1/2">
+            <div style={{ padding: "10px" }} className={`${isScreenSmall?'w-full':'w-1/2'}`}>
               <p onClick={() => restpasswordBack()} className="cursor-pointer">
                 <div className="flex  items-center">
                   {" "}
