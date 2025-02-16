@@ -319,7 +319,7 @@ const AuthModal = () => {
       <div
         className={`relative z-30 ${
           !isScreenSmall && "bg-white"
-        }   dark:bg-neutral-950   w-full  mx-4 md:mx-0 ${
+        }     w-full  mx-4 md:mx-0 ${
           isLogin ? "md:max-w-[57%]  md:max-w-h-[500px]" : "md:max-w-[60%] "
         }`}
         style={
