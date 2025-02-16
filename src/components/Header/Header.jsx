@@ -7,16 +7,14 @@ const Header = () => {
   return (
     <div 
       className="w-full flex flex-col-reverse md:flex-row mb-10 md:mb-0 justify-center items-center"
-      style={{ marginTop: "85px", marginLeft: "0px", marginBottom: "10px" }}
+      style={{ marginTop: "55px", marginLeft: "0px", marginBottom: "10px" }}
     >
-      {/* SearchForm will be first on small screens */}
-      <div className="w-full md:w-8/12">
-        <Courosel />
-      </div>
       <div className="w-full md:w-4/12">
         <SearchForm fromWhere = "homePage"/>
       </div>
-
+      <div className="w-full md:w-8/12">
+        <Courosel />
+      </div>
 
     </div>
   );

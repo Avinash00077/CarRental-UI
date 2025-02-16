@@ -10,7 +10,7 @@ const UserProfile = () => {
   const [userDeatils, setUserDeatils] = useState(null);
   const [imageSrc, setImageSrc] = useState("");
   const [drivingLicenceImage, setDrivingLicence] = useState("");
-  const [aadharImage,setAadharImage] = useState("")
+  const [aadharImage, setAadharImage] = useState("");
   const [activeTab, setActiveTab] = useState("details");
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
@@ -27,31 +27,42 @@ const UserProfile = () => {
   });
   useEffect(() => {
     if (userDeatils?.profile_image?.data) {
-      const base64String = btoa(
-        String.fromCharCode(...userDeatils.profile_image.data)
-      );
-
-      setImageSrc(`data:image/png;base64,${base64String}`);
+      try {
+        const uint8Array = new Uint8Array(userDeatils.profile_image.data);
+        const base64String = btoa(String.fromCharCode.apply(null, uint8Array));
+        setImageSrc(`data:image/png;base64,${base64String}`);
+      } catch (error) {
+        console.error(error);
+      }
     }
-    if (userDeatils?.aadhar_image.data) {
-      const base64String = btoa(
-        String.fromCharCode(...userDeatils.aadhar_image.data)
-      );
+    if (userDeatils?.aadhar_image?.data) {
+      try {
+        const uint8Array = new Uint8Array(userDeatils.aadhar_image.data);
+        const base64String = btoa(String.fromCharCode.apply(null, uint8Array));
 
-      setAadharImage(`data:image/png;base64,${base64String}`);
+        setAadharImage(`data:image/png;base64,${base64String}`);
+      } catch (error) {
+        console.log(error);
+      }
     }
+
     if (userDeatils?.driving_license_image.data) {
-      const base64String = btoa(
-        String.fromCharCode(...userDeatils.driving_license_image.data)
-      );
+      try {
+        const uint8Array = new Uint8Array(
+          userDeatils.driving_license_image.data
+        );
 
-      setDrivingLicence(`data:image/png;base64,${base64String}`);
+        const base64String = btoa(String.fromCharCode.apply(null, uint8Array));
+
+        setDrivingLicence(`data:image/png;base64,${base64String}`);
+      } catch (error) {
+        console.error(error);
+      }
     }
   }, [userDeatils]);
 
   const token = localStorage.getItem("authToken");
   const fetchUserData = async () => {
-    console.log("Token:", token);
     setIsLoaderOpen(true);
 
     try {
@@ -62,7 +73,6 @@ const UserProfile = () => {
         },
       });
       setIsLoaderOpen(false);
-      console.log("Response:", response);
       setUserDeatils(response?.data?.data[0]);
       setEditFormInfo({
         first_name: response?.data?.data[0].first_name || "",
@@ -83,7 +93,6 @@ const UserProfile = () => {
   }, []);
 
   const handleInputChange = (e) => {
-    console.log(e);
     setEditFormInfo({ ...editFormInfo, [e.target.name]: e.target.value });
   };
 
@@ -92,8 +101,6 @@ const UserProfile = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(editFormInfo);
-    console.log(editFormInfo, " Hello");
     setIsLoaderOpen(true);
     try {
       const response = await axios.put(
@@ -115,7 +122,6 @@ const UserProfile = () => {
       );
       setIsEditOpen(false);
       fetchUserData();
-      console.log("Response:", response);
       setIsLoaderOpen(false);
     } catch (error) {
       setIsLoaderOpen(false);
@@ -124,9 +130,7 @@ const UserProfile = () => {
   };
 
   const handleUploadImage = async (data, img_type, profile_type) => {
-    console.log(data, " Inside Submit form");
-    console.log(data.LisenceValue);
-    // console.log(expiry)
+    setIsLoaderOpen(true);
     if (!data) {
       alert("No file selected.");
       return;
@@ -142,8 +146,6 @@ const UserProfile = () => {
     if (data.type == "Aaadhar") {
       formData.append("aadhar_number", data.aadharNumber);
     }
-    console.log(formData, " Formdtaa value is ");
-
     try {
       const response = await fetch(
         `${constants.API_BASE_URL}/user/image-upload`,
@@ -157,13 +159,12 @@ const UserProfile = () => {
       );
 
       if (!response.ok) throw new Error("Upload failed!");
-
       const result = await response.json();
-      console.log("Upload successful:", result);
       setUploadedFile(result); // Store uploaded file response if needed
       fetchUserData();
     } catch (error) {
       console.error("Error:", error);
+      setIsLoaderOpen(false);
       alert("Image upload failed.");
     }
   };
@@ -213,10 +214,6 @@ const UserProfile = () => {
                   />
                 </div>
               </div>
-
-              {/* Last Name */}
-
-              {/* Email */}
               <label className="block font-medium">Email</label>
               <input
                 type="email"
@@ -311,10 +308,11 @@ const UserProfile = () => {
             <div className="relative">
               <img
                 src={imageSrc}
-                className="w-full h-[290px] object-cover rounded-lg"
+                className="w-full h-[260px] object-cover rounded-lg"
               />
               <div className="absolute bottom-4 right-4 flex p-3 rounded-full shadow-md cursor-pointer">
                 <FileUpload
+                  type="profile"
                   onUpload={(data) =>
                     handleUploadImage(data, "profile", "profile_image")
                   }
@@ -370,13 +368,16 @@ const UserProfile = () => {
           </div>
 
           <div
-            className=" p-6  rounded-lg  shadow-md"
+          className="p-6 bg-gradient-to-r from-[#abbaab] to-[#ffffff] h-[300px] rounded-lg shadow-md"
+
             style={{ padding: "20px" }}
           >
             {activeTab === "details" && (
               <div>
                 <div className="flex flex-wrap items-center justify-between mb-5">
-                  <div className="text-xl font-semibold">User Details</div>
+                  <div className="text-xl font-semibold text-[#6f82c6]">
+                    User Details
+                  </div>
                   <div className="flex items-center font-semibold space-x-2 cursor-pointer">
                     <span style={{ padding: "5px 10px" }}>Edit</span>
                     <Pencil size={18} onClick={() => setIsEditOpen(true)} />
@@ -478,11 +479,7 @@ const UserProfile = () => {
                     ></img>
                     <FileUpload
                       onUpload={(data) =>
-                        handleUploadImage(
-                          data,
-                          "aadhar",
-                          "aadhar_image"
-                        )
+                        handleUploadImage(data, "aadhar", "aadhar_image")
                       }
                       type="Aaadhar"
                     />

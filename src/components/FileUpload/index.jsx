@@ -9,7 +9,6 @@ const FileUpload = ({ onUpload, type }) => {
   const [aadharNumber, setAadharNumber] = useState("");
   const [error, setError] = useState({ aadhar: "", licence: "", expiry: "" });
   const fileInputRef = useRef(null);
-  console.log(type, " Hello123");
   const handleClick = () => {
     fileInputRef.current.click();
   };
@@ -21,48 +20,42 @@ const FileUpload = ({ onUpload, type }) => {
       setPreview(URL.createObjectURL(file)); // Preview image
     }
   };
-
-  const handleSaveImage = () => {
-    let data = {
-      selectedFile: selectedFile,
-      LisenceValue: LisenceValue,
-      expiryDate: expiryDate,
-      aadharNumber: aadharNumber,
-      type: type,
-    };
-    if (selectedFile) {
-      if (type == "Aaadhar" && aadharNumber.length === 12) {
-        setPreview(false);
-        onUpload(data);
-      }
-      if (type == "Licence" && LisenceValue.length>10 && expiryDate!=="") {
-        setPreview(false);
-        onUpload(data);
-      }
-    }
-  };
-
   const handleCancel = () => {
     setPreview(null);
     setSelectedFile(null);
   };
+
   const handleAadharChange = (e) => {
     const value = e.target.value;
     if (/^\d{0,12}$/.test(value)) {
       setAadharNumber(value);
+      validateAadhar(value);
     }
   };
+
+  const validateAadhar = (value) => {
+    if (!/^\d{12}$/.test(value)) {
+      setError((prev) => ({
+        ...prev,
+        aadhar: "Aadhaar number must be exactly 12 digits.",
+      }));
+    } else {
+      setError((prev) => ({ ...prev, aadhar: "" }));
+    }
+  };
+
   const handleExpiryChange = (e) => {
     setExpiryDate(e.target.value);
   };
   const handleLicenceChange = (e) => {
     const value = e.target.value;
     setLisenceValue(value);
+    validateLicence();
   };
 
   // Validate Licence Format
   const validateLicence = () => {
-    const licenceRegex = /^[A-Z]{2}\d{7,13}$/; // Example: "DL1234567890123"
+    const licenceRegex = /^[A-Z][a-z]{2}\d{7,13}$/; // Example: "DL1234567890123"
     if (!licenceRegex.test(LisenceValue)) {
       setError((prev) => ({
         ...prev,
@@ -84,14 +77,49 @@ const FileUpload = ({ onUpload, type }) => {
     }
   };
 
-  const validateAadhar = () => {
-    if (!/^\d{12}$/.test(aadharNumber)) {
-      setError((prev) => ({
-        ...prev,
-        aadhar: "Aadhaar number must be exactly 12 digits.",
-      }));
-    } else {
-      setError((prev) => ({ ...prev, aadhar: "" }));
+  const handleSaveImage = () => {
+    let data = {
+      selectedFile: selectedFile,
+      LisenceValue: LisenceValue,
+      expiryDate: expiryDate,
+      aadharNumber: aadharNumber,
+      type: type,
+    };
+    if (selectedFile) {
+      if (type == "Aaadhar" && aadharNumber.length === 12) {
+        setPreview(false);
+        onUpload(data);
+        setError((prev) => ({
+          ...prev,
+          aadhar: "",
+        }));
+      } else {
+        setError((prev) => ({
+          ...prev,
+          aadhar: "Please Enter Aaadhar Number",
+        }));
+      }
+      if (type == "Licence" && LisenceValue.length > 10 && expiryDate !== "") {
+        setPreview(false);
+        onUpload(data);
+      } else {
+        if (!LisenceValue.length < 10) {
+          setError((prev) => ({
+            ...prev,
+            licence: "Please Enter licence",
+          }));
+        }
+        if (expiryDate == "") {
+          setError((prev) => ({
+            ...prev,
+            expiry: "Please Enter Expiry date",
+          }));
+        }
+      }
+      if (type === "profile") {
+        setPreview(false);
+        onUpload(data);
+      }
     }
   };
 
@@ -125,7 +153,9 @@ const FileUpload = ({ onUpload, type }) => {
                   style={{ padding: "5px", margin: "5px 0px" }}
                   placeholder="Enter Your valid Drivers License"
                 />
-                {error.licence && <p className="text-red-500">{error.licence}</p>}
+                {error.licence && (
+                  <p className="text-red-500">{error.licence}</p>
+                )}
                 <label className="block font-medium">Date of Birth</label>
                 <input
                   type="date"
@@ -167,13 +197,13 @@ const FileUpload = ({ onUpload, type }) => {
               style={{ margin: "10px 0px" }}
             >
               <button
-                className="w-20 rounded-lg h-10 border border-gray-500"
+                className="w-20 rounded-lg cursor-pointer  hover:-translate-y-1 hover:bg-red-500 hover:border-none hover:text-white h-10 border border-gray-500"
                 onClick={handleCancel}
               >
                 Cancel
               </button>
               <button
-                className="w-20 rounded-lg h-10 text-white bg-[#6f82c6]"
+                className="w-20  cursor-pointer hover:-translate-y-1  rounded-lg h-10 text-white bg-[#6f82c6]"
                 onClick={handleSaveImage}
                 style={{ margin: "0px 10px" }}
               >

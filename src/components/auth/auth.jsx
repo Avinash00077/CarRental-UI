@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import constants from "../../config/constants";
+import debounce from "lodash.debounce";
 import Modal from "../Modal/Modal";
-import Loader from "../Loader/Loader";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Confetti from "react-confetti";
+import { useScreenSize } from "../../context/screenSizeContext";
 import { useWindowSize } from "react-use";
 import arrow from "../../assets/arrow.png";
+import Loader from "../Loader/Loader";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
+import available from "../../assets/available.png";
+import not_available from "../../assets/not_available.jpg";
 
 const AuthModal = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -21,12 +25,14 @@ const AuthModal = () => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [openResetPassword, setOpenResetPassword] = useState(false);
   const [ispasswordReset, setPasswordReset] = useState(false);
+  const [isUserAvailable, setUserAvailable] = useState("none");
   const [authStatus, setAuthStatus] = useState("auth");
   const navigate = useNavigate();
   const location = useLocation();
+  const { isScreenSmall } = useScreenSize();
+  console.log(isScreenSmall, " Is small scren value is");
   useEffect(() => {
     if (location.state?.isLogin !== undefined) {
-      console.log(isLogin, " Is login value is ");
       setIsLogin(location.state.isLogin);
     }
   }, [location.state]);
@@ -117,7 +123,10 @@ const AuthModal = () => {
         setIsModalOpen(true);
         setIsLoaderOpen(false);
         setModalType("failure");
-        setModalMessage(error?.response?.data?.message || "Login failed. Please check your credentials.");
+        setModalMessage(
+          error?.response?.data?.message ||
+            "Login failed. Please check your credentials."
+        );
         setFormData({ ...formData, password: "", email: "" });
       }
     }
@@ -253,17 +262,42 @@ const AuthModal = () => {
     setFormData({ ...formData, dob: formattedDOB });
   };
 
+  const checkUserNameAvailablity = useCallback(
+    debounce(async (username) => {
+      if (username.lenght > 3) {
+        setUserAvailable("none");
+        return;
+      }
+      try {
+        console.log("Inside UserName Techen");
+        const response = await axios.get(
+          `${constants.API_BASE_URL}/user/user-name/availability`,
+          {
+            headers: {
+              user_name: username,
+            },
+          }
+        );
+        if (response.data.userNameAvilable) {
+          setUserAvailable(true);
+        } else {
+          setUserAvailable(false);
+        }
+        console.log(response);
+      } catch (error) {
+        console.error(error, " Error While Checking UserName ");
+      }
+    }, 500),
+    []
+  );
+  useEffect(() => {
+    checkUserNameAvailablity(formData.userName);
+    return () => checkUserNameAvailablity.cancel();
+  }, [formData.userName, checkUserNameAvailablity]);
+
   return (
-    <div
-      className="fixed inset-0 bg-gradient-to-r from-[#7c94e1] to-[#dadff5] bg-opacity-70 flex items-center justify-center z-20"
-      style={{
-        backgroundImage:
-          "url('https://ideogram.ai/assets/image/lossless/response/dcXzY0mIS8uKgte_QClBvQ')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      {showConfetti && <Confetti width={width} height={height} />}(
+    <div className="fixed inset-0 flex items-center justify-center z-20  ">
+      {showConfetti && <Confetti width={width} height={height} />}
       {isModalOpen && (
         <Modal
           typeOfModal={modalType}
@@ -271,207 +305,297 @@ const AuthModal = () => {
           closeModal={closeModal}
         />
       )}
-      ) ({isLoaderOpen && <Loader message="Loading..." />})
-      <div className="bg-white dark:bg-neutral-950 relative rounded-lg shadow-2xl w-full h-auto mx-4 md:mx-0 md:max-w-[55%]">
-        <div className="flex flex-col md:flex-row rounded-lg shadow-lg">
-          {/* Image Section */}
-          <div className="w-6/12 h-[530px] flex items-center justify-center rounded-lg">
-            <img
-              src={
-                isLogin
-                  ? "https://ideogram.ai/assets/progressive-image/balanced/response/FvlMM4_uTDa0H7qBYbjcSQ"
-                  : "https://ideogram.ai/assets/image/lossless/response/yVHGbZm0T3ed00nPnMCoAQ"
-              }
-              alt="Doctor"
-              className="rounded-tl-lg rounded-bl-lg w-full h-full object-cover"
-            />
-          </div>
-          {!ispasswordReset ? (
-            <form
-              onSubmit={handleSubmit}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                padding: "1rem",
-                height: "510px",
-                width: "50%",
-                borderRadius: "0.5rem",
-              }}
+      {isLoaderOpen && <Loader message="Loading..." />}
+      <div
+        className="absolute inset-0 "
+        style={{
+          backgroundImage:
+            "url('https://ideogram.ai/assets/image/lossless/response/dcXzY0mIS8uKgte_QClBvQ')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          opacity: "0.5",
+        }}
+      ></div>
+      <div
+        className={`relative z-30 ${
+          !isScreenSmall && "bg-white"
+        }   dark:bg-neutral-950   w-full  mx-4 md:mx-0 ${
+          isLogin ? "md:max-w-[57%]  md:max-w-h-[500px]" : "md:max-w-[60%] "
+        }`}
+        style={
+          isScreenSmall
+            ? { marginTop: isLogin ? "0px" : "-40px" }
+            : { marginTop: "60px" }
+        }
+      >
+        <div
+          className={`flex flex-col md:flex-row rounded-lg ${
+            !isScreenSmall && "shadow-lg"
+          }`}
+        >
+          {!isScreenSmall && (
+            <div
+              className={`${isScreenSmall && "hidden"} w-6/12 ${
+                isLogin ? "md:max-h-[520px]" : "md:max-h-[620px]"
+              }  flex items-center justify-center rounded-lg`}
             >
-              <div className="flex justify-end ">
-                <span
-                  onClick={() => navigate("/")}
-                  className="text-xl cursor-pointer text-gray-500 hover:text-gray-800"
-                >
-                  ✖
-                </span>
-              </div>
-              <h2
-                className="text-lg font-semibold text-gray-800 text-center"
-                style={isLogin ? { marginTop: "60px" } : {}}
-              >
-                {isLogin ? "Welcome Back!" : "Join Us!"}
-              </h2>
-              <p className="text-center text-sm text-gray-500 mb-4">
-                {isLogin
-                  ? "Log in to your account to continue."
-                  : "Create a new account to get started."}
-              </p>
-              {!isLogin && (
-                <div className="flex space-x-4">
-                  <div className="w-1/2 " style={{ marginRight: "10px" }}>
-                    <label className="block text-sm mb-1">First Name</label>
-                    <input
-                      type="text"
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      placeholder="Enter First Name"
-                      className="w-full text-sm bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none"
-                      style={{ padding: "8px", margin: "4px 0px" }}
-                    />
-                  </div>
-                  <div className="w-1/2">
-                    <label className="block text-sm mb-1">Last Name</label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      placeholder="Enter Last Name"
-                      className="w-full text-sm bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none"
-                      style={{ padding: "8px", margin: "4px 0px" }}
-                    />
-                  </div>
-                </div>
-              )}
-              
-               
-                
-              <div className="w-full flex" style={{ marginTop: "10px" }}>
-              <div className={`${isLogin && "w-full"}`}>
-                  <label className="block text-sm mb-1">UserName</label>
-                  <input
-                    type="text"
-                    name="userName"
-                    value={formData.userName}
-                    onChange={handleInputChange}
-                    placeholder="Type your UserName"
-                    className="w-full text-sm bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none"
-                    style={{ padding: "8px", margin: "4px 0px" }}
-                  />
-                </div>
-              {!isLogin && (
-                <div className={`${isLogin && "w-full"}`}>
-                  <label className="block text-sm mb-1">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="Type your email"
-                    className="w-full text-sm bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none"
-                    style={{ padding: "8px", margin: "4px 0px" }}
-                  />
-                </div>
-              )}
+              <img
+                src={
+                  isLogin
+                    ? "https://ideogram.ai/assets/progressive-image/balanced/response/FvlMM4_uTDa0H7qBYbjcSQ"
+                    : "https://ideogram.ai/assets/image/lossless/response/yVHGbZm0T3ed00nPnMCoAQ"
+                }
+                alt="Doctor"
+                className="rounded-tl-lg rounded-bl-lg w-full h-full object-cover"
+              />
+            </div>
+          )}
 
-          {!isLogin && (
-                  <div style={{ marginLeft: "10px" }}>
-                    <label className="block text-sm mb-1">Phone Number</label>
+          {!ispasswordReset ? (
+            <div className={`${isScreenSmall ? "w-full" : "w-1/2"} `}>
+              <form
+                onSubmit={handleSubmit}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  padding: "1rem",
+                  height: "510px",
+                  borderRadius: "0.5rem",
+                }}
+              >
+                <div className="flex justify-end w-full">
+                  <span
+                    onClick={() => navigate("/")}
+                    className="text-xl cursor-pointer text-gray-500 hover:text-gray-800"
+                  >
+                    ✖
+                  </span>
+                </div>
+                <h2
+                  className="text-lg font-semibold text-gray-800 text-center"
+                  style={isLogin ? { marginTop: "60px" } : {}}
+                >
+                  {isLogin ? "Welcome Back!" : "Join Us!"}
+                </h2>
+                <p className="text-center text-sm text-gray-500 mb-4">
+                  {isLogin
+                    ? "Log in to your account to continue."
+                    : "Create a new account to get started."}
+                </p>
+                <div
+                  className={` flex  w-full items-center`}
+                  style={{ margin: "5px 0px" }}
+                >
+                  <div className={`${!isLogin ? "w-11/12" : "w-full"}`}>
+                    <label className="block text-sm mb-1">UserName</label>
                     <input
-                      type="phone"
-                      name="phone"
-                      value={formData.phone}
+                      type="text"
+                      name="userName"
+                      value={formData.userName}
                       onChange={handleInputChange}
-                      placeholder="Enter Your Phone Number"
-                      className="w-full text-sm bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none"
+                      placeholder="Type your UserName"
+                      className={`w-full text-sm  ${
+                        isScreenSmall
+                          ? "border-b-2"
+                          : "border bg-white rounded-lg hover:bg-gray-50"
+                      }  border-gray-300  px-2 py-1 focus:outline-none hover:-translate-y-0.5 hover:h-[38px]  hover:text-[15px]`}
+                      style={{ padding: "8px", margin: "4px 0px" }}
+                    />
+                  </div>
+                  {!isLogin && isUserAvailable != "none" && (
+                    <div>
+                      <img
+                        src={isUserAvailable ? available : not_available}
+                        className="w-16 h-10"
+                        style={{ marginTop: "20px", marginLeft: "8px" }}
+                      ></img>
+                    </div>
+                  )}
+                </div>
+                {!isLogin && (
+                  <div className="flex space-x-4">
+                    <div className="w-1/2 " style={{ marginRight: "10px" }}>
+                      <label className="block text-sm mb-1">First Name</label>
+                      <input
+                        type="text"
+                        name="firstName"
+                        value={formData.firstName}
+                        onChange={handleInputChange}
+                        placeholder="Enter First Name"
+                        className={`w-full text-sm  ${
+                          isScreenSmall
+                            ? "border-b-2"
+                            : "border bg-white rounded-lg hover:bg-gray-50"
+                        }  border-gray-300  px-2 py-1 focus:outline-none hover:-translate-y-0.5 hover:h-[38px]  hover:text-[15px]`}
+                        style={{ padding: "8px", margin: "4px 0px" }}
+                      />
+                    </div>
+                    <div className="w-1/2">
+                      <label className="block text-sm mb-1">Last Name</label>
+                      <input
+                        type="text"
+                        name="lastName"
+                        value={formData.lastName}
+                        onChange={handleInputChange}
+                        placeholder="Enter Last Name"
+                        className={`w-full text-sm  ${
+                          isScreenSmall
+                            ? "border-b-2"
+                            : "border bg-white rounded-lg hover:bg-gray-50"
+                        }  border-gray-300  px-2 py-1 focus:outline-none hover:-translate-y-0.5 hover:h-[38px]  hover:text-[15px]`}
+                        style={{ padding: "8px", margin: "4px 0px" }}
+                      />
+                    </div>
+                  </div>
+                )}
+
+                <div className="w-full flex " style={{ marginTop: "10px" }}>
+                  {!isLogin && (
+                    <div className={`${isLogin ? "w-full" : "w-1/2"}`}>
+                      <label className="block text-sm mb-1">Email</label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        placeholder="Type your email"
+                        className={`w-full text-sm  ${
+                          isScreenSmall
+                            ? "border-b-2"
+                            : "border bg-white rounded-lg hover:bg-gray-50"
+                        }  border-gray-300  px-2 py-1 focus:outline-none hover:-translate-y-0.5 hover:h-[38px]  hover:text-[15px]`}
+                        style={{ padding: "8px", margin: "4px 0px" }}
+                      />
+                    </div>
+                  )}
+
+                  {!isLogin && (
+                    <div style={{ marginLeft: "10px" }} className="w-1/2">
+                      <label className="block text-sm   mb-1">
+                        Phone Number
+                      </label>
+                      <input
+                        type="phone"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        placeholder="Enter Your Phone Number"
+                        className={`w-full text-sm  ${
+                          isScreenSmall
+                            ? "border-b-2"
+                            : "border bg-white rounded-lg hover:bg-gray-50"
+                        }  border-gray-300  px-2 py-1 focus:outline-none hover:-translate-y-0.5 hover:h-[38px]  hover:text-[15px]`}
+                        style={{ padding: "8px", margin: "4px 0px" }}
+                      />
+                    </div>
+                  )}
+                </div>
+                {!isLogin && (
+                  <div
+                    className="w-full flex justify-center items-center"
+                    style={{ marginTop: "10px" }}
+                  >
+                    <div className="w-1/2">
+                      <label className="block text-sm mb-1">
+                        Date Of Birth
+                      </label>
+                      <Calendar
+                        className={`w-full h-9 text-[12px] border-gray-300 px-2 py-1 focus:outline-none 
+    hover:-translate-y-0.5 hover:h-[38px] hover:text-[15px] 
+    ${
+      isScreenSmall
+        ? "border-b-2"
+        : "border bg-transparent rounded-lg hover:bg-gray-50"
+    }`}
+                        id="buttondisplay"
+                        value={formData.dob}
+                        placeholder="Select your DOB"
+                        onChange={handleDOB}
+                        style={{ padding: "1px", backgroundColor: "beige" }}
+                        showIcon
+                      />
+                    </div>
+                    <div className="w-1/2" style={{ marginLeft: "10px" }}>
+                      <label className="block text-sm mb-1">Gender</label>
+                      <Dropdown
+                        value={formData.gender}
+                        onChange={(e) =>
+                          setFormData({ ...formData, gender: e.value })
+                        }
+                        options={["Male", "Female", "Other"]}
+                        optionLabel="gender"
+                        placeholder="pickup Time"
+                        className={`w-full text-sm  ${
+                          isScreenSmall
+                            ? "border-b-2"
+                            : "border bg-white rounded-lg hover:bg-gray-50"
+                        }  border-gray-300 h-8 px-2 py-1 focus:outline-none hover:-translate-y-0.5 hover:h-[38px]  hover:text-[15px]`}
+                        style={{ paddingLeft: "10px" }}
+                      />
+                    </div>
+                  </div>
+                )}
+                <div>
+                  <label className="block text-sm mb-1">Password</label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    placeholder="Type your password"
+                    className={`w-full text-sm  ${
+                      isScreenSmall
+                        ? "border-b-2"
+                        : "border bg-white rounded-lg hover:bg-gray-50"
+                    }  border-gray-300  px-2 py-1 focus:outline-none hover:-translate-y-0.5 hover:h-[38px]  hover:text-[15px]`}
+                    style={{ padding: "8px", margin: "4px 0px" }}
+                  />
+                </div>
+                {!isLogin && (
+                  <div>
+                    <label className="block text-sm mb-1">
+                      Confirm Password
+                    </label>
+                    <input
+                      type="password"
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                      placeholder="Confirm your password"
+                      className={`w-full text-sm  ${
+                        isScreenSmall
+                          ? "border-b-2"
+                          : "border bg-white rounded-lg hover:bg-gray-50"
+                      }  border-gray-300  px-2 py-1 focus:outline-none hover:-translate-y-0.5 hover:h-[38px]  hover:text-[15px]`}
                       style={{ padding: "8px", margin: "4px 0px" }}
                     />
                   </div>
                 )}
-              </div>
-              {!isLogin && (
-                <div
-                  className="w-full flex justify-center items-center"
-                  style={{ marginTop: "10px" }}
+                <p
+                  className="text-xs text-gray-500 cursor-pointer hover:text-blue-400 mb-4"
+                  onClick={() => handleResetPassword()}
                 >
-                  <div className="w-1/2">
-                    <label className="block text-sm mb-1">Date Of Birth</label>
-                    <Calendar
-                      className={`${"w-full h-9 text-xs"}`}
-                      id="buttondisplay"
-                      value={formData.dob}
-                      placeholder="Select Your DOB"
-                      onChange={handleDOB}
-                      style={{ padding: "1px" }}
-                      showIcon
-                    />
-                  </div>
-                  <div className="w-1/2" style={{ marginLeft: "10px" }}>
-                    <label className="block text-sm mb-1">Gender</label>
-                    <Dropdown
-                      value={formData.gender}
-                      onChange={(e) =>
-                        setFormData({ ...formData, gender: e.value })
-                      }
-                      options={["Male", "Female", "Other"]}
-                      optionLabel="gender"
-                      placeholder="pickup Time"
-                      className="w-full h-9 text-xs flex justify-center items-center"
-                      style={{ paddingLeft: "10px" }}
-                    />
-                  </div>
-                </div>
-              )}
-              <div>
-                <label className="block text-sm mb-1">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  placeholder="Type your password"
-                  className="w-full text-sm bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none"
-                  style={{ padding: "8px", margin: "4px 0px" }}
-                />
-              </div>
-              {!isLogin && (
-                <div>
-                  <label className="block text-sm mb-1">Confirm Password</label>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    placeholder="Confirm your password"
-                    className="w-full text-sm bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none"
-                    style={{ padding: "8px", margin: "4px 0px" }}
-                  />
-                </div>
-              )}
-              <p
-                className="text-xs text-gray-500 cursor-pointer hover:text-blue-400 mb-4"
-                onClick={() => handleResetPassword()}
-              >
-                {isLogin ? "Forgot your password?" : ""}
-              </p>
-              <button
-                style={{ padding: "8px", margin: "10px 0px" }}
-                type="submit"
-                className="bg-[#6e81c7] hover:bg-[#5a6aa1] text-medium py-2 px-5 rounded-full text-white shadow-lg transition-colors duration-300"
-              >
-                {isLogin ? "Log In" : "Sign Up"}
-              </button>
-              <p
-                onClick={() => setIsLogin(!isLogin)}
-                className="text-center text-medium text-gray-600 cursor-pointer hover:text-blue-400 mt-4"
-              >
-                {isLogin
-                  ? "Don't have an account? Sign Up"
-                  : "Already have an account? Log In"}
-              </p>
-            </form>
+                  {isLogin ? "Forgot your password?" : ""}
+                </p>
+                <button
+                  style={{ padding: "8px", margin: "10px 0px" }}
+                  type="submit"
+                  className="bg-[#6e81c7] hover:bg-[#5a6aa1] text-medium py-2 px-5 rounded-full text-white shadow-lg transition-colors duration-300  hover:text-[15px]"
+                >
+                  {isLogin ? "Log In" : "Sign Up"}
+                </button>
+                <p
+                  onClick={() => setIsLogin(!isLogin)}
+                  className={`text-center text-medium ${
+                    isScreenSmall ? "text-black" : "text-gray-600"
+                  } cursor-pointer hover:text-blue-400 mt-4`}
+                >
+                  {isLogin
+                    ? "Don't have an account? Sign Up"
+                    : "Already have an account? Log In"}
+                </p>
+              </form>
+            </div>
           ) : (
             <div style={{ padding: "10px" }} className="w-1/2">
               <p onClick={() => restpasswordBack()} className="cursor-pointer">
@@ -500,13 +624,15 @@ const AuthModal = () => {
                     className="flex items-center justify-start space-x-1"
                     style={{ marginLeft: "3%", marginBottom: "10px" }}
                   >
-                    <label className="text-sm w-24">UserName : </label>
+                    <label className="text-sm w-24 text-black">
+                      UserName :{" "}
+                    </label>
                     <input
                       type="text"
                       name="userName"
                       value={formData.userName}
                       placeholder="Type your user name"
-                      className="text-sm  h-10 w-full bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none w-full"
+                      className="text-sm  h-10  bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none w-full"
                       disabled
                     />
                   </div>

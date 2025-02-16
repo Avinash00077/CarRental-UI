@@ -6,6 +6,7 @@ import Auth from "./components/auth/auth";
 import CarsDisplay from "./components/CarsDisplay/CarsDisplay";
 import AdminAuth from "./components/admin/AdminAuth";
 import PlaceOrder from "./pages/PlaceOrder/PlaceOrder";
+import { useScreenSize } from "../src/context/screenSizeContext"
 import SideBar from "./components/SideBar";
 import MyBookings from "./components/MyBookings";
 import PaymentPage from "./components/PaymentPage/PaymentPage";
@@ -13,8 +14,8 @@ import UserProfile from "./components/UserProfile";
 
 const App = () => {
   const [isLogin, setIsLogin] = useState(false);
-  const [isSidebarHovered, setIsSidebarHovered] = useState(false); 
-
+  const [isSidebarHovered, setIsSidebarHovered] = useState(false);
+  const { isScreenSmall } = useScreenSize();
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
     if (authToken) {
@@ -23,18 +24,29 @@ const App = () => {
   }, []);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen ">
       {/* Sidebar */}
       {isLogin && (
-        <div className="fixed" style={{marginTop:"4%"}}>
+        <div className="fixed" style={{ marginTop: "4%" }}>
           <SideBar setIsSidebarHovered={setIsSidebarHovered} />{" "}
         </div>
       )}
 
       {/* Main Content */}
       <div
-        style={ isLogin ? isSidebarHovered ? { marginLeft: "14%" } : { marginLeft: "5%" }:{marginLeft:"0%",padding:"10px"}}
-        className={`transition-all duration-300 p-4 ${
+      style={{
+        ...(!isScreenSmall
+          ? isLogin
+            ? isSidebarHovered
+              ? { marginLeft: "14%" }
+              : { marginLeft: "5%" }
+            : { marginLeft: "0%", padding: "10px" }
+          : { marginLeft: "0%", padding: "10px" }
+        ),
+        ...(!isScreenSmall && { fontSize: "14px", padding: "8px" })
+      }}
+      
+        className={`transition-all duration-300  ${isScreenSmall&& 'w-full'} p-4 ${
           isLogin
             ? isSidebarHovered
               ? "ml-[5%] w-[calc(100%-14%)]"
@@ -51,7 +63,7 @@ const App = () => {
           <Route path="/myBookings" element={<MyBookings />} />
           <Route path="/booking" element={<PaymentPage />} />
           <Route path="/admin" element={<AdminAuth />} />
-          <Route path="/userProfile" element={<UserProfile/>}/>
+          <Route path="/userProfile" element={<UserProfile />} />
         </Routes>
       </div>
     </div>

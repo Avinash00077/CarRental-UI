@@ -4,7 +4,7 @@ import Clock from "../../assets/clock.png";
 import location from "../../assets/gps.png";
 import LocationModal from "./LocationModal";
 import { useNavigate } from "react-router-dom";
-
+import { useScreenSize } from "../../context/screenSizeContext";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import "primereact/resources/primereact.min.css";
@@ -15,6 +15,7 @@ const SearchForm = ({ fromWhere }) => {
   const [openModal, setOpenModal] = useState(false);
   const [pickUpDate, setPickUpDate] = useState("");
   const [pickUpTime, setPickUpTime] = useState("");
+  const { isScreenSmall } = useScreenSize();
   const [dropOffDate, setDropOffDate] = useState("");
   const [dropOffTime, setDropOffTime] = useState("");
   const navigate = useNavigate();
@@ -39,7 +40,7 @@ const SearchForm = ({ fromWhere }) => {
 
   return (
     <form
-      className="flex  flex-col items-center justify-center"
+      className="flex  flex-col items-center  justify-center"
       onSubmit={handleSubmit}
     >
       {openModal && fromWhere === "homePage" && (
@@ -49,9 +50,18 @@ const SearchForm = ({ fromWhere }) => {
         />
       )}
       <div
-      className={`md:flex md:flex-col items-center justify-center p-2 rounded-3xl shadow-2xl ${fromWhere === "homePage" ? "w-[85%]" : "w-[93%]"}`}
-
-        style={{ margin: "0px 0px ", padding: "10px" }}
+        className={`md:flex md:flex-col items-center bg-gradient-to-b from-[#caefd7] via-[#f5bfd7] to-[#abc9e9] justify-center p-2 rounded-3xl shadow-2xl ${
+          isScreenSmall
+            ? "w-full"
+            : fromWhere === "homePage"
+            ? "w-[85%]"
+            : "w-[93%]"
+        }`}
+        style={{
+          margin: "0px 0px ",
+          padding: "10px",
+          ...(isScreenSmall && { marginTop: "20px" }),
+        }}
       >
         <div className="w-full">
           {fromWhere === "homePage" ? (
@@ -79,7 +89,7 @@ const SearchForm = ({ fromWhere }) => {
             </div>
           ) : (
             <div className="text-start">
-              <p >Select Date & Time</p>
+              <p>Select Date & Time</p>
               <p>Ride Duration - (1 day)</p>
             </div>
           )}
@@ -185,7 +195,6 @@ const SearchForm = ({ fromWhere }) => {
                   style={{ paddingLeft: "10px" }}
                 />
                 {fromWhere === "homePage" && (
-                  
                   <img
                     src={Clock}
                     alt="Date"
