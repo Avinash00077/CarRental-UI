@@ -524,7 +524,7 @@ const AuthModal = () => {
                         }
                         options={["Male", "Female", "Other"]}
                         optionLabel="gender"
-                        placeholder="pickup Time"
+                        placeholder="select gender"
                         className={`w-full text-sm  ${
                           isScreenSmall
                             ? "border-b-2"

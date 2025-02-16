@@ -1,19 +1,20 @@
 import React from "react";
 import Courosel from "../courosel/Courosel";
 import SearchForm from "../SearchForm/SearchForm";
-
+import { useScreenSize } from "../../context/screenSizeContext";
 import "./Header.css";
 const Header = () => {
+  const { isScreenSmall } = useScreenSize();
   return (
-    <div 
-      className="w-full flex flex-col-reverse md:flex-row mb-10 md:mb-0 justify-center items-center"
+    <div
+      className={`w-full flex ${isScreenSmall&&'flex-col'}  mb-10 md:mb-0 justify-center items-center`}
       style={{ marginTop: "55px", marginLeft: "0px", marginBottom: "10px" }}
     >
-      <div className="w-full md:w-4/12">
-        <SearchForm fromWhere = "homePage"/>
-      </div>
-      <div className="w-full md:w-8/12">
+            <div className="w-full md:w-8/12">
         <Courosel />
+      </div>
+      <div className="w-full md:w-4/12">
+        <SearchForm fromWhere="homePage" />
       </div>
 
     </div>

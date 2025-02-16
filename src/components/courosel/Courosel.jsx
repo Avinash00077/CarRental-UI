@@ -49,7 +49,7 @@ const Courosel = () => {
               className={`w-full ${
                 isScreenSmall ? "h-[200px]" : "h-[500px]"
               } rounded-xl`}
-              src="https://ideogram.ai/assets/progressive-image/balanced/response/W7X5prHTQj-qtTViaguc4Q"
+              src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/car-sale-banner-design-template-f3025e019370db68e4ddb97ae9a10178_screen.jpg?ts=1639355203"
               alt="slide 3"
             />
           </div>
