@@ -20,7 +20,7 @@ const Courosel = () => {
 
   return (
     <div
-      className={`main mt-10  rounded-xl ${
+      className={`main mt-10 w-full  rounded-xl ${
         isScreenSmall ? "h-[200px]" : "h-[500px]"
       }`}
     >
