@@ -66,7 +66,7 @@ const Navbar = () => {
           src="https://ideogram.ai/assets/image/lossless/response/QhwppK8wRL66uMwS4nY1ZQ"
           className={`${
             isScreenSize
-              ? " w-[85px] h-[48px] rounded-md"
+              ? " w-[85px] h-[44px] rounded-md"
               : "w-44 h-[60px] p-24"
           }`}
           alt="logo"

@@ -4,18 +4,16 @@ import constants from "../../config/constants";
 import { Pencil } from "lucide-react";
 import Loader from "../Loader/Loader";
 import FileUpload from "../FileUpload";
+import { useScreenSize } from "../../context/screenSizeContext";
 import { data } from "jquery";
 
 const UserProfile = () => {
   const [userDeatils, setUserDeatils] = useState(null);
-  const [imageSrc, setImageSrc] = useState("");
-  const [drivingLicenceImage, setDrivingLicence] = useState("");
-  const [aadharImage, setAadharImage] = useState("");
   const [activeTab, setActiveTab] = useState("details");
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
-
+  const isScreenSize = useScreenSize().isScreenSmall;
   const [editFormInfo, setEditFormInfo] = useState({
     first_name: "",
     last_name: "",
@@ -25,42 +23,6 @@ const UserProfile = () => {
     dob: "",
     address: "",
   });
-  useEffect(() => {
-    if (userDeatils?.profile_image?.data) {
-      try {
-        const uint8Array = new Uint8Array(userDeatils.profile_image.data);
-        const base64String = btoa(String.fromCharCode.apply(null, uint8Array));
-        setImageSrc(`data:image/png;base64,${base64String}`);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    if (userDeatils?.aadhar_image?.data) {
-      try {
-        const uint8Array = new Uint8Array(userDeatils.aadhar_image.data);
-        const base64String = btoa(String.fromCharCode.apply(null, uint8Array));
-
-        setAadharImage(`data:image/png;base64,${base64String}`);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    if (userDeatils?.driving_license_image.data) {
-      try {
-        const uint8Array = new Uint8Array(
-          userDeatils.driving_license_image.data
-        );
-
-        const base64String = btoa(String.fromCharCode.apply(null, uint8Array));
-
-        setDrivingLicence(`data:image/png;base64,${base64String}`);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-  }, [userDeatils]);
-
   const token = localStorage.getItem("authToken");
   const fetchUserData = async () => {
     setIsLoaderOpen(true);
@@ -171,7 +133,12 @@ const UserProfile = () => {
 
   return (
     <div
-      style={{ marginTop: "5%", padding: "25px", paddingTop: "10px" }}
+    style={{ 
+      marginTop: "5%", 
+      padding: isScreenSize ? "0" : "0px", 
+      paddingTop: isScreenSize ? "0" : "0px" 
+    }}
+    
       className="rounded-lg w-full"
     >
       {isLoaderOpen && <Loader />}
@@ -307,8 +274,8 @@ const UserProfile = () => {
           <div className="shadow-lg relative">
             <div className="relative">
               <img
-                src={imageSrc}
-                className="w-full h-[260px] object-cover rounded-lg"
+                src={userDeatils?.profile_img_url}
+                className={`w-full ${isScreenSize?'h-[200px]':'h-[260px]'}  object-cover rounded-lg`}
               />
               <div className="absolute bottom-4 right-4 flex p-3 rounded-full shadow-md cursor-pointer">
                 <FileUpload
@@ -321,10 +288,10 @@ const UserProfile = () => {
             </div>
 
             <div className="rounded-lg" style={{ padding: "10px" }}>
-              <div className="absolute bottom-[20px] left-5">
+              <div className={`absolute ${isScreenSize?'bottom-[50px] left-1':'bottom-[20px] left-5'} `}>
                 <img
                   src="https://img.freepik.com/premium-vector/silhouette-young-man-profile-against-stark-black-background_1058532-30803.jpg?w=360"
-                  className="w-[110px] h-[110px] rounded-full border-4 border-white shadow-lg"
+                  className={` ${isScreenSize?'w-[90px] h-[90px]':'w-[110px] h-[110px]'} rounded-full border-4 border-white shadow-lg`}
                 />
               </div>
               <div className="mt-16 flex justify-center space-x-8 ">
@@ -368,13 +335,12 @@ const UserProfile = () => {
           </div>
 
           <div
-          className="p-6 bg-gradient-to-r from-[#abbaab] to-[#ffffff] h-[300px] rounded-lg shadow-md"
-
+            className="p-6 bg-gradient-to-l from-[#caefd7] via-[#f5bfd7] to-[#abc9e9] h-[315px] no-scrollbar overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200  rounded-lg rounded-b-none shadow-md"
             style={{ padding: "20px" }}
           >
             {activeTab === "details" && (
               <div>
-                <div className="flex flex-wrap items-center justify-between mb-5">
+                <div className="flex flex-wrap items-center  justify-between mb-5">
                   <div className="text-xl font-semibold text-[#6f82c6]">
                     User Details
                   </div>
@@ -444,13 +410,13 @@ const UserProfile = () => {
                 >
                   User Documents
                 </h2>
-                <div className="flex justify-start items-center">
+                <div className="md:flex justify-start items-center">
                   <div className="flex justify-start items-center">
                     <p style={{ margin: "0px 10px" }} className="text-lg">
                       Drivers Licence:
                     </p>
                     <img
-                      src={drivingLicenceImage}
+                      src={userDeatils.driving_license_img_url}
                       className="w-48 h-20 rounded-lg"
                       style={{ margin: "10px" }}
                     ></img>
@@ -473,7 +439,7 @@ const UserProfile = () => {
                       Aadhar Card :
                     </p>
                     <img
-                      src={aadharImage}
+                      src={userDeatils?.aadhar_img_url}
                       className="w-48 h-20 rounded-lg"
                       style={{ margin: "10px" }}
                     ></img>

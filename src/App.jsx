@@ -40,9 +40,9 @@ const App = () => {
               ? isSidebarHovered
                 ? { marginLeft: "14%" }
                 : { marginLeft: "5%" }
-              : { marginLeft: "0%", padding: "10px" }
-            : { marginLeft: "0%", padding: "10px" }),
-          ...(!isScreenSmall && { fontSize: "14px", padding: "8px" }),
+              : { marginLeft: "0%", padding: "00px" }
+            : { marginLeft: "0%", padding: "0px" }),
+          ...(!isScreenSmall && { fontSize: "14px", padding: "0px" }),
         }}
         className={`transition-all duration-300  ${
           isScreenSmall && "w-full"

@@ -14,6 +14,7 @@ const menuItems = [
 const SideBar = ({ setIsSidebarHovered }) => {
   const location = useLocation();
   const [activeMenu, setActiveMenu] = useState(location.pathname);
+  console.log(location.pathname == "/viewCars", " loaction is ");
   const [isHovered, setIsHovered] = useState(false);
   const { isScreenSmall } = useScreenSize();
 
@@ -21,29 +22,41 @@ const SideBar = ({ setIsSidebarHovered }) => {
     setActiveMenu(route);
   };
 
+  console.log(activeMenu, "ActiveMenu is Hello");
+
   return (
     <>
       {!isScreenSmall && (
         <div
           className="h-screen bg-gradient-to-b from-[#caefd7] via-[#f5bfd7] to-[#abc9e9] shadow-lg transition-all duration-300 flex flex-col"
           style={{
-            width: isHovered ? "200px" : "64px",
+            width:
+              isHovered && location.pathname != "/viewCars" ? "200px" : "64px",
             marginTop: ".8%",
             padding: "10px",
             marginRight: "15px",
           }}
           onMouseEnter={() => {
-            setIsHovered(true);
-            setIsSidebarHovered(true);
+            if (location.pathname != "/viewCars") {
+              setIsHovered(true);
+              setIsSidebarHovered(true);
+            }
           }}
           onMouseLeave={() => {
-            setIsHovered(false);
-            setIsSidebarHovered(false);
+            if (location.pathname != "/viewCars") {
+              setIsHovered(false);
+              setIsSidebarHovered(false);
+            }
           }}
         >
           <ul
             className="mt-6 space-y-3"
-            style={{ width: isHovered ? "170px" : "40px" }}
+            style={{
+              width:
+                isHovered && location.pathname != "/viewCars"
+                  ? "170px"
+                  : "40px",
+            }}
           >
             {menuItems.map(({ route, label, icon: Icon }) => (
               <li key={route}>
@@ -58,7 +71,9 @@ const SideBar = ({ setIsSidebarHovered }) => {
                   onClick={() => handleScroll(route)}
                 >
                   <Icon size={20} />
-                  {isHovered && <span>{label}</span>}
+                  {isHovered && location.pathname != "/viewCars" && (
+                    <span>{label}</span>
+                  )}
                 </Link>
               </li>
             ))}

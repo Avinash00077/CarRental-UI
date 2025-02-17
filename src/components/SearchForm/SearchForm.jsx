@@ -33,7 +33,7 @@ const SearchForm = ({ fromWhere }) => {
     e.preventDefault();
     if (pickUpDate !== "" && pickUpTime !== "") {
       navigate(
-        `/viewCars?pickUpDate=${pickUpDate}&toDate=${dropOffDate}&location=${selectedLocation}`
+        `/viewCars?pickUpDate=${pickUpDate}&toDate=${dropOffDate}&location=${selectedLocation}&pickupTime=${pickUpTime}&dropoffTime=${dropOffTime}`
       );
     }
   };
