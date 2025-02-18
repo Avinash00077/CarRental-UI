@@ -48,6 +48,12 @@ const CarsDisplay = ({ category }) => {
       2,
       "0"
     )}/${String(pickUpDate.getDate()).padStart(2, "0")}`;
+  const userSelectedDates = {
+    fromDate: formattedPickUpDate,
+    dropOffDate: formattedDropOffDate,
+    pickupTime: pickupTime,
+    dropOffTime: dropOffTime,
+  };
   useEffect(() => {
     setIsLoderOpen(true);
     const fetchData = async () => {
@@ -94,6 +100,7 @@ const CarsDisplay = ({ category }) => {
         {isBookingOpen && (
           <BookingModel
             carInfo={selectedCar}
+            userSelectedDates={userSelectedDates}
             closeModal={() => setIsBookingOpen(false)}
           />
         )}
@@ -142,10 +149,9 @@ const CarsDisplay = ({ category }) => {
               marginTop: "80px",
             }}
           >
-            $
             {!isScreenSize && (
               <div className="w-[99%]">
-                <Filters />
+                <Filters userSelectedDates={userSelectedDates} />
               </div>
             )}
             <div className="w-[1%] relative left-1">
@@ -177,7 +183,8 @@ const CarsDisplay = ({ category }) => {
                     name={item.name}
                     description={item.description}
                     price={item.price}
-                    image={item.image}
+                    userSelectedDates={userSelectedDates}
+                    image={item.car_cover_img_url}
                     image_ext={item.image_ext}
                     location={item.location}
                     onBookNow={handleBookNow}

@@ -8,6 +8,7 @@ const CarItem = ({
   description,
   image,
   brand,
+  userSelectedDates,
   availability,
   daily_rent,
   model_year,
@@ -16,14 +17,6 @@ const CarItem = ({
   location,
   onBookNow,
 }) => {
-  const isBase64 = typeof image === "string" && image.startsWith("data:image");
-  const base64String = btoa(
-    new Uint8Array(image.data).reduce(
-      (data, byte) => data + String.fromCharCode(byte),
-      ""
-    )
-  );
-  const imageString = `data:image/${image_ext};base64,${base64String}`;
   const [carsLeft, setCarsLeft] = useState(5);
   useEffect(() => {
     setCarsLeft(Math.floor(Math.random() * 6) + 1);
@@ -49,7 +42,7 @@ const CarItem = ({
         </p>
         <div className="flex items-center justify-center">
           <img
-            src={imageString}
+            src={image}
             alt="Car"
             className="w-[70%] h-48 object-fit rounded-xl "
           />

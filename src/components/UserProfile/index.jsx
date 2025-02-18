@@ -133,12 +133,11 @@ const UserProfile = () => {
 
   return (
     <div
-    style={{ 
-      marginTop: "5%", 
-      padding: isScreenSize ? "0" : "0px", 
-      paddingTop: isScreenSize ? "0" : "0px" 
-    }}
-    
+      style={{
+        marginTop: "5%",
+        padding: isScreenSize ? "0" : "0px",
+        paddingTop: isScreenSize ? "0" : "0px",
+      }}
       className="rounded-lg w-full"
     >
       {isLoaderOpen && <Loader />}
@@ -275,7 +274,9 @@ const UserProfile = () => {
             <div className="relative">
               <img
                 src={userDeatils?.profile_img_url}
-                className={`w-full ${isScreenSize?'h-[200px]':'h-[260px]'}  object-cover rounded-lg`}
+                className={`w-full ${
+                  isScreenSize ? "h-[200px]" : "h-[260px]"
+                }  object-cover rounded-lg`}
               />
               <div className="absolute bottom-4 right-4 flex p-3 rounded-full shadow-md cursor-pointer">
                 <FileUpload
@@ -288,10 +289,16 @@ const UserProfile = () => {
             </div>
 
             <div className="rounded-lg" style={{ padding: "10px" }}>
-              <div className={`absolute ${isScreenSize?'bottom-[50px] left-1':'bottom-[20px] left-5'} `}>
+              <div
+                className={`absolute ${
+                  isScreenSize ? "bottom-[50px] left-1" : "bottom-[20px] left-5"
+                } `}
+              >
                 <img
                   src="https://img.freepik.com/premium-vector/silhouette-young-man-profile-against-stark-black-background_1058532-30803.jpg?w=360"
-                  className={` ${isScreenSize?'w-[90px] h-[90px]':'w-[110px] h-[110px]'} rounded-full border-4 border-white shadow-lg`}
+                  className={` ${
+                    isScreenSize ? "w-[90px] h-[90px]" : "w-[110px] h-[110px]"
+                  } rounded-full border-4 border-white shadow-lg`}
                 />
               </div>
               <div className="mt-16 flex justify-center space-x-8 ">
@@ -335,7 +342,9 @@ const UserProfile = () => {
           </div>
 
           <div
-            className="p-6 bg-gradient-to-l from-[#caefd7] via-[#f5bfd7] to-[#abc9e9] h-[315px] no-scrollbar overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200  rounded-lg rounded-b-none shadow-md"
+            className={`p-6   ${
+              isScreenSize ? "w-[390px] h-[47vh] bg-gradient-to-l from-[#caefd7] via-[#f5bfd7] to-[#abc9e9]":'h-[41vh] bg-gradient-to-t from-[#caefd7] via-[#f5bfd7] to-[#abc9e9]'
+            } no-scrollbar overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200  rounded-lg rounded-b-none shadow-md`}
             style={{ padding: "20px" }}
           >
             {activeTab === "details" && (
@@ -387,7 +396,7 @@ const UserProfile = () => {
                       key={index}
                       style={{ padding: "10px" }}
                       className={`p-4 flex items-center rounded-lg shadow-lg transition-transform transform hover:-translate-y-1 hover:bg-[#6f82c6] hover:text-white 
-  ${item.label == "User Address" ? "w-[600px]" : ""} 
+  ${item.label == "User Address" ? "w-[350px] h-[100px]" : ""} 
   ${item.status || ""}`}
                     >
                       <div
@@ -412,7 +421,10 @@ const UserProfile = () => {
                 </h2>
                 <div className="md:flex justify-start items-center">
                   <div className="flex justify-start items-center">
-                    <p style={{ margin: "0px 10px" }} className="text-lg">
+                    <p
+                      style={{ margin: "0px 10px", width: "150px" }}
+                      className="text-lg"
+                    >
                       Drivers Licence:
                     </p>
                     <img
@@ -431,11 +443,11 @@ const UserProfile = () => {
                       type="Licence"
                     />
                   </div>
-                  <div
-                    className="flex justify-start items-center"
-                    style={{ margin: "0px 40px" }}
-                  >
-                    <p style={{ margin: "0px 10px" }} className="text-lg">
+                  <div className="flex justify-start items-center">
+                    <p
+                      style={{ margin: "0px 10px", width: "150px" }}
+                      className="text-lg"
+                    >
                       Aadhar Card :
                     </p>
                     <img

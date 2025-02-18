@@ -1,28 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import constants from "../../config/constants";
 import Loader from "../../components/Loader/Loader";
+import { Calendar } from "primereact/calendar";
+import "primereact/resources/primereact.min.css";
+import { calculateDaysBetween, parseDate,formatDateToYYYYMMDD } from "../../utils/dateUtils";
+import { useScreenSize } from "../../context/screenSizeContext";
+import "primereact/resources/themes/lara-light-blue/theme.css";
 
-const BookingModel = ({ carInfo, closeModal }) => {
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
+  const [startDate, setStartDate] = useState(
+    parseDate(userSelectedDates?.fromDate) || ""
+  );
+  const [endDate, setEndDate] = useState(
+    parseDate(userSelectedDates?.dropOffDate) || ""
+  );
+  const isScreenSize = useScreenSize().isScreenSmall;
   const [totalAmount, setTotalAmount] = useState(0);
   const [totalDays, setTotalDays] = useState(0);
   const token = localStorage.getItem("authToken");
   const [isLoaderOpen, setLoaderOpen] = useState(false);
 
   // Function to calculate total days and amount
-  const handleDateChange = () => {
-    if (startDate && endDate) {
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      const dayDiff = (end - start) / (1000 * 3600 * 24);
-      setTotalDays(dayDiff);
+  // const calculateDaysBetween = (fromDate, toDate) => {
+  //   if (!fromDate || !toDate) return 0;
 
+  //   const from = new Date(fromDate);
+  //   const to = new Date(toDate);
+
+  //   const differenceInTime = to.getTime() - from.getTime(); // Difference in milliseconds
+  //   const differenceInDays = differenceInTime / (1000 * 60 * 60 * 24); // Convert to days
+
+  //   console.log(
+  //     differenceInDays,
+  //     differenceInTime,
+  //     "' Calculated duration is '"
+  //   ); // Debug log
+  //   return differenceInDays;
+  // };
+  useEffect(() => {
+    if (userSelectedDates) {
+      const duration = calculateDaysBetween(startDate, endDate);
+      console.log(duration, " Caliculated duration is ");
+      setTotalDays(duration);
       const rentPerDay = parseFloat(carInfo[0].daily_rent);
-      setTotalAmount(rentPerDay * dayDiff);
+      setTotalAmount(rentPerDay * duration);
     }
-  };
+  }, [startDate, endDate]);
 
   // Function to dynamically load the Razorpay script
   const loadRazorpayScript = () => {
@@ -48,7 +72,7 @@ const BookingModel = ({ carInfo, closeModal }) => {
     };
     try {
       const response = await axios.put(
-        `${constants.API_BASE_URL}/booking`,
+        `${constants.API_BASE_URL}/user/booking`,
         payload,
         {
           headers: {
@@ -117,15 +141,17 @@ const BookingModel = ({ carInfo, closeModal }) => {
 
     const payload = {
       car_id: carInfo[0].car_id,
-      start_date: startDate,
-      end_date: endDate,
+      start_date: formatDateToYYYYMMDD(startDate),
+      end_date: formatDateToYYYYMMDD(endDate),
+      start_time:userSelectedDates.start_time || "10:00",
+      end_time:userSelectedDates.end_time||"11:00",
       payment_mode: "ONLINE",
       total_price: totalAmount,
     };
 
     try {
       const response = await axios.post(
-        `${constants.API_BASE_URL}/booking`,
+        `${constants.API_BASE_URL}/user/booking`,
         payload,
         {
           headers: {
@@ -151,8 +177,13 @@ const BookingModel = ({ carInfo, closeModal }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50" >
-      <div className="bg-white dark:bg-neutral-900 text-black dark:text-white rounded-lg shadow-xl w-full max-w-lg p-6 space-y-6 relative" style={{padding:"20px"}}>
+    <div className="fixed inset-0 flex items-center justify-center z-50">
+      <div
+        className={`bg-white dark:bg-neutral-900 text-black dark:text-white rounded-lg shadow-xl ${
+          isScreenSize ? "w-[370px]" : "w-full"
+        } max-w-lg p-6 space-y-6 relative`}
+        style={{ padding: "20px" }}
+      >
         {/* Close Button */}
         <button
           className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 dark:hover:text-gray-300 text-2xl"
@@ -164,7 +195,9 @@ const BookingModel = ({ carInfo, closeModal }) => {
 
         {/* Car Details */}
         <div className="text-center">
-          <h2 className="text-2xl font-bold" style={{padding:"10px"}}>{carInfo[0].name}</h2>
+          <h2 className="text-2xl font-bold" style={{ padding: "10px" }}>
+            {carInfo[0].name}
+          </h2>
           <p className="text-gray-500 dark:text-gray-400">
             {carInfo[0].brand} - {carInfo[0].model_year}
           </p>
@@ -179,30 +212,32 @@ const BookingModel = ({ carInfo, closeModal }) => {
         {/* Booking Form */}
         <div className="space-y-4 dark:bg-neutral-800 p-4 rounded-lg">
           <div>
-            <label className="block text-medium " style={{padding:"10px"}}>
+            <label className="block text-medium " style={{ padding: "10px" }}>
               Booking Start Date
             </label>
-            <input
-              type="date"
+            <Calendar
+              className={`${"w-full h-10"}`}
+              id="buttondisplay"
               value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="w-full px-4 py-2 border rounded-sm mt-2"
-              onBlur={handleDateChange}
-              style={{padding:"5px"}}
+              placeholder="PickUp Date"
+              onChange={(e) => setStartDate(e.value)}
+              minDate={new Date()}
+              showIcon
             />
           </div>
 
           <div>
-            <label className="block " style={{padding:"10px"}}>
+            <label className="block " style={{ padding: "10px" }}>
               Booking End Date
             </label>
-            <input
-              type="date"
+            <Calendar
+              className={`${"w-full h-10"}`}
+              id="buttondisplay"
               value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="w-full px-4 py-2 border rounded-lg mt-2"
-              onBlur={handleDateChange}
-              style={{padding:"5px"}}
+              placeholder="DropOff Date"
+              onChange={(e) => setEndDate(e.value)}
+              minDate={new Date()}
+              showIcon
             />
           </div>
         </div>
@@ -218,10 +253,10 @@ const BookingModel = ({ carInfo, closeModal }) => {
         )}
 
         {/* Next to Pay Button */}
-        <div className="mt-6" style={{padding:"10px",paddingTop:"20px"}}>
+        <div className="mt-6" style={{ padding: "10px", paddingTop: "20px" }}>
           <button
             onClick={postBooking}
-            style={{padding:"7px"}}
+            style={{ padding: "7px" }}
             className="w-full text-white p-2 text-lg bg-[#6f82c6] font-medium border-[#6f82c6] rounded-lg hover:bg-gray-100 hover:text-black hover:border-[#6f82c6] transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md hover:shadow-lg"
           >
             Next to Pay

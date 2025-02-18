@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import SearchForm from "../SearchForm/SearchForm";
 
-const Filters = () => {
+const Filters = ({userSelectedDates}) => {
   const [selectedOptions, setSelectedOptions] = useState([]);
-
   // Handle checkbox changes
   const handleChange = (event) => {
     const value = event.target.value;
@@ -21,9 +20,9 @@ const Filters = () => {
     <div className="h-full">
       <div
         className="flex justify-between items-center  w-full "
-        style={{ padding: "10px", paddingTop:"15px" }}
+        style={{ padding: "10px", paddingTop: "15px" }}
       >
-        <div className="" >
+        <div className="">
           <p className="text-xl font-semibold">Filter </p>
         </div>
         <div>
@@ -41,19 +40,24 @@ const Filters = () => {
         className="w-full h-[1px] bg-gray-300"
         style={{ margin: "5px 0px" }}
       ></div>
-      <SearchForm fromWhere="insideCars" />
+      <SearchForm fromWhere="insideCars" userSelectedDates ={userSelectedDates} />
       <div
         className="w-full h-[1px] bg-gray-300"
         style={{ margin: "10px 0px" }}
-      > </div>
+      >
+        {" "}
+      </div>
       <div className="flex flex-col space-y-2">
         <p
           className="text-start text-lg font-semibold"
-          style={{ margin: "10px" , marginTop:"5px"}}
+          style={{ margin: "10px", marginTop: "5px" }}
         >
           Vehicle Models{" "}
         </p>
-        <div className="no-scrollbar m-2  h-[200px] overflow-y-auto bg-white rounded-2xl shadow-xl p-2" style={{padding:"15px 20px", margin:"0px 10px"}}>
+        <div
+          className="no-scrollbar m-2  h-[200px] overflow-y-auto bg-white rounded-2xl shadow-xl p-2"
+          style={{ padding: "15px 20px", margin: "0px 10px" }}
+        >
           {[
             "Maruti Suzuki Swift",
             "Hyundai i20",
@@ -63,7 +67,11 @@ const Filters = () => {
             "Maruti Suzuki Baleno",
             "Toyota Innova Crysta",
           ].map((option, index) => (
-            <label key={index} className="flex items-center m-2" style={{marginTop:"0px"}}>
+            <label
+              key={index}
+              className="flex items-center m-2"
+              style={{ marginTop: "0px" }}
+            >
               <input
                 type="checkbox"
                 value={option}
@@ -71,7 +79,10 @@ const Filters = () => {
                 onChange={handleChange}
                 className="mr-3 scale-150 h-8 w-3"
               />
-             <p className="" style={{marginLeft:"10px"}}> {option}</p>
+              <p className="" style={{ marginLeft: "10px" }}>
+                {" "}
+                {option}
+              </p>
             </label>
           ))}
         </div>

@@ -1,23 +1,49 @@
-import React, { useState } from "react";
-import Date from "../../assets/date.png";
+import React, { useState, useEffect } from "react";
 import Clock from "../../assets/clock.png";
 import location from "../../assets/gps.png";
 import LocationModal from "./LocationModal";
 import { useNavigate } from "react-router-dom";
 import { useScreenSize } from "../../context/screenSizeContext";
+import { calculateDaysBetween, parseDate } from "../../utils/dateUtils";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import "primereact/resources/primereact.min.css";
 import "primereact/resources/themes/lara-light-blue/theme.css";
 
-const SearchForm = ({ fromWhere }) => {
+const SearchForm = ({ fromWhere, userSelectedDates }) => {
+  const parseDate = (dateString) => {
+    if (userSelectedDates) {
+      const [year, month, day] = dateString?.split("/").map(Number);
+      return new Date(year, month - 1, day);
+    }
+  };
   const [selectedLocation, setSelectedLocation] = useState("Hyderabad");
   const [openModal, setOpenModal] = useState(false);
-  const [pickUpDate, setPickUpDate] = useState("");
-  const [pickUpTime, setPickUpTime] = useState("");
+  const [pickUpDate, setPickUpDate] = useState(
+    parseDate(userSelectedDates?.fromDate) || ""
+  );
+  const [pickUpTime, setPickUpTime] = useState(
+    userSelectedDates?.pickupTime || "10:00 AM"
+  );
   const { isScreenSmall } = useScreenSize();
-  const [dropOffDate, setDropOffDate] = useState("");
-  const [dropOffTime, setDropOffTime] = useState("");
+  const [dropOffDate, setDropOffDate] = useState(
+    parseDate(userSelectedDates?.dropOffDate) || ""
+  );
+  const [dropOffTime, setDropOffTime] = useState(
+    userSelectedDates?.dropOffTime || "11:00 AM"
+  );
+  const [rideDuration, setRideDuration] = useState("");
+
+  useEffect(() => {
+    if (userSelectedDates) {
+      const duration = calculateDaysBetween(
+        userSelectedDates.fromDate,
+        userSelectedDates.dropOffDate
+      );
+      console.log(duration, " Caliculated duration is ");
+      setRideDuration(duration);
+    }
+  }, [userSelectedDates]);
   const navigate = useNavigate();
   const timeSlots = [
     "10:00 AM",
@@ -29,6 +55,7 @@ const SearchForm = ({ fromWhere }) => {
     "04:00 PM",
     "05:00 PM",
   ];
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (pickUpDate !== "" && pickUpTime !== "") {
@@ -90,7 +117,10 @@ const SearchForm = ({ fromWhere }) => {
           ) : (
             <div className="text-start">
               <p>Select Date & Time</p>
-              <p>Ride Duration - (1 day)</p>
+              <p className="flex">
+                Ride Duration - {rideDuration}{" "}
+                <div style={{ margin: "0px 5px" }}>Days</div>
+              </p>
             </div>
           )}
         </div>
@@ -114,6 +144,7 @@ const SearchForm = ({ fromWhere }) => {
               value={pickUpDate}
               placeholder="Pickup Date"
               onChange={(e) => setPickUpDate(e.value)}
+              minDate={new Date()}
               showIcon
             />
           </div>
@@ -179,6 +210,7 @@ const SearchForm = ({ fromWhere }) => {
               value={dropOffDate}
               placeholder="DropOff Date"
               onChange={(e) => setDropOffDate(e.value)}
+              minDate={new Date()}
               showIcon
             />
           </div>
@@ -229,7 +261,7 @@ const SearchForm = ({ fromWhere }) => {
           <button
             type="submit"
             style={{ margin: "20px 20px" }}
-            className="w-[80%] h-[43px] bg-gradient-to-r from-[#6578ca] to-[#9cb0f1] text-white text-[18px] font-medium rounded-full focus:outline-none"
+            className="w-[80%] h-[43px] bg-gradient-to-r from-[#6578ca] to-[#9cb0f1] text-white text-[18px] font-medium rounded-full focus:outline-none cursor-pointer"
           >
             Search
           </button>

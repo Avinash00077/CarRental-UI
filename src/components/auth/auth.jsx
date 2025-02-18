@@ -580,7 +580,7 @@ const AuthModal = () => {
                 <button
                   style={{ padding: "8px", margin: "10px 0px" }}
                   type="submit"
-                  className="bg-[#6e81c7] hover:bg-[#5a6aa1] text-medium py-2 px-5 rounded-full text-white shadow-lg transition-colors duration-300  hover:text-[15px]"
+                  className="bg-[#6e81c7] hover:bg-[#5a6aa1] text-medium py-2 px-5 rounded-full text-white shadow-lg transition-colors cursor-pointer duration-300  hover:text-[15px]"
                 >
                   {isLogin ? "Log In" : "Sign Up"}
                 </button>
@@ -703,7 +703,7 @@ const AuthModal = () => {
                       marginTop: "25px",
                     }}
                     type="submit"
-                    className="bg-[#6e81c7] w-5/12 hover:bg-[#5a6aa1] text-medium py-2 px-5 rounded-full text-white  shadow-lg transition-colors duration-300"
+                    className="bg-[#6e81c7] w-5/12 hover:bg-[#5a6aa1] text-medium py-2 px-5 rounded-full text-white  shadow-lg transition-colors duration-300 cursor-pointer"
                   >
                     {authStatus == "verifyEmail" ? "Send Otp" : "Submit"}
                   </button>
