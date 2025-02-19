@@ -200,7 +200,7 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
               className=" bg-wh text-gray-600 hover:text-gray-900 dark:hover:text-gray-300 text-2xl"
               onClick={closeModal}
             >
-              <FaArrowLeft />
+              <FaArrowLeft  style={{color:"black"}}/>
             </button>
           </div>
         </div>
