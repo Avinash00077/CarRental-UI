@@ -64,8 +64,8 @@ const CarsDisplay = ({ category }) => {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-            location: userLocation ||"Hyderabad",
-            start_date: formattedickUpDate|| "2025/02/21",
+            location: userLocation ||"",
+            start_date: formattedPickUpDate|| "2025/02/21",
             end_date: formattedDropOffDate ||"2025/02/23",
             end_time: dropOffTime||"11:00",
             start_time: pickupTime||"10:00",
