@@ -184,7 +184,7 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div
-        className={`bg-gradient-to-r from-[#caefd7] via-[#f5bfd7] to-[#abc9e9] rounded-lg shadow-xl ${
+        className={`bg-white rounded-lg shadow-xl ${
           isScreenSize ? "w-[100%] h-[100vh]" : "w-[70%]"
         } max-w-lg p-6 space-y-6 relative`}
         style={{ padding: "20px" }}
@@ -197,7 +197,7 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
           <div>
             {" "}
             <button
-              className=" text-gray-600 hover:text-gray-900 dark:hover:text-gray-300 text-2xl"
+              className=" bg-wh text-gray-600 hover:text-gray-900 dark:hover:text-gray-300 text-2xl"
               onClick={closeModal}
             >
               <FaArrowLeft />
@@ -223,7 +223,7 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
         </div>
 
         {/* Booking Form */}
-        <div className="space-y-4 dark:bg-neutral-800 p-4 rounded-lg">
+        <div className="space-y-4 bg-white p-4 rounded-lg">
           <div>
             <label className="block text-medium " style={{ padding: "10px" }}>
               Booking Start Date
@@ -258,7 +258,7 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
         {/* Total Days and Total Amount */}
         {totalDays > 0 && (
           <div
-            className={`mt-4 text-center dark:bg-neutral-800 p-4 rounded-lg`}
+            className={`mt-4 text-center bg-white p-4 rounded-lg`}
             style={isScreenSize ? { marginTop: "20px" } : { marginTop: "5px" }}
           >
             <p
