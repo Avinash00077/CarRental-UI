@@ -12,14 +12,15 @@ import {
 } from "../../utils/dateUtils";
 import { useScreenSize } from "../../context/screenSizeContext";
 import "primereact/resources/themes/lara-light-blue/theme.css";
+
 const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
+  const isScreenSize = useScreenSize().isScreenSmall;
   const [startDate, setStartDate] = useState(
-    parseDate(userSelectedDates?.fromDate) || ""
+    isScreenSize ? "2025/02/26": parseDate(userSelectedDates?.fromDate) || ""
   );
   const [endDate, setEndDate] = useState(
-    parseDate(userSelectedDates?.dropOffDate) || ""
+    isScreenSize ? "2025/02/27": parseDate(userSelectedDates?.dropOffDate) || ""
   );
-  const isScreenSize = useScreenSize().isScreenSmall;
   const [totalAmount, setTotalAmount] = useState(0);
   const [totalDays, setTotalDays] = useState(0);
   const token = localStorage.getItem("authToken");
@@ -183,7 +184,7 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div
-        className={`bg-white dark:bg-neutral-900 text-black dark:text-white rounded-lg shadow-xl ${
+        className={`bg-white rounded-lg shadow-xl ${
           isScreenSize ? "w-[100%] h-[100vh]" : "w-[70%]"
         } max-w-lg p-6 space-y-6 relative`}
         style={{ padding: "20px" }}
