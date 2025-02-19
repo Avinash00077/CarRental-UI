@@ -64,15 +64,15 @@ const CarsDisplay = ({ category }) => {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-            location: userLocation ||"",
-            start_date: "2025/02/21",
-            end_date: "2025/02/23",
-            end_time: dropOffTime||"11:00",
-            start_time: pickupTime||"10:00",
+            location: userLocation || "",
+            start_date: isScreenSize ? "2025/02/26" : formattedPickUpDate,
+            end_date: isScreenSize ? "2025/02/27" : formattedDropOffDate,
+            end_time: dropOffTime || "11:00",
+            start_time: pickupTime || "10:00",
           },
         });
-        //           start_date: formattedPickUpDate|| "2025/02/21",
-       // end_date: formattedDropOffDate ||"2025/02/23",
+        //start_date: formattedPickUpDate|| "2025/02/21",
+        // end_date: formattedDropOffDate ||"2025/02/23",
 
         setCarList(response.data.data);
         setIsLoderOpen(false);
@@ -137,41 +137,50 @@ const CarsDisplay = ({ category }) => {
         )}
       </div>
       <div
-        className={` flex ${isLogin ? "w-full" : "w-full"} `}
+        className={` flex ${isLogin ? "w-full" : "w-full"} ${
+          isScreenSize && "h-14"
+        }`}
         style={{
           marginTop: "65px",
         }}
       >
-        {!isScreenSize && (
-          <div
-            className="heading w-[22%] shadow-2xl flex h-screen fixed top-0 left-0"
-            style={{
-              marginLeft: isLogin ? "4.5%" : undefined,
-              marginTop: "80px",
-            }}
-          >
-            {!isScreenSize && (
-              <div className="w-[99%]">
-                <Filters userSelectedDates={userSelectedDates} />
-              </div>
-            )}
-            <div className="w-[1%] relative left-1">
-              <div className="h-full w-[1px] bg-gray-400"></div>
+        <div
+          className={`heading lg:w-[22%] ${
+            isScreenSize
+              ? " w-full "
+              : "shadow-2xl flex h-screen fixed top-0 left-0"
+          }`}
+          style={{
+            marginLeft: isLogin && !isScreenSize ? "4.5%" : undefined,
+            marginTop: isScreenSize ? "0px" : "80px",
+          }}
+        >
+          {isScreenSize && <Filters userSelectedDates={userSelectedDates} />}
+
+          {!isScreenSize && (
+            <div className="w-[99%]">
+              <Filters userSelectedDates={userSelectedDates} />
             </div>
+          )}
+          <div className="w-[1%] relative left-1 hidden lg:flex">
+            <div className="h-full w-[1px] bg-gray-400"></div>
           </div>
-        )}
+        </div>
 
         <div
-          className={` flex ${isScreenSize ? "w-full" : "w-[73.5%]"}fixed  `}
-          style={{ marginLeft: isScreenSize ? "0px" : "22.5%" }}
+          className={` flex ${isScreenSize ? "w-full" : "w-[73.5%]"} fixed `}
+          style={{
+            marginLeft: isScreenSize ? "0px" : "22.5%",
+            marginTop: isScreenSize ? "12%" : "0%",
+          }}
         >
           {carList.length > 0 ? (
             <div
               className={`${
-                isScreenSize ? "h-[530px] " : "h-[630px] "
-              } no-scrollbar overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200`}
+                isScreenSize ? "h-[73vh] " : "h-[630px] "
+              } no-scrollbar overflow-y-auto w-full scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200`}
             >
-              <div className="md:grid md:grid-cols-3 md:gap-4">
+              <div className="md:grid md:grid-cols-3 md:gap-4 w-full">
                 {carList.map((item, index) => (
                   <CarItem
                     key={index}

@@ -278,7 +278,7 @@ const UserProfile = () => {
                   isScreenSize ? "h-[200px]" : "h-[260px]"
                 }  object-cover rounded-lg`}
               />
-              <div className="absolute bottom-4 right-4 flex p-3 rounded-full shadow-md cursor-pointer">
+              <div className="absolute bg-amber-400 bottom-4 right-4 flex p-3 rounded-full shadow-md cursor-pointer">
                 <FileUpload
                   type="profile"
                   onUpload={(data) =>

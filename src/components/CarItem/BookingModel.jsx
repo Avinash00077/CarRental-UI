@@ -3,11 +3,15 @@ import axios from "axios";
 import constants from "../../config/constants";
 import Loader from "../../components/Loader/Loader";
 import { Calendar } from "primereact/calendar";
+import { FaArrowLeft } from "react-icons/fa6";
 import "primereact/resources/primereact.min.css";
-import { calculateDaysBetween, parseDate,formatDateToYYYYMMDD } from "../../utils/dateUtils";
+import {
+  calculateDaysBetween,
+  parseDate,
+  formatDateToYYYYMMDD,
+} from "../../utils/dateUtils";
 import { useScreenSize } from "../../context/screenSizeContext";
 import "primereact/resources/themes/lara-light-blue/theme.css";
-
 const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
   const [startDate, setStartDate] = useState(
     parseDate(userSelectedDates?.fromDate) || ""
@@ -143,8 +147,8 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
       car_id: carInfo[0].car_id,
       start_date: formatDateToYYYYMMDD(startDate),
       end_date: formatDateToYYYYMMDD(endDate),
-      start_time:userSelectedDates.start_time || "10:00",
-      end_time:userSelectedDates.end_time||"11:00",
+      start_time: userSelectedDates.start_time || "10:00",
+      end_time: userSelectedDates.end_time || "11:00",
       payment_mode: "ONLINE",
       total_price: totalAmount,
     };
@@ -180,21 +184,29 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div
         className={`bg-white dark:bg-neutral-900 text-black dark:text-white rounded-lg shadow-xl ${
-          isScreenSize ? "w-[370px]" : "w-full"
+          isScreenSize ? "w-[100%] h-[100vh]" : "w-[70%]"
         } max-w-lg p-6 space-y-6 relative`}
         style={{ padding: "20px" }}
       >
         {/* Close Button */}
-        <button
-          className="absolute top-4 right-4 text-gray-600 hover:text-gray-900 dark:hover:text-gray-300 text-2xl"
-          onClick={closeModal}
-        >
-          &times;
-        </button>
         {isLoaderOpen && <Loader />}
 
         {/* Car Details */}
-        <div className="text-center">
+        <div>
+          <div>
+            {" "}
+            <button
+              className=" text-gray-600 hover:text-gray-900 dark:hover:text-gray-300 text-2xl"
+              onClick={closeModal}
+            >
+              <FaArrowLeft />
+            </button>
+          </div>
+        </div>
+        <div
+          className="text-center"
+          style={isScreenSize ? { marginTop: "20%" } : {}}
+        >
           <h2 className="text-2xl font-bold" style={{ padding: "10px" }}>
             {carInfo[0].name}
           </h2>
@@ -244,9 +256,22 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
 
         {/* Total Days and Total Amount */}
         {totalDays > 0 && (
-          <div className="mt-4 text-center dark:bg-neutral-800 p-4 rounded-lg">
-            <p className="font-semibold text-lg">Total Days: {totalDays}</p>
-            <p className="font-semibold text-lg text-[#6f82c6] dark:text-blue-400">
+          <div
+            className={`mt-4 text-center dark:bg-neutral-800 p-4 rounded-lg`}
+            style={isScreenSize ? { marginTop: "20px" } : { marginTop: "5px" }}
+          >
+            <p
+              className="font-semibold text-lg"
+              style={
+                isScreenSize ? { marginTop: "10px" } : { marginTop: "5px" }
+              }
+            >
+              Total Days: {totalDays}
+            </p>
+            <p
+              className="font-semibold text-lg text-[#6f82c6] dark:text-blue-400"
+              style={isScreenSize ? { marginTop: "5px" } : { marginTop: "5px" }}
+            >
               Total Rent: ₹{totalAmount.toFixed(2)}
             </p>
           </div>
