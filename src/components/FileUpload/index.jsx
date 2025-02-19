@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { ImagePlus, Pencil } from "lucide-react";
+import { useScreenSize } from "../../context/screenSizeContext";
 
 const FileUpload = ({ onUpload, type }) => {
   const [preview, setPreview] = useState(false);
@@ -7,6 +8,7 @@ const FileUpload = ({ onUpload, type }) => {
   const [LisenceValue, setLisenceValue] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
   const [aadharNumber, setAadharNumber] = useState("");
+  const { isScreenSmall } = useScreenSize();
   const [error, setError] = useState({ aadhar: "", licence: "", expiry: "" });
   const fileInputRef = useRef(null);
   const handleClick = () => {
@@ -127,10 +129,12 @@ const FileUpload = ({ onUpload, type }) => {
     <div>
       {preview && (
         <div
-          className="fixed inset-0 flex items-center justify-center w-[50%] z-50"
-          style={{ marginLeft: "30%", padding: "20px" }}
+          className={`fixed inset-0 flex items-center justify-center ${
+            isScreenSmall ? "w-[100%]" : "w-[50%]"
+          } z-50`}
+          style={isScreenSmall ? {} : { marginLeft: "30%", padding: "20px" }}
         >
-          <div className="bg-white dark:bg-neutral-950 relative flex flex-col items-center justify-center rounded-lg shadow-2xl w-[90%] mx-4 md:mx-0 p-8 space-y-8">
+          <div className="bg-gradient-to-b from-[#caefd7] via-[#f5bfd7] to-[#abc9e9]  relative flex flex-col items-center justify-center rounded-lg shadow-2xl w-[90%] mx-4 md:mx-0 p-8 space-y-8">
             <h1
               className="text-[#6f82c6] font-semibold text-lg"
               style={{ margin: "10px 0px" }}

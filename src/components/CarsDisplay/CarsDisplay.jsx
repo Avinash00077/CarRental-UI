@@ -58,18 +58,17 @@ const CarsDisplay = ({ category }) => {
     setIsLoderOpen(true);
     const fetchData = async () => {
       const token = localStorage.getItem("authToken");
-
       try {
         console.log(formattedPickUpDate, " formated pickup date ");
         const response = await axios.get(`${constants.API_BASE_URL}/user/car`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
-            location: userLocation,
-            start_date: formattedPickUpDate,
-            end_date: formattedDropOffDate,
-            end_time: dropOffTime,
-            start_time: pickupTime,
+            location: userLocation ||"Hyderabad",
+            start_date: formattedickUpDate|| "2025/02/21",
+            end_date: formattedDropOffDate ||"2025/02/23",
+            end_time: dropOffTime||"11:00",
+            start_time: pickupTime||"10:00",
           },
         });
 

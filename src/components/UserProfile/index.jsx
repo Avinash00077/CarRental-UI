@@ -325,7 +325,6 @@ const UserProfile = () => {
                 >
                   Documents
                 </button>
-
                 <button
                   className={`px-4 py-2 font-semibold transition-all ${
                     activeTab === "status"
@@ -343,7 +342,9 @@ const UserProfile = () => {
 
           <div
             className={`p-6   ${
-              isScreenSize ? "w-[390px] h-[47vh] bg-gradient-to-l from-[#caefd7] via-[#f5bfd7] to-[#abc9e9]":'h-[41vh] bg-gradient-to-t from-[#caefd7] via-[#f5bfd7] to-[#abc9e9]'
+              isScreenSize
+                ? "w-[100%] h-[47vh] bg-gradient-to-l from-[#caefd7] via-[#f5bfd7] to-[#abc9e9]"
+                : "h-[41vh] bg-gradient-to-t from-[#caefd7] via-[#f5bfd7] to-[#abc9e9]"
             } no-scrollbar overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200  rounded-lg rounded-b-none shadow-md`}
             style={{ padding: "20px" }}
           >
