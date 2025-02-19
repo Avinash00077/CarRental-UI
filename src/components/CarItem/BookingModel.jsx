@@ -184,7 +184,7 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div
-        className={`bg-white rounded-lg shadow-xl ${
+        className={`bg-gradient-to-r from-[#caefd7] via-[#f5bfd7] to-[#abc9e9] rounded-lg shadow-xl ${
           isScreenSize ? "w-[100%] h-[100vh]" : "w-[70%]"
         } max-w-lg p-6 space-y-6 relative`}
         style={{ padding: "20px" }}
