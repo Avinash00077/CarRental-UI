@@ -3,15 +3,22 @@ import { Link, useLocation } from "react-router-dom";
 import { Home, CalendarCheck, Car, Star, User } from "lucide-react";
 import { useScreenSize } from "../../context/screenSizeContext";
 
-const menuItems = [
+const SideBar = ({ setIsSidebarHovered }) => {
+  let menuItems
+    const adminAuthToken = localStorage.getItem("adminAuthToken")
+    if (adminAuthToken) {
+      menuItems = [
+        { route: "/admin/car-upload", label: "Car Upload", icon: Car },
+      ];
+    }else{
+ menuItems = [
   { route: "/", label: "Home", icon: Home },
   { route: "/bookings", label: "Bookings", icon: CalendarCheck },
   { route: "/ride", label: "Ride", icon: Car },
   { route: "/reviews", label: "Reviews", icon: Star },
   { route: "/userProfile", label: "Profile", icon: User },
 ];
-
-const SideBar = ({ setIsSidebarHovered }) => {
+    }
   const location = useLocation();
   const [activeMenu, setActiveMenu] = useState(location.pathname);
   console.log(location.pathname == "/viewCars", " loaction is ");

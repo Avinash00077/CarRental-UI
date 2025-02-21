@@ -11,9 +11,11 @@ import SideBar from "./components/SideBar";
 import MyBookings from "./components/MyBookings";
 import PaymentPage from "./components/PaymentPage/PaymentPage";
 import UserProfile from "./components/UserProfile";
+import AdminCarUpload from "./components/admin/cars/car-upload-edit";
 
 const App = () => {
   const [isLogin, setIsLogin] = useState(false);
+  const [isAdminLogin, setIsAdminLogin] = useState(false);
   const [isSidebarHovered, setIsSidebarHovered] = useState(false);
   const { isScreenSmall } = useScreenSize();
   useEffect(() => {
@@ -21,12 +23,16 @@ const App = () => {
     if (authToken) {
       setIsLogin(true);
     }
+    const adminAuthToken = localStorage.getItem("adminAuthToken")
+    if (adminAuthToken) {
+      setIsAdminLogin(true);
+    }
   }, []);
 
   return (
     <div className="flex h-screen ">
       {/* Sidebar */}
-      {isLogin && (
+      {(isLogin || isAdminLogin) && (
         <div className="fixed" style={{ marginTop: "4%" }}>
           <SideBar setIsSidebarHovered={setIsSidebarHovered} />{" "}
         </div>
@@ -64,6 +70,8 @@ const App = () => {
           <Route path="/booking" element={<PaymentPage />} />
           <Route path="/admin" element={<AdminAuth />} />
           <Route path="/userProfile" element={<UserProfile />} />
+          <Route path="/admin/car-upload" element={<AdminCarUpload />} />
+
         </Routes>
       </div>
     </div>

@@ -3,6 +3,8 @@ import axios from "axios";
 import constants from "../../config/constants";
 import Loader from "../Loader/Loader";
 import Modal from "../Modal/Modal";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const AdminAuth = () => {
   const [adminForm, setAdminForm] = useState({
@@ -28,10 +30,10 @@ const AdminAuth = () => {
         },
       });
       console.log(response.data," response Value is ")
-      localStorage.setItem("authToken", response.data.data.token);
+      localStorage.setItem("adminAuthToken", response.data.data.token);
       localStorage.setItem(
-        "userDetails",
-        JSON.stringify(response.data.data.userDetails)
+        "adminDetails",
+        JSON.stringify(response.data.data.adminDetails)
       );
       setOpenLoader(false);
       setOpenModal(true);
@@ -42,6 +44,10 @@ const AdminAuth = () => {
       setModalMessage("Admin Login Success");
       console.log(response, "Response Value is");
       setOpenModal(true);
+      setTimeout(() => {
+        window.location.href = "/admin/car-upload";
+      }, 4000);
+   
     } catch (error) {
       console.error(
         "Error in handleSubmit:",

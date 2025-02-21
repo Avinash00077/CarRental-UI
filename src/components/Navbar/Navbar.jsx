@@ -8,14 +8,21 @@ const Navbar = () => {
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const userDetails = localStorage.getItem("userDetails");
+  const adminDetails  = localStorage.getItem("adminDetails")
   const [isOpen,setOpen] = useState(false)
   const isScreenSize = useScreenSize().isScreenSmall;
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
-    if (authToken) {
-      const { email, user_name } = JSON.parse(userDetails);
+    const adminAuthToken = localStorage.getItem("adminAuthToken")
+ 
+    if (authToken && !adminAuthToken) {
+      const { user_name } = JSON.parse(userDetails);
       //setUserName(email.split('@')[0]);
       setUserName(user_name);
+    }
+    if(!authToken && adminAuthToken){
+      const {name} = JSON.parse(adminDetails);
+      setUserName(name);
     }
   }, []);
 
@@ -37,6 +44,8 @@ const Navbar = () => {
     console.log("Logout request sent!"); // Replace with actual logout logic
     localStorage.removeItem("authToken");
     localStorage.removeItem("userDetails");
+    localStorage.removeItem("adminAuthToken");
+    localStorage.removeItem("adminDetails");
     setUserName(null);
     navigate("/");
     location.reload();
