@@ -128,7 +128,7 @@ const CarsDisplay = ({ category }) => {
         )}
         {isModalOpen && (
           <div>
-            <Modal
+            <Moda
               typeOfModal="failure"
               message="Something went wrong"
               closeModal={closeModal}

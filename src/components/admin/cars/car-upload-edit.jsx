@@ -6,18 +6,20 @@ import Loader from "../../Loader/Loader";
 
 
 const AdminCarUpload = () => {
-    const [isLoggedInUser,setIsLoggedInUser]= useState(true)
+  const [isLoggedInUser,setIsLoggedInUser]= useState(true)
   const isScreenSize = useScreenSize().isScreenSmall;
   const authToken = localStorage.getItem("adminAuthToken");
   if(!authToken){
     window.location.href = "/";
   }
   const locationsData = [
-    "Hyderbad",
-    "Delhi",
-    "Chennai",
+    "Vijayawada",
+    "Narsapur",
+    "Hyderabad",
+    "Vijayawada",
+    "Narsapur",
     "Bangalore",
-    "Gujarat",
+    "Chennai",
     "Kolkata",
   ];
 
@@ -26,7 +28,7 @@ const AdminCarUpload = () => {
     brand: "",
     model_year: "",
     daily_rent: "",
-    availability: "N",
+    availability: "Y",
     registration_number: "",
     location: "",
     description: "",

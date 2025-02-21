@@ -14,12 +14,15 @@ import { useScreenSize } from "../../context/screenSizeContext";
 import "primereact/resources/themes/lara-light-blue/theme.css";
 
 const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
+  console.log(carInfo, "car info is ");
   const isScreenSize = useScreenSize().isScreenSmall;
   const [startDate, setStartDate] = useState(
-    isScreenSize ? "2025/02/26": parseDate(userSelectedDates?.fromDate) || ""
+    isScreenSize ? "2025/02/26" : parseDate(userSelectedDates?.fromDate) || ""
   );
   const [endDate, setEndDate] = useState(
-    isScreenSize ? "2025/02/27": parseDate(userSelectedDates?.dropOffDate) || ""
+    isScreenSize
+      ? "2025/02/27"
+      : parseDate(userSelectedDates?.dropOffDate) || ""
   );
   const [totalAmount, setTotalAmount] = useState(0);
   const [totalDays, setTotalDays] = useState(0);
@@ -184,109 +187,143 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div
-        className={`bg-white rounded-lg shadow-xl ${
-          isScreenSize ? "w-[100%] h-[100vh]" : "w-[70%]"
-        } max-w-lg p-6 space-y-6 relative`}
-        style={{ padding: "20px" }}
+        className={` flex items-center justify-center  bg-white rounded-lg shadow-xl ${
+          isScreenSize ? "w-[100%] h-[100vh] flex-col" : "w-[70%] "
+        }  p-6 space-y-6 relative`}
       >
         {/* Close Button */}
         {isLoaderOpen && <Loader />}
-
-        {/* Car Details */}
-        <div>
-          <div>
-            {" "}
-            <button
-              className=" bg-wh text-gray-600 hover:text-gray-900 dark:hover:text-gray-300 text-2xl"
-              onClick={closeModal}
-            >
-              <FaArrowLeft  style={{color:"black"}}/>
-            </button>
-          </div>
-        </div>
         <div
-          className="text-center"
-          style={isScreenSize ? { marginTop: "20%" } : {}}
+          className={`${
+            isScreenSize ? "w-full h-[240px] relative" : "w-1/2 h-[500px] rounded-lg"
+          }  rounded-r-none relative`}
         >
-          <h2 className="text-2xl font-bold" style={{ padding: "10px" }}>
-            {carInfo[0].name}
-          </h2>
-          <p className="text-gray-500 dark:text-gray-400">
-            {carInfo[0].brand} - {carInfo[0].model_year}
-          </p>
-          <p className="text-sm text-gray-600 dark:text-gray-300 mt-2">
-            {carInfo[0].description}
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {carInfo[0].location}
-          </p>
-        </div>
-
-        {/* Booking Form */}
-        <div className="space-y-4 bg-white p-4 rounded-lg">
-          <div>
-            <label className="block text-medium " style={{ padding: "10px" }}>
-              Booking Start Date
-            </label>
-            <Calendar
-              className={`${"w-full h-10"}`}
-              id="buttondisplay"
-              value={startDate}
-              placeholder="PickUp Date"
-              onChange={(e) => setStartDate(e.value)}
-              minDate={new Date()}
-              showIcon
-            />
-          </div>
-
-          <div>
-            <label className="block " style={{ padding: "10px" }}>
-              Booking End Date
-            </label>
-            <Calendar
-              className={`${"w-full h-10"}`}
-              id="buttondisplay"
-              value={endDate}
-              placeholder="DropOff Date"
-              onChange={(e) => setEndDate(e.value)}
-              minDate={new Date()}
-              showIcon
-            />
-          </div>
-        </div>
-
-        {/* Total Days and Total Amount */}
-        {totalDays > 0 && (
-          <div
-            className={`mt-4 text-center bg-white p-4 rounded-lg`}
-            style={isScreenSize ? { marginTop: "20px" } : { marginTop: "5px" }}
-          >
-            <p
-              className="font-semibold text-lg"
+          {isScreenSize && (
+            <FaArrowLeft
+              className=" absolute text-black text-3xl z-[9999]  p-1 rounded-full"
               style={
-                isScreenSize ? { marginTop: "10px" } : { marginTop: "5px" }
+                isScreenSize
+                  ? { color: "black", marginTop: "10px" }
+                  : { color: "black" }
+              }
+            />
+          )}
+          <img
+            src={carInfo[0].car_cover_img_url}
+            className={`w-full h-full ${!isScreenSize&& 'rounded-lg'} rounded-r-none object-fit`}
+            alt="Car"
+          />
+        </div>
+
+        <div className={`${isScreenSize ? "w-full overflow-y-scroll" : " w-1/2 "} h-full`}>
+          <div>
+            {!isScreenSize && (
+              <div>
+                {" "}
+                <button
+                  className=" bg-wh text-gray-600 hover:text-gray-900 cursor-pointer dark:hover:text-gray-300 text-2xl"
+                  onClick={closeModal}
+                >
+                  <FaArrowLeft
+                  className="text-3xl"
+                    style={
+                      isScreenSize ? {} : { color: "black", marginTop: "-30px",paddingLeft:"10px" }
+                    }
+                  />
+                </button>
+              </div>
+            )}
+          </div>
+          <div className="text-center">
+            <div className={`flex ${ !isScreenSize?'flex-col':'space-x-6'} justify-ceneter items-center`}>
+            <h2 className="text-2xl font-bold" style={{ padding: "10px" }}>
+              {carInfo[0].name}
+            </h2>
+            <p className="text-gray-500 text-[20px] dark:text-gray-400">
+              {carInfo[0].brand} - {carInfo[0].model_year}
+            </p>
+            </div>
+            <p className="text-[16px] text-gray-600 dark:text-gray-300 mt-2">
+              {carInfo[0].description}
+            </p>
+            <p className="text-[20px] items-end text-gray-500 dark:text-gray-400">
+              {carInfo[0].location}
+            </p>
+          </div>
+
+          {/* Booking Form */}
+          <div
+            className="space-y-4 bg-white p-4 rounded-lg"
+            style={{ padding: "0px 10px" }}
+          >
+            <div>
+              <label className="block text-medium " style={{ padding: "10px" }}>
+                Booking Start Date
+              </label>
+              <Calendar
+                className={`${"w-full h-10"}`}
+                id="buttondisplay"
+                value={startDate}
+                placeholder="PickUp Date"
+                onChange={(e) => setStartDate(e.value)}
+                minDate={new Date()}
+                showIcon
+              />
+            </div>
+
+            <div>
+              <label className="block " style={{ padding: "10px" }}>
+                Booking End Date
+              </label>
+              <Calendar
+                className={`${"w-full h-10"}`}
+                id="buttondisplay"
+                value={endDate}
+                placeholder="DropOff Date"
+                onChange={(e) => setEndDate(e.value)}
+                minDate={new Date()}
+                showIcon
+              />
+            </div>
+          </div>
+
+          {/* Total Days and Total Amount */}
+          {totalDays > 0 && (
+            <div
+              className={`mt-4 text-center bg-white p-4 rounded-lg`}
+              style={
+                isScreenSize ? { marginTop: "20px" } : { marginTop: "5px" }
               }
             >
-              Total Days: {totalDays}
-            </p>
-            <p
-              className="font-semibold text-lg text-[#6f82c6] dark:text-blue-400"
-              style={isScreenSize ? { marginTop: "5px" } : { marginTop: "5px" }}
-            >
-              Total Rent: ₹{totalAmount.toFixed(2)}
-            </p>
-          </div>
-        )}
+              <p
+                className="font-semibold text-lg"
+                style={
+                  isScreenSize ? { marginTop: "5px" } : { marginTop: "5px" }
+                }
+              >
+                Total Days: {totalDays}
+              </p>
+              <p
+                className="font-semibold text-lg text-[#6f82c6] dark:text-blue-400"
+                style={
+                  isScreenSize ? { marginTop: "5px" } : { marginTop: "5px" }
+                }
+              >
+                Total Rent: ₹{totalAmount.toFixed(2)}
+              </p>
+            </div>
+          )}
 
-        {/* Next to Pay Button */}
-        <div className="mt-6" style={{ padding: "10px", paddingTop: "20px" }}>
-          <button
-            onClick={postBooking}
-            style={{ padding: "7px" }}
-            className="w-full text-white p-2 text-lg bg-[#6f82c6] font-medium border-[#6f82c6] rounded-lg hover:bg-gray-100 hover:text-black hover:border-[#6f82c6] transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md hover:shadow-lg"
-          >
-            Next to Pay
-          </button>
+          {/* Next to Pay Button */}
+          <div className="mt-6" style={{ padding: "10px", paddingTop: "20px" }}>
+            <button
+              onClick={postBooking}
+              style={{ padding: "7px" }}
+              className="w-full text-white p-2 text-lg bg-[#6f82c6] font-medium border-[#6f82c6] rounded-lg hover:bg-gray-100 hover:text-black hover:border-[#6f82c6] transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md hover:shadow-lg"
+            >
+              Next to Pay
+            </button>
+          </div>
         </div>
       </div>
     </div>

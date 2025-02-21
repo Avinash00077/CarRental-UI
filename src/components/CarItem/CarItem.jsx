@@ -44,7 +44,8 @@ const CarItem = ({
           <img
             src={image}
             alt="Car"
-            className="w-[70%] h-48 object-fit rounded-xl "
+            className="w-[70%] h-48 object-fit rounded-xl cursor-pointer "
+            onClick={() => onBookNowClick(id)}
           />
         </div>
       </div>
@@ -73,7 +74,7 @@ const CarItem = ({
             style={{ marginBottom: "10px" }}
           />
           <button
-            className="w-[140px] py-2 h-[40px] text-sm bg-[#6f82c6] font-medium border border-[#6f82c6] text-white rounded-lg shadow-md transition-all duration-300 ease-in-out 
+            className="w-[140px] py-2 h-[40px] text-sm bg-[#6f82c6] font-medium border cursor-pointer border-[#6f82c6] text-white rounded-lg shadow-md transition-all duration-300 ease-in-out 
   hover:bg-[#5a6bab] hover:border-[#5a6bab] hover:shadow-lg hover:scale-105 
   active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#6f82c6]"
             onClick={() => onBookNowClick(id)}
