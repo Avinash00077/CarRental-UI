@@ -25,6 +25,8 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
       : parseDate(userSelectedDates?.dropOffDate) || ""
   );
   const [totalAmount, setTotalAmount] = useState(0);
+  const [tACValue,setTACValue]=useState(false);
+  const [openTAC, setOpenTAc] = useState(false);
   const [totalDays, setTotalDays] = useState(0);
   const token = localStorage.getItem("authToken");
   const [isLoaderOpen, setLoaderOpen] = useState(false);
@@ -104,6 +106,11 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
     }
   };
 
+  const handleAcceptButton = (value)=>{
+    setOpenTAc(false);
+    value =="accept"?setTACValue(true):
+    setTACValue(false)
+  }
   // Function to start the Razorpay payment process
   const startRazorpayPayment = async (bookingId, amount) => {
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
@@ -195,7 +202,9 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
         {isLoaderOpen && <Loader />}
         <div
           className={`${
-            isScreenSize ? "w-full h-[240px] relative" : "w-1/2 h-[500px] rounded-lg"
+            isScreenSize
+              ? "w-full h-[240px] relative"
+              : "w-1/2 h-[500px] rounded-lg"
           }  rounded-r-none relative`}
         >
           {isScreenSize && (
@@ -210,12 +219,18 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
           )}
           <img
             src={carInfo[0].car_cover_img_url}
-            className={`w-full h-full ${!isScreenSize&& 'rounded-lg'} rounded-r-none object-fit`}
+            className={`w-full h-full ${
+              !isScreenSize && "rounded-lg"
+            } rounded-r-none object-fit`}
             alt="Car"
           />
         </div>
 
-        <div className={`${isScreenSize ? "w-full overflow-y-scroll" : " w-1/2 "} h-full`}>
+        <div
+          className={`${
+            isScreenSize ? "w-full overflow-y-scroll" : " w-1/2 "
+          } h-full`}
+        >
           <div>
             {!isScreenSize && (
               <div>
@@ -225,9 +240,15 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
                   onClick={closeModal}
                 >
                   <FaArrowLeft
-                  className="text-3xl"
+                    className="text-3xl"
                     style={
-                      isScreenSize ? {} : { color: "black", marginTop: "-30px",paddingLeft:"10px" }
+                      isScreenSize
+                        ? {}
+                        : {
+                            color: "black",
+                            marginTop: "-30px",
+                            paddingLeft: "10px",
+                          }
                     }
                   />
                 </button>
@@ -235,13 +256,17 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
             )}
           </div>
           <div className="text-center">
-            <div className={`flex ${ !isScreenSize?'flex-col':'space-x-6'} justify-ceneter items-center`}>
-            <h2 className="text-2xl font-bold" style={{ padding: "10px" }}>
-              {carInfo[0].name}
-            </h2>
-            <p className="text-gray-500 text-[20px] dark:text-gray-400">
-              {carInfo[0].brand} - {carInfo[0].model_year}
-            </p>
+            <div
+              className={`flex ${
+                !isScreenSize ? "flex-col" : "space-x-6"
+              } justify-ceneter items-center`}
+            >
+              <h2 className="text-2xl font-bold" style={{ padding: "10px" }}>
+                {carInfo[0].name}
+              </h2>
+              <p className="text-gray-500 text-[20px] dark:text-gray-400">
+                {carInfo[0].brand} - {carInfo[0].model_year}
+              </p>
             </div>
             <p className="text-[16px] text-gray-600 dark:text-gray-300 mt-2">
               {carInfo[0].description}
@@ -313,15 +338,41 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
               </p>
             </div>
           )}
+          <div className="flex" style={{padding:"5px 10px"}}>
+            {" "}
+            <input type="checkbox" checked={tACValue} onChange={()=>setOpenTAc(true)}  className="cursor-pointer" ></input> <label style={{paddingLeft:"5px"}}>Terms and conditions</label>{" "}
+          </div>
+          {openTAC && (
+            <div className="fixed inset-0 flex items-center justify-center z-50">
+              <div className="lg:w-2xl h-[60vh]  bg-gray-100">
+                <div>content here</div>
+                <div className="flex justify-end space-x-10">
+                  <button
+                    className="bg-blue-500 rounded-lg cursor-pointer "
+                    style={{ padding: "7px 20px", margin: "0px 10px" }}
+                    onClick={()=>handleAcceptButton("reject")}
+                  >
+                    Reject
+                  </button>
+                  <button
+                    className="bg-green-600 rounded-lg cursor-pointer  "
+                    style={{ padding: "7px 20px", margin: "0px 10px" }}
+                    onClick={()=>handleAcceptButton("accept")}
+                  >
+                    Accept
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
-          {/* Next to Pay Button */}
           <div className="mt-6" style={{ padding: "10px", paddingTop: "20px" }}>
             <button
-              onClick={postBooking}
+              onClick={tACValue&& postBooking}
               style={{ padding: "7px" }}
-              className="w-full text-white p-2 text-lg bg-[#6f82c6] font-medium border-[#6f82c6] rounded-lg hover:bg-gray-100 hover:text-black hover:border-[#6f82c6] transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md hover:shadow-lg"
+              className={`w-full text-white p-2 text-lg ${tACValue?'bg-[#6f82c6] font-medium border-[#6f82c6] rounded-lg hover:bg-gray-100 hover:text-black hover:border-[#6f82c6] transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md hover:shadow-lg':' text-gray-700 bg-gray-100   disabled cursor-not-allowed'}`}
             >
-              Next to Pay
+              Procced To Pay
             </button>
           </div>
         </div>

@@ -27,14 +27,14 @@ const Modal = ({ typeOfModal, message, closeModal, onConfirm }) => {
       {typeOfModal === "success" && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div
-            className="bg-white dark:bg-neutral-950 relative rounded-lg shadow-2xl w-full max-w-xs h-44 mx-4 md:mx-0 p-8 space-y-8"
-            style={{ padding: "20px" }}
+            className="relative rounded-lg shadow-2xl w-full max-w-sm h-56 mx-4 md:mx-0 p-8 space-y-8"
+            //style={{ padding: "20px" }}
           >
             <div className="flex items-center justify-center">
               <img src={successCar} alt="Success" className="h-28 w-28" />
             </div>
-            <div className="inset-0 flex items-center justify-center text-center z-10 overflow-auto p-4">
-              <p className="text-lg font-sm text-black break-words">
+            <div className="inset-0 flex items-center justify-center text-center z-10 overflow-auto">
+              <p className="text-lg font-sm text-black break-words pb-6">
                 {message}
               </p>
             </div>
@@ -45,8 +45,8 @@ const Modal = ({ typeOfModal, message, closeModal, onConfirm }) => {
         <>
           <div className="fixed inset-0 flex items-center justify-center z-50">
             <div
-              className="bg-white dark:bg-neutral-950 relative backdrop-opacity-95 rounded-lg shadow-2xl w-full max-w-[80%] md:max-w-[20%] h-36 mx-4 md:mx-0 p-6 md:p-8 space-y-6 md:space-y-8"
-              style={{ padding: "20px" }}
+              className="bg-white  relative backdrop-opacity-95 rounded-lg shadow-2xl w-full max-w-[80%] md:max-w-[25%] h-52 mx-4 md:mx-0 p-6 md:p-8 space-y-6 md:space-y-8"
+              //style={{ padding: "20px" }}
             >
               <h2 className="text-center text-xl font-semibold">
                 Confirm Logout
@@ -56,19 +56,19 @@ const Modal = ({ typeOfModal, message, closeModal, onConfirm }) => {
               </p>
               <div
                 className="flex  md:flex-row justify-center md:justify-end items-center pt-4 space-y-2 md:space-y-0 md:space-x-2"
-                style={{ marginTop: "10px" }}
+                //style={{ marginTop: "10px" }}
               >
                 <button
                   onClick={closeModal}
                   className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400"
-                  style={{ padding: "6px 12px", margin: "4px" }}
+                  //style={{ padding: "6px 12px", margin: "4px" }}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={onConfirm}
                   className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                  style={{ padding: "6px 12px", margin: "10px" }}
+                  //style={{ padding: "6px 12px", margin: "10px" }}
                 >
                   Logout
                 </button>

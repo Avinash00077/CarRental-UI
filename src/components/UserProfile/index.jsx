@@ -145,11 +145,11 @@ const UserProfile = () => {
         <div className="fixed inset-0  flex items-center justify-center z-50">
           <div
             className="bg-white relative rounded-2xl shadow-2xl w-[570px] h-auto mx-4 md:mx-0 p-8 space-y-8"
-            style={{ padding: "25px" }}
+           // style={{ padding: "25px" }}
           >
             <h2
               className="text-xl text-[#6f82c6] font-semibold mb-4 text-center"
-              style={{ marginBottom: "10px" }}
+              //style={{ marginBottom: "10px" }}
             >
               Edit Your Details
             </h2>
@@ -163,11 +163,13 @@ const UserProfile = () => {
                     value={editFormInfo.first_name || ""}
                     onChange={handleInputChange}
                     className="w-full p-2 border border-gray-400 rounded-lg"
-                    style={{ padding: "5px", margin: "5px 0px" }}
+                   // style={{ padding: "5px", margin: "5px 0px" }}
                     placeholder="First Name"
                   />
                 </div>
-                <div className="w-1/2" style={{ marginLeft: "10px" }}>
+                <div className="w-1/2" 
+                //style={{ marginLeft: "10px" }}
+                >
                   <label className="block font-medium">Last Name</label>
                   <input
                     type="text"
@@ -175,7 +177,7 @@ const UserProfile = () => {
                     value={editFormInfo.last_name || userDeatils.last_name}
                     onChange={handleInputChange}
                     className="w-full p-2 border border-gray-400 rounded-lg"
-                    style={{ padding: "5px", margin: "5px 0px" }}
+                   // style={{ padding: "5px", margin: "5px 0px" }}
                     placeholder="Last Name"
                   />
                 </div>
@@ -187,7 +189,7 @@ const UserProfile = () => {
                 value={editFormInfo.email || ""}
                 onChange={handleInputChange}
                 className="w-full p-2 border border-gray-400 rounded"
-                style={{ padding: "5px", margin: "5px 0px" }}
+                //style={{ padding: "5px", margin: "5px 0px" }}
                 placeholder="Email"
               />
 
@@ -199,31 +201,33 @@ const UserProfile = () => {
                 value={editFormInfo.phone_number || ""}
                 onChange={handleInputChange}
                 className="w-full p-2 border border-gray-400 rounded"
-                style={{ padding: "5px", margin: "5px 0px" }}
+                //style={{ padding: "5px", margin: "5px 0px" }}
                 placeholder="Phone Number"
               />
 
-              {/* Date of Birth */}
+              {/* Driving lisense expiry date */}
               <div className="flex justify-center items-center">
                 <div className="w-1/2">
-                  <label className="block font-medium">Date of Birth</label>
+                  <label className="block font-medium">Driving lisense expiry date</label>
                   <input
                     type="date"
                     name="dob"
                     value={editFormInfo.dob || ""}
                     onChange={handleInputChange}
                     className="w-full p-2 border border-gray-400 rounded"
-                    style={{ padding: "5px", margin: "5px 0px" }}
+                   // style={{ padding: "5px", margin: "5px 0px" }}
                   />
                 </div>
-                <div className="w-1/2" style={{ marginLeft: "10px" }}>
+                <div className="w-1/2" 
+                //style={{ marginLeft: "10px" }}
+                >
                   <label className="block font-medium">Gender</label>
                   <select
                     name="gender"
                     value={editFormInfo.gender || ""}
                     onChange={handleInputChange}
                     className="w-full p-2 border border-gray-400 rounded"
-                    style={{ padding: "7px", margin: "5px 0px" }}
+                   // style={{ padding: "7px", margin: "5px 0px" }}
                   >
                     <option value="">Select Gender</option>
                     <option value="Male">Male</option>
@@ -240,7 +244,7 @@ const UserProfile = () => {
                 value={editFormInfo.address || ""}
                 onChange={handleInputChange}
                 className="w-full p-2 border border-gray-400 rounded"
-                style={{ padding: "5px", margin: "5px 0px" }}
+                //style={{ padding: "5px", margin: "5px 0px" }}
                 placeholder="Enter address"
               />
 
@@ -252,14 +256,14 @@ const UserProfile = () => {
                     setIsEditOpen(false);
                   }}
                   className="bg-gray-300 px-4 py-2 rounded-md"
-                  style={{ padding: "5px 10px", margin: "0px 15px" }}
+                  //style={{ padding: "5px 10px", margin: "0px 15px" }}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   className="bg-blue-500 text-white px-4 py-2 rounded-md"
-                  style={{ padding: "5px 10px", margin: "0px" }}
+                  //style={{ padding: "5px 10px", margin: "0px" }}
                 >
                   Save
                 </button>
@@ -288,10 +292,12 @@ const UserProfile = () => {
               </div>
             </div>
 
-            <div className="rounded-lg" style={{ padding: "10px" }}>
+            <div className="rounded-lg"
+            // style={{ padding: "10px" }}
+            >
               <div
                 className={`absolute ${
-                  isScreenSize ? "bottom-[50px] left-1" : "bottom-[20px] left-5"
+                  isScreenSize ? "bottom-[50px] left-1" : "bottom-[0px] left-5 "
                 } `}
               >
                 <img
@@ -301,14 +307,14 @@ const UserProfile = () => {
                   } rounded-full border-4 border-white shadow-lg`}
                 />
               </div>
-              <div className="mt-16 flex justify-center space-x-8 ">
+              <div className="m-2 flex justify-center space-x-8 ">
                 <button
                   className={`px-4 py-2 font-semibold transition-all ${
                     activeTab === "details"
                       ? "border-b-3 border-blue-500 text-blue-600"
                       : "text-gray-600"
                   }`}
-                  style={{ padding: "0px 5px", margin: "0px" }}
+                  //style={{ padding: "0px 5px", margin: "0px" }}
                   onClick={() => setActiveTab("details")}
                 >
                   Details
@@ -320,7 +326,7 @@ const UserProfile = () => {
                       ? "border-b-3 border-blue-500 text-blue-600"
                       : "text-gray-600"
                   }`}
-                  style={{ padding: "5px 10px", margin: "10px" }}
+                  //style={{ padding: "5px 10px", margin: "10px" }}
                   onClick={() => setActiveTab("documents")}
                 >
                   Documents
@@ -331,7 +337,7 @@ const UserProfile = () => {
                       ? "border-b-3 border-blue-500 text-blue-600"
                       : "text-gray-600"
                   }`}
-                  style={{ padding: "5px 10px", margin: "10px" }}
+                  //style={{ padding: "5px 10px", margin: "10px" }}
                   onClick={() => setActiveTab("status")}
                 >
                   Status
@@ -346,7 +352,7 @@ const UserProfile = () => {
                 ? "w-[100%] h-[47vh] bg-gradient-to-l from-[#caefd7] via-[#f5bfd7] to-[#abc9e9]"
                 : "h-[41vh] bg-gradient-to-t from-[#caefd7] via-[#f5bfd7] to-[#abc9e9]"
             } no-scrollbar overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200  rounded-lg rounded-b-none shadow-md`}
-            style={{ padding: "20px" }}
+            //style={{ padding: "20px" }}
           >
             {activeTab === "details" && (
               <div>
@@ -355,7 +361,9 @@ const UserProfile = () => {
                     User Details
                   </div>
                   <div className="flex items-center font-semibold space-x-2 cursor-pointer">
-                    <span style={{ padding: "5px 10px" }}>Edit</span>
+                    <span 
+                   // style={{ padding: "5px 10px" }}
+                    >Edit</span>
                     <Pencil size={18} onClick={() => setIsEditOpen(true)} />
                   </div>
                 </div>
@@ -395,14 +403,14 @@ const UserProfile = () => {
                   ].map((item, index) => (
                     <div
                       key={index}
-                      style={{ padding: "10px" }}
+                     // style={{ padding: "10px" }}
                       className={`p-4 flex items-center rounded-lg shadow-lg transition-transform transform hover:-translate-y-1 hover:bg-[#6f82c6] hover:text-white 
   ${item.label == "User Address" ? "w-[350px] h-[100px]" : ""} 
   ${item.status || ""}`}
                     >
                       <div
                         className="font-semibold "
-                        style={{ paddingRight: "10px" }}
+                        //style={{ paddingRight: "10px" }}
                       >
                         {item.label} <span>:</span>
                       </div>
@@ -416,22 +424,22 @@ const UserProfile = () => {
               <div>
                 <h2
                   className="text-xl font-semibold mb-2 text-[#6f82c6]"
-                  style={{ margin: "10px 0px" }}
+                  //style={{ margin: "10px 0px" }}
                 >
                   User Documents
                 </h2>
                 <div className="md:flex justify-start items-center">
                   <div className="flex justify-start items-center">
                     <p
-                      style={{ margin: "0px 10px", width: "150px" }}
+                     // style={{ margin: "0px 10px", width: "150px" }}
                       className="text-lg"
                     >
                       Drivers Licence:
                     </p>
                     <img
                       src={userDeatils.driving_license_img_url}
-                      className="w-48 h-20 rounded-lg"
-                      style={{ margin: "10px" }}
+                      className="w-44 h-22 rounded-lg"
+                     // style={{ margin: "10px" }}
                     ></img>
                     <FileUpload
                       onUpload={(data) =>
@@ -446,15 +454,15 @@ const UserProfile = () => {
                   </div>
                   <div className="flex justify-start items-center">
                     <p
-                      style={{ margin: "0px 10px", width: "150px" }}
+                     // style={{ margin: "0px 10px", width: "150px" }}
                       className="text-lg"
                     >
                       Aadhar Card :
                     </p>
                     <img
                       src={userDeatils?.aadhar_img_url}
-                      className="w-48 h-20 rounded-lg"
-                      style={{ margin: "10px" }}
+                      className="w-44 h-22 rounded-lg"
+                     // style={{ margin: "10px" }}
                     ></img>
                     <FileUpload
                       onUpload={(data) =>
