@@ -12,6 +12,7 @@ import MyBookings from "./components/MyBookings";
 import PaymentPage from "./components/PaymentPage/PaymentPage";
 import UserProfile from "./components/UserProfile";
 import AdminCarUpload from "./components/admin/cars/car-upload-edit";
+import UserVerification from "./components/admin/user/UserVerfication";
 
 const App = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -71,7 +72,7 @@ const App = () => {
           <Route path="/admin" element={<AdminAuth />} />
           <Route path="/userProfile" element={<UserProfile />} />
           <Route path="/admin/car-upload" element={<AdminCarUpload />} />
-
+          <Route path="/admin/user-verfication" element={<UserVerification />} />
         </Routes>
       </div>
     </div>

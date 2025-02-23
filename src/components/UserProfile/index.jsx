@@ -5,7 +5,6 @@ import { Pencil } from "lucide-react";
 import Loader from "../Loader/Loader";
 import FileUpload from "../FileUpload";
 import { useScreenSize } from "../../context/screenSizeContext";
-import { data } from "jquery";
 
 const UserProfile = () => {
   const [userDeatils, setUserDeatils] = useState(null);

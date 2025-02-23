@@ -143,11 +143,11 @@ const AdminCarUpload = () => {
           {/* Car Name */}
           <div
             className={`${
-              isScreenSize ? "" : "flex justify-between place-content-evenly"
+              isScreenSize ? "" : "flex w-full space-x-6 justify-between place-content-evenly"
             }`}
           >
-            <div style={{ padding: "10px", margin: "10px" }}>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+            <div className="w-4/12"  >
+              <label className="block text-sm font-medium text-gray-700 mb-1 ">
                 Car Name
               </label>
               <input
@@ -155,7 +155,7 @@ const AdminCarUpload = () => {
                 name="name"
                 placeholder="Enter car name"
                 value={carData.name}
-                style={{ padding: "10px", margin: "10px" }}
+                
                 onChange={handleChange}
                 className="w-full px-3 py-2 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -163,7 +163,7 @@ const AdminCarUpload = () => {
             </div>
 
             {/* Brand */}
-            <div style={{ padding: "10px", margin: "10px" }}>
+            <div className="w-4/12" >
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Brand
               </label>
@@ -172,7 +172,7 @@ const AdminCarUpload = () => {
                 name="brand"
                 placeholder="Enter brand"
                 value={carData.brand}
-                style={{ padding: "10px", margin: "10px" }}
+                
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -180,7 +180,7 @@ const AdminCarUpload = () => {
             </div>
 
             {/* Model Year */}
-            <div style={{ padding: "10px", margin: "10px" }}>
+            <div className="w-4/12"  >
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Model Year
               </label>
@@ -189,7 +189,7 @@ const AdminCarUpload = () => {
                 name="model_year"
                 placeholder="Enter model year"
                 value={carData.model_year}
-                style={{ padding: "10px", margin: "10px" }}
+                
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -198,11 +198,11 @@ const AdminCarUpload = () => {
           </div>
           <div
             className={`${
-              isScreenSize ? "" : "flex justify-between place-content-evenly"
+              isScreenSize ? "" : " w-full flex justify-between place-content-evenly space-x-6"
             }`}
           >
             {/* Daily Rent */}
-            <div style={{ padding: "10px", margin: "10px" }}>
+            <div  className="w-4/12" >
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Daily Rent
               </label>
@@ -211,7 +211,7 @@ const AdminCarUpload = () => {
                 name="daily_rent"
                 placeholder="Enter daily rent"
                 value={carData.daily_rent}
-                style={{ padding: "10px", margin: "10px" }}
+                
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -219,7 +219,7 @@ const AdminCarUpload = () => {
             </div>
 
             {/* Registration Number */}
-            <div style={{ padding: "10px", margin: "10px" }}>
+            <div className="w-4/12" >
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Registration Number
               </label>
@@ -228,7 +228,7 @@ const AdminCarUpload = () => {
                 name="registration_number"
                 placeholder="Enter registration number"
                 value={carData.registration_number}
-                style={{ padding: "10px", margin: "10px" }}
+                
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -236,14 +236,14 @@ const AdminCarUpload = () => {
             </div>
 
             {/* Location */}
-            <div style={{ padding: "10px", margin: "10px" }}>
+            <div className="w-4/12" >
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Location
               </label>
               <select
                 name="location"
                 value={carData.location}
-                style={{ padding: "10px", margin: "10px" }}
+                
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -256,11 +256,11 @@ const AdminCarUpload = () => {
 
           <div
             className={`${
-              isScreenSize ? "" : "flex justify-between place-content-evenly"
+              isScreenSize ? "" : " w-full space-x-6 flex justify-between place-content-evenly"
             }`}
           >
             {/* Car Owner */}
-            <div style={{ padding: "10px", margin: "10px" }}>
+            <div className="w-4/12"  >
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Car Owner
               </label>
@@ -269,7 +269,7 @@ const AdminCarUpload = () => {
                 name="car_owner"
                 placeholder="Enter car owner"
                 value={carData.car_owner}
-                style={{ padding: "10px", margin: "10px" }}
+                
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -277,7 +277,7 @@ const AdminCarUpload = () => {
             </div>
 
             {/* Mileage */}
-            <div style={{ padding: "10px", margin: "10px" }}>
+            <div className="w-4/12" >
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Mileage (km/l)
               </label>
@@ -286,7 +286,7 @@ const AdminCarUpload = () => {
                 name="mileage"
                 placeholder="Enter mileage"
                 value={carData.mileage}
-                style={{ padding: "10px", margin: "10px" }}
+                
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -294,14 +294,14 @@ const AdminCarUpload = () => {
             </div>
 
             {/* Car Type */}
-            <div style={{ padding: "10px", margin: "10px" }}>
+            <div className="w-4/12"  >
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Car Type
               </label>
               <select
                 name="car_type"
                 value={carData.car_type}
-                style={{ padding: "10px", margin: "10px" }}
+                
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -316,11 +316,11 @@ const AdminCarUpload = () => {
 
           <div
             className={`${
-              isScreenSize ? "" : "flex justify-between place-content-evenly"
+              isScreenSize ? "" : " w-full space-x-6 flex justify-between place-content-evenly"
             }`}
           >
             {/* Seater */}
-            <div style={{ padding: "10px", margin: "10px" }}>
+            <div className="w-4/12" >
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Seater
               </label>
@@ -329,7 +329,7 @@ const AdminCarUpload = () => {
                 name="seater"
                 placeholder="Enter number of seats"
                 value={carData.seater}
-                style={{ padding: "10px", margin: "10px" }}
+                
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -337,14 +337,14 @@ const AdminCarUpload = () => {
             </div>
 
             {/* Fastag Availability */}
-            <div style={{ padding: "10px", margin: "10px" }}>
+            <div className="w-4/12" >
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Fastag Availability
               </label>
               <select
                 name="fastag_availability"
                 value={carData.fastag_availability}
-                style={{ padding: "10px", margin: "10px" }}
+                
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -354,7 +354,7 @@ const AdminCarUpload = () => {
               </select>
             </div>
             {/* Location Address */}
-            <div style={{ padding: "10px", margin: "10px" }}>
+            <div className="w-4/12" >
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Location Address
               </label>
@@ -363,7 +363,7 @@ const AdminCarUpload = () => {
                 name="location_address"
                 placeholder="Enter location address"
                 value={carData.location_address}
-                style={{ padding: "10px", margin: "10px" }}
+                
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -376,15 +376,16 @@ const AdminCarUpload = () => {
             }`}
           >
             {/* Description */}
-            <div style={{ padding: "10px", margin: "10px" }}>
+            <div className="w-full">
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Description
               </label>
               <textarea
                 name="description"
                 placeholder="Enter car description"
+                rows={4}
                 value={carData.description}
-                style={{ padding: "10px", margin: "10px" }}
+                
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
@@ -393,17 +394,17 @@ const AdminCarUpload = () => {
           </div>
 
           {/* Image Upload */}
-          <div style={{ padding: "10px", margin: "10px" }}>
+          <div >
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Car Image
             </label>
-            <div className="flex flex-col place-content-evenly justify-center border-2 border-dashed border-gray-300 rounded-md p-4">
+            <div className="flex flex-col place-content-evenly justify-center items-center border-2 border-dashed border-gray-300 rounded-md p-4">
               <FaCloudUploadAlt className="text-3xl text-gray-400 mb-2" />
               <p className="text-gray-600 mb-2">Upload your car image here</p>
               <input
                 type="file"
                 name="car_image"
-                style={{ padding: "10px", margin: "10px" }}
+                
                 onChange={handleFileChange}
                 className="hidden"
                 id="file-upload"
@@ -411,58 +412,60 @@ const AdminCarUpload = () => {
               />
               <label
                 htmlFor="file-upload"
-                style={
-                  isScreenSize
-                    ? {
-                        padding: "10px",
-                        margin: "10px",
-                        width: "200px",
-                        marginLeft: "100px",
-                      }
-                    : {
-                        padding: "10px",
-                        margin: "10px",
-                        width: "500px",
-                        marginLeft: "180px",
-                      }
-                }
+                // style={
+                //   isScreenSize
+                //     ? {
+                //         padding: "10px",
+                //         margin: "10px",
+                //         width: "200px",
+                //         marginLeft: "100px",
+                //       }
+                //     : {
+                //         padding: "10px",
+                //         margin: "10px",
+                //         width: "500px",
+                //         marginLeft: "180px",
+                //       }
+                // }
                 className="px-4 py-2 bg-blue-500 text-white rounded-md cursor-pointer hover:bg-blue-600"
               >
                 Choose File
-              </label>
+              </label >
               {preview && (
                 <img
                   src={preview}
                   alt="Car Preview"
-                  className="mt-4 rounded-md object-cover"
+                  className="mt-4 w-2xs rounded-md object-cover"
                 />
               )}
             </div>
           </div>
 
           {/* Submit Button */}
+          <div className="flex items-end justify-end w-full">
           <button
             type="submit"
-            style={
-              isScreenSize
-                ? {
-                    padding: "10px",
-                    margin: "10px",
-                    width: "200px",
-                    marginLeft: "100px",
-                  }
-                : {
-                    padding: "10px",
-                    margin: "10px",
-                    width: "500px",
-                    marginLeft: "180px",
-                  }
-            }
+            // style={
+            //   isScreenSize
+            //     ? {
+            //         padding: "10px",
+            //         margin: "10px",
+            //         width: "200px",
+            //         marginLeft: "100px",
+            //       }
+            //     : {
+            //         padding: "10px",
+            //         margin: "10px",
+            //         width: "500px",
+            //         marginLeft: "180px",
+            //       }
+            // }
             disabled={loading}
-            className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
+            className="w-2/12  bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
           >
             {loading ? "Uploading..." : "Upload Car"}
           </button>
+          </div>
 
           {/* Error Message */}
           {error && (

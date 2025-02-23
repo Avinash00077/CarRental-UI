@@ -57,11 +57,11 @@ const FileUpload = ({ onUpload, type }) => {
 
   // Validate Licence Format
   const validateLicence = () => {
-    const licenceRegex = /^[A-Z][a-z]{2}\d{7,13}$/; // Example: "DL1234567890123"
+    const licenceRegex = /^[A-Z0-9]{5,20}$/; // Example: "DL1234567890123"
     if (!licenceRegex.test(LisenceValue)) {
       setError((prev) => ({
         ...prev,
-        licence: "Invalid Licence Format (e.g., AP1234567890123).",
+        licence: "Invalid Licence Format (e.g., AP12DS4567).",
       }));
     } else {
       setError((prev) => ({ ...prev, licence: "" }));
@@ -101,11 +101,11 @@ const FileUpload = ({ onUpload, type }) => {
           aadhar: "Please Enter Aaadhar Number",
         }));
       }
-      if (type == "Licence" && LisenceValue.length > 10 && expiryDate !== "") {
+      if (type == "Licence" && LisenceValue.length > 9 && expiryDate !== "") {
         setPreview(false);
         onUpload(data);
       } else {
-        if (!LisenceValue.length < 10) {
+        if (!LisenceValue.length < 9) {
           setError((prev) => ({
             ...prev,
             licence: "Please Enter licence",

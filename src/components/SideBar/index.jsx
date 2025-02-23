@@ -7,9 +7,14 @@ const SideBar = ({ setIsSidebarHovered }) => {
   let menuItems
     const adminAuthToken = localStorage.getItem("adminAuthToken")
     if (adminAuthToken) {
+      const adminDetails = localStorage.getItem("adminDetails");
+      const {user_type} = JSON.parse(adminDetails);
       menuItems = [
         { route: "/admin/car-upload", label: "Car Upload", icon: Car },
       ];
+      if(user_type === 'super_user'){
+        menuItems.push({ route: "/admin/user-verfication", label: "User Verfication", icon: User })
+      }
     }else{
  menuItems = [
   { route: "/", label: "Home", icon: Home },
