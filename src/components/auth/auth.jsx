@@ -36,14 +36,26 @@ const AuthModal = () => {
       setIsLogin(location.state.isLogin);
     }
   }, [location.state]);
+  // const [formData, setFormData] = useState({
+  //   userName: "lokeshreddy",
+  //   firstName: "avinash",
+  //   lastName: "tummuri",
+  //   email: "reddyjlokesh@gmail.com",
+  //   password: "lokesh@0508",
+  //   phone: "6303896539",
+  //   confirmPassword: "Avinash77",
+  //   gender: "",
+  //   dob: "",
+  // });
+
   const [formData, setFormData] = useState({
-    userName: "lokeshreddy",
-    firstName: "avinash",
-    lastName: "tummuri",
-    email: "reddyjlokesh@gmail.com",
-    password: "lokesh@0508",
-    phone: "6303896539",
-    confirmPassword: "Avinash77",
+    userName: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    phone: "",
+    confirmPassword: "",
     gender: "",
     dob: "",
   });
