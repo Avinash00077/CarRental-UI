@@ -18,7 +18,7 @@ const Home = () => {
     }
   }, []);
   return (
-    <div className="w-full">
+    <div className="w-full" id="Home">
       <div className="flex w-full" style={{ marginTop: "1%" }}>
         <div
           className={`${isLogin ? "w-full" : "w-full"}`}

@@ -25,12 +25,17 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
       : parseDate(userSelectedDates?.dropOffDate) || ""
   );
   const [totalAmount, setTotalAmount] = useState(0);
-  const [tACValue,setTACValue]=useState(false);
+  const [tACValue, setTACValue] = useState(false);
   const [openTAC, setOpenTAc] = useState(false);
   const [totalDays, setTotalDays] = useState(0);
   const token = localStorage.getItem("authToken");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedToDate, setSelectedToDate] = useState("");
+  const [selectedToTime, setSelectedToTime] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
   const [isLoaderOpen, setLoaderOpen] = useState(false);
-
+  const [selectedTodatesInfo, setSelectedTodatesInfo] = useState(null);
+  const [openToDateInputs, setOpenToDateInputs] = useState(false);
   // Function to calculate total days and amount
   // const calculateDaysBetween = (fromDate, toDate) => {
   //   if (!fromDate || !toDate) return 0;
@@ -48,6 +53,18 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
   //   ); // Debug log
   //   return differenceInDays;
   // };
+
+  const timeSlots = selectedDate
+    ? carInfo[0].available_slots.find(
+        (slot) => slot.available_date === selectedDate
+      )?.time_slots || []
+    : [];
+
+  const toDateSlots = selectedToDate
+    ? selectedTodatesInfo.find((slot) => slot.available_date === selectedToDate)
+        ?.time_slots || []
+    : [];
+
   useEffect(() => {
     if (userSelectedDates) {
       const duration = calculateDaysBetween(startDate, endDate);
@@ -106,11 +123,10 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
     }
   };
 
-  const handleAcceptButton = (value)=>{
+  const handleAcceptButton = (value) => {
     setOpenTAc(false);
-    value =="accept"?setTACValue(true):
-    setTACValue(false)
-  }
+    value == "accept" ? setTACValue(true) : setTACValue(false);
+  };
   // Function to start the Razorpay payment process
   const startRazorpayPayment = async (bookingId, amount) => {
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
@@ -133,7 +149,7 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
         setLoaderOpen(true);
         await updateBookingStatus(bookingId, response.razorpay_payment_id);
         setLoaderOpen(false);
-        window.location.href = "/myBookings";
+        window.location.href = "/bookings";
       },
       prefill: {
         name: userDetails.email.split("@")[0],
@@ -190,7 +206,35 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
       console.error("Error while booking:", error);
     }
   };
+  const fetchBookingSlots = async (startTime) => {
+    try {
+      const response = await axios.get(
+        `${constants.API_BASE_URL}/user/bookings/slots-start-date`,
+        {
+          headers: {
+            start_date: formatDateToYYYYMMDD(selectedDate),
+            start_time: startTime ? startTime : selectedTime,
+            car_id: carInfo[0].car_id,
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
+      console.log(response.data, "Helleoeeeeeeeeee");
+      setSelectedTodatesInfo(response.data.data);
+      setOpenToDateInputs(true);
+    } catch (error) {
+      console.error(
+        "Error fetching booking slots:",
+        error.response ? error.response.data : error.message
+      );
+    }
+  };
+  const selectedFromTime = (e) => {
+    setSelectedTime(e.target.value);
+    fetchBookingSlots(e.target.value);
+  };
+  console.log(selectedTodatesInfo, " heeeeeeeeeeeeeeeeeeee");
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div
@@ -285,30 +329,92 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
               <label className="block text-medium " style={{ padding: "10px" }}>
                 Booking Start Date
               </label>
-              <Calendar
-                className={`${"w-full h-10"}`}
-                id="buttondisplay"
-                value={startDate}
-                placeholder="PickUp Date"
-                onChange={(e) => setStartDate(e.value)}
-                minDate={new Date()}
-                showIcon
-              />
-            </div>
-
-            <div>
-              <label className="block " style={{ padding: "10px" }}>
-                Booking End Date
-              </label>
-              <Calendar
-                className={`${"w-full h-10"}`}
-                id="buttondisplay"
-                value={endDate}
-                placeholder="DropOff Date"
-                onChange={(e) => setEndDate(e.value)}
-                minDate={new Date()}
-                showIcon
-              />
+              <div className=" flex space-x-4  justify-between items-center ">
+                <div className="w-1/2">
+                  <label className="block ">Select Date:</label>
+                  <select
+                    className="border p-2 w-full h-10 rounded-lg"
+                    onChange={(e) => {
+                      setSelectedDate(e.target.value);
+                      setSelectedTime(""); // Reset time when date changes
+                    }}
+                    value={selectedDate}
+                  >
+                    <option value="">Select a date</option>
+                    {carInfo[0].available_slots.map((slot) => (
+                      <option
+                        key={slot.available_date}
+                        value={slot.available_date}
+                      >
+                        {slot.available_date}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="w-1/2">
+                  {selectedDate && (
+                    <>
+                      <label className="block ">Select Time Slot:</label>
+                      <select
+                        className="border p-2 w-full h-10 rounded-lg"
+                        onChange={(e) => selectedFromTime(e)}
+                        value={selectedTime}
+                      >
+                        <option value="">Select a time</option>
+                        {timeSlots.map((time) => (
+                          <option key={time} value={time}>
+                            {time}
+                          </option>
+                        ))}
+                      </select>
+                    </>
+                  )}
+                </div>
+              </div>
+              {openToDateInputs && (
+                <div className=" flex space-x-4  mt-4 justify-between items-center ">
+                  <div className="w-1/2">
+                    <label className="block ">Select To Date:</label>
+                    <select
+                      className="border p-2 w-full h-10 rounded-lg"
+                      onChange={(e) => {
+                        setSelectedToDate(e.target.value);
+                        setSelectedToTime(""); // Reset time when date changes
+                      }}
+                      value={selectedToDate}
+                    >
+                      <option value="">Select a date</option>
+                      {selectedTodatesInfo.map((slot) => (
+                        <option
+                          key={slot.available_date}
+                          value={slot.available_date}
+                        >
+                          {slot.available_date}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="w-1/2">
+                    {openToDateInputs && selectedDate && (
+                      <>
+                        <label className="block ">Select Time Slot:</label>
+                        <select
+                          className="border p-2 w-full h-10 rounded-lg"
+                          onChange={(e) => setSelectedToTime(e.target.value)}
+                          value={selectedToTime}
+                        >
+                          <option value="">Select a time</option>
+                          {toDateSlots.map((time) => (
+                            <option key={time} value={time}>
+                              {time}
+                            </option>
+                          ))}
+                        </select>
+                      </>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -329,7 +435,7 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
                 Total Days: {totalDays}
               </p>
               <p
-                className="font-semibold text-lg text-[#6f82c6] dark:text-blue-400"
+                className="font-semibold text-lg text-[#121212] dark:text-blue-400"
                 style={
                   isScreenSize ? { marginTop: "5px" } : { marginTop: "5px" }
                 }
@@ -338,9 +444,15 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
               </p>
             </div>
           )}
-          <div className="flex" style={{padding:"5px 10px"}}>
+          <div className="flex" style={{ padding: "5px 10px" }}>
             {" "}
-            <input type="checkbox" checked={tACValue} onChange={()=>setOpenTAc(true)}  className="cursor-pointer" ></input> <label style={{paddingLeft:"5px"}}>Terms and conditions</label>{" "}
+            <input
+              type="checkbox"
+              checked={tACValue}
+              onChange={() => setOpenTAc(true)}
+              className="cursor-pointer appearance-none w-5 h-5 border-2 border-gray-500 rounded-sm checked:bg-black checked:border-black checked:ring-2 checked:ring-black focus:ring-black"
+            ></input>{" "}
+            <label style={{ paddingLeft: "5px" }}>Terms and conditions</label>{" "}
           </div>
           {openTAC && (
             <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -350,14 +462,14 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
                   <button
                     className="bg-blue-500 rounded-lg cursor-pointer "
                     style={{ padding: "7px 20px", margin: "0px 10px" }}
-                    onClick={()=>handleAcceptButton("reject")}
+                    onClick={() => handleAcceptButton("reject")}
                   >
                     Reject
                   </button>
                   <button
                     className="bg-green-600 rounded-lg cursor-pointer  "
                     style={{ padding: "7px 20px", margin: "0px 10px" }}
-                    onClick={()=>handleAcceptButton("accept")}
+                    onClick={() => handleAcceptButton("accept")}
                   >
                     Accept
                   </button>
@@ -368,9 +480,13 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
 
           <div className="mt-6" style={{ padding: "10px", paddingTop: "20px" }}>
             <button
-              onClick={tACValue&& postBooking}
+              onClick={tACValue && postBooking}
               style={{ padding: "7px" }}
-              className={`w-full text-white p-2 text-lg ${tACValue?'bg-[#6f82c6] font-medium border-[#6f82c6] rounded-lg hover:bg-gray-100 hover:text-black hover:border-[#6f82c6] transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md hover:shadow-lg':' text-gray-700 bg-gray-100   disabled cursor-not-allowed'}`}
+              className={`w-full text-white p-2 text-lg ${
+                tACValue
+                  ? "bg-[#121212] font-medium border-[#121212] rounded-lg  hover:text-white hover:bg-[#121212] hover:border-[#121212] transition-all duration-300 ease-in-out transform hover:scale-105 shadow-md hover:shadow-lg"
+                  : " text-gray-700 bg-gray-100   disabled cursor-not-allowed"
+              }`}
             >
               Procced To Pay
             </button>

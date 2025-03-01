@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "./components/Navbar/Navbar";
 import { Route, Routes } from "react-router-dom";
+import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
 import Auth from "./components/auth/auth";
 import CarsDisplay from "./components/CarsDisplay/CarsDisplay";
@@ -13,29 +13,34 @@ import PaymentPage from "./components/PaymentPage/PaymentPage";
 import UserProfile from "./components/UserProfile";
 import AdminCarUpload from "./components/admin/cars/car-upload-edit";
 import UserVerification from "./components/admin/user/UserVerfication";
+import CurrentBookings from "./components/admin/bookings/CurrentBookings";
+import Locations from "./components/admin/location/Locations";
+import CarBrands from "./components/admin/cars/CarBrands";
+import AdminRoute from "./routes/adminRoute";
 
 const App = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [isAdminLogin, setIsAdminLogin] = useState(false);
   const [isSidebarHovered, setIsSidebarHovered] = useState(false);
   const { isScreenSmall } = useScreenSize();
+
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
     if (authToken) {
       setIsLogin(true);
     }
-    const adminAuthToken = localStorage.getItem("adminAuthToken")
+    const adminAuthToken = localStorage.getItem("adminAuthToken");
     if (adminAuthToken) {
       setIsAdminLogin(true);
     }
   }, []);
 
   return (
-    <div className="flex h-screen ">
+    <div className="flex h-screen">
       {/* Sidebar */}
       {(isLogin || isAdminLogin) && (
         <div className="fixed" style={{ marginTop: "4%" }}>
-          <SideBar setIsSidebarHovered={setIsSidebarHovered} />{" "}
+          <SideBar setIsSidebarHovered={setIsSidebarHovered} />
         </div>
       )}
 
@@ -51,9 +56,7 @@ const App = () => {
             : { marginLeft: "0%", padding: "0px" }),
           ...(!isScreenSmall && { fontSize: "14px", padding: "0px" }),
         }}
-        className={`transition-all duration-300  ${
-          isScreenSmall && "w-full"
-        } p-4 ${
+        className={`transition-all duration-300 ${isScreenSmall && "w-full"} p-4 ${
           isLogin
             ? isSidebarHovered
               ? "ml-[5%] w-[calc(100%-14%)]"
@@ -71,8 +74,14 @@ const App = () => {
           <Route path="/booking" element={<PaymentPage />} />
           <Route path="/admin" element={<AdminAuth />} />
           <Route path="/userProfile" element={<UserProfile />} />
-          <Route path="/admin/car-upload" element={<AdminCarUpload />} />
-          <Route path="/admin/user-verfication" element={<UserVerification />} />
+
+          {/* <Route element={<AdminRoute isAdminLogin={isAdminLogin} />}> */}
+            <Route path="/admin/car-upload" element={<AdminCarUpload />} />
+            <Route path="/admin/user-verification" element={<UserVerification />} />
+            <Route path="/admin/bookings" element={<CurrentBookings />} />
+            <Route path="/admin/locations" element={<Locations />} />
+            <Route path="/admin/cars-brands" element={< CarBrands />} />
+          {/* </Route> */}
         </Routes>
       </div>
     </div>

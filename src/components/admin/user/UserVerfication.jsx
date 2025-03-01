@@ -83,7 +83,7 @@ export default function UserVerification() {
       setIsLoaderOpen(false)
     }
   };
-  console.log(selectedDoc?.type, selectedDoc?.type == "aadhar");
+  console.log(users, users.length);
 
   return (
     <div className="flex items-center justify-center">
@@ -183,7 +183,11 @@ export default function UserVerification() {
           </div>
         </div>
       ) : (
-        <p>No User </p>
+        <div className="w-full h-screen  flex justify-center items-center">
+                  <h1 className="font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-3xl dark:text-white mt-20 mb-10 align-middle">
+            Currently there are no user or verfication
+          </h1>
+        </div>
       )}
 
       {selectedDoc?.type === "aadhar" && (
@@ -299,7 +303,6 @@ export default function UserVerification() {
                 placeholder="Enter comments"
                 rows={4}
                 value={comments}
-                
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required

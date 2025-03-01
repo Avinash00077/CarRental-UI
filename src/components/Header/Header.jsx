@@ -7,8 +7,8 @@ const Header = () => {
   const { isScreenSmall } = useScreenSize();
   return (
     <div
-      className={`w-full flex ${isScreenSmall&&'flex-col'}  mb-10 md:mb-0 justify-center items-center`}
-      style={{ marginTop: "55px", marginLeft: "0px", marginBottom: "10px",padding:"10px" }}
+      className={`w-full flex ${isScreenSmall&&'flex-col'} mt-7  mb-10 md:mb-0 justify-center items-center`}
+      //style={{ marginTop: "55px", marginLeft: "0px", marginBottom: "10px",padding:"10px" }}
     >
             <div className="w-full md:w-8/12">
         <Courosel />

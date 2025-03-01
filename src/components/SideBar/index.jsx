@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, CalendarCheck, Car, Star, User } from "lucide-react";
+import { Home, CalendarCheck, Car, Star, User, BookAIcon, LoaderCircle, CarFrontIcon } from "lucide-react";
 import { useScreenSize } from "../../context/screenSizeContext";
 
 const SideBar = ({ setIsSidebarHovered }) => {
@@ -11,9 +11,12 @@ const SideBar = ({ setIsSidebarHovered }) => {
       const {user_type} = JSON.parse(adminDetails);
       menuItems = [
         { route: "/admin/car-upload", label: "Car Upload", icon: Car },
+        { route: "/admin/bookings", label: "Bookings", icon: BookAIcon },
       ];
       if(user_type === 'super_user'){
-        menuItems.push({ route: "/admin/user-verfication", label: "User Verfication", icon: User })
+        menuItems.push({ route: "/admin/user-verification", label: "User Verfication", icon: User })
+        menuItems.push({ route: "/admin/locations", label: "Locations", icon: LoaderCircle })
+        menuItems.push({ route: "/admin/cars-brands", label: "Car Brands", icon: CarFrontIcon })
       }
     }else{
  menuItems = [
@@ -40,7 +43,7 @@ const SideBar = ({ setIsSidebarHovered }) => {
     <>
       {!isScreenSmall && (
         <div
-          className="h-screen bg-gradient-to-b from-[#caefd7] via-[#f5bfd7] to-[#abc9e9] shadow-lg transition-all duration-300 flex flex-col"
+          className="h-screen bg-[#121212] shadow-lg transition-all duration-300 flex flex-col"
           style={{
             width:
               isHovered && location.pathname != "/viewCars" ? "200px" : "64px",
@@ -76,8 +79,8 @@ const SideBar = ({ setIsSidebarHovered }) => {
                   to={route}
                   className={`flex items-center gap-3 text-[17px] font-medium cursor-pointer p-3 w-full transition-all duration-300 rounded-lg ${
                     activeMenu === route
-                      ? "bg-[#6f82c6] text-white shadow-md scale-[1.05]"
-                      : "text-[#4a4a8c]"
+                      ? "bg-white text-[#121212] shadow-md scale-[1.05]"
+                      : "text-white"
                   } hover:bg-gray-300 hover:scale-[1.05] hover:shadow-md`}
                   style={{ padding: "10px", marginTop: "10px" }}
                   onClick={() => handleScroll(route)}

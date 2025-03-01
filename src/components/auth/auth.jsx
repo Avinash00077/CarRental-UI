@@ -13,7 +13,7 @@ import Loader from "../Loader/Loader";
 import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import available from "../../assets/available.png";
-import not_available from "../../assets/not_available.jpg";
+import not_available from "../../assets/not_available.png";
 
 const AuthModal = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -145,7 +145,7 @@ const AuthModal = () => {
             email: formData.email,
             phone_number: formData.phone,
             password: formData.password,
-            dob: formData.dob,
+            dob: DOBFormat(formData.dob),
             gender: formData.gender,
           }
         );
@@ -251,15 +251,17 @@ const AuthModal = () => {
     // setOpenResetPassword(!openResetPassword)
   };
 
-  const handleDOB = (e) => {
-    console.log(e, " Value is ");
-    const convertDOB = new Date(e.value);
-    console.log(convertDOB);
+  const DOBFormat = (date) => {
+    const convertDOB = new Date(date);
     const year = convertDOB.getFullYear();
     const month = (convertDOB.getMonth() + 1).toString().padStart(2, "0");
     const day = convertDOB.getDate().toString().padStart(2, "0");
     const formattedDOB = `${year}-${month}-${day}`;
-    setFormData({ ...formData, dob: formattedDOB });
+    return formattedDOB
+  };
+
+  const handleDOB = (e) => {
+    setFormData({ ...formData, dob: e.target.value });
   };
 
   const checkUserNameAvailablity = useCallback(
@@ -406,8 +408,8 @@ const AuthModal = () => {
                     <div>
                       <img
                         src={isUserAvailable ? available : not_available}
-                        className="w-16 h-10"
-                        style={{ marginTop: "20px", marginLeft: "8px" }}
+                        className=" mt-6 w-8 h-8"
+                        //style={{ marginTop: "20px", marginLeft: "8px" }}
                       ></img>
                     </div>
                   )}
@@ -493,14 +495,15 @@ const AuthModal = () => {
                 {!isLogin && (
                   <div
                     className="w-full flex justify-center items-center"
-                    style={{ marginTop: "10px" }}
+                    //style={{ marginTop: "10px" }}
                   >
                     <div className="w-1/2">
                       <label className="block text-sm mb-1">
                         Date Of Birth
                       </label>
                       <Calendar
-                        className={`w-full h-9 text-[12px] border-gray-300 px-2 py-1 focus:outline-none 
+                        value={formData.dob}
+                        className={`w-full h-9 text-[12px] border-gray-300 focus:outline-none 
     hover:-translate-y-0.5 hover:h-[38px] hover:text-[15px] 
     ${
       isScreenSmall
@@ -508,14 +511,16 @@ const AuthModal = () => {
         : "border bg-transparent rounded-lg hover:bg-gray-50"
     }`}
                         id="buttondisplay"
-                        value={formData.dob}
                         placeholder="Select your DOB"
-                        onChange={handleDOB}
-                        style={{ padding: "1px", backgroundColor: "beige" }}
+                        onChange={(e)=>handleDOB(e)}
+                        //style={{ padding: "1px", backgroundColor: "beige" }}
                         showIcon
                       />
                     </div>
-                    <div className="w-1/2" style={{ marginLeft: "10px" }}>
+                    <div
+                      className="w-1/2"
+                      // style={{ marginLeft: "10px" }}
+                    >
                       <label className="block text-sm mb-1">Gender</label>
                       <Dropdown
                         value={formData.gender}
@@ -529,8 +534,8 @@ const AuthModal = () => {
                           isScreenSmall
                             ? "border-b-2"
                             : "border bg-white rounded-lg hover:bg-gray-50"
-                        }  border-gray-300 h-8 px-2 py-1 focus:outline-none hover:-translate-y-0.5 hover:h-[38px]  hover:text-[15px]`}
-                        style={{ paddingLeft: "10px" }}
+                        }  border-gray-300 h-8 focus:outline-none hover:-translate-y-0.5 hover:h-[38px]  hover:text-[15px]`}
+                        // style={{ paddingLeft: "10px" }}
                       />
                     </div>
                   </div>
@@ -580,7 +585,7 @@ const AuthModal = () => {
                 <button
                   style={{ padding: "8px", margin: "10px 0px" }}
                   type="submit"
-                  className="bg-[#6e81c7] hover:bg-[#5a6aa1] text-medium py-2 px-5 rounded-full text-white shadow-lg transition-colors cursor-pointer duration-300  hover:text-[15px]"
+                  className="bg-[#121212] hover:bg-[#121212] text-medium py-2 px-5 rounded-full text-white shadow-lg transition-colors cursor-pointer duration-300  hover:text-[15px]"
                 >
                   {isLogin ? "Log In" : "Sign Up"}
                 </button>
@@ -588,7 +593,7 @@ const AuthModal = () => {
                   onClick={() => setIsLogin(!isLogin)}
                   className={`text-center text-medium ${
                     isScreenSmall ? "text-black" : "text-gray-600"
-                  } cursor-pointer hover:text-blue-400 mt-4`}
+                  } cursor-pointer hover:text-[#121212] mt-4`}
                 >
                   {isLogin
                     ? "Don't have an account? Sign Up"
@@ -703,7 +708,7 @@ const AuthModal = () => {
                       marginTop: "25px",
                     }}
                     type="submit"
-                    className="bg-[#6e81c7] w-5/12 hover:bg-[#5a6aa1] text-medium py-2 px-5 rounded-full text-white  shadow-lg transition-colors duration-300 cursor-pointer"
+                    className="bg-[#121212] w-5/12 hover:bg-[#5a6aa1] text-medium py-2 px-5 rounded-full text-white  shadow-lg transition-colors duration-300 cursor-pointer"
                   >
                     {authStatus == "verifyEmail" ? "Send Otp" : "Submit"}
                   </button>

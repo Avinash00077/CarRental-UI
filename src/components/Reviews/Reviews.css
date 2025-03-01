@@ -1,8 +1,8 @@
 :root{
     --main-color:#fe5b3d;
-    --second-color:#ffac38;
+    --second-color:#121212;
     --text-color:#444;
-    --gradient:linear-gradient(#fe5b3d, #ffac38);
+    --gradient:linear-gradient(#fe5b3d, #121212);
 }
 #reviews{
     padding: 40px;

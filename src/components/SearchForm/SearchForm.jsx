@@ -77,7 +77,7 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
         />
       )}
       <div
-        className={`md:flex md:flex-col items-center bg-gradient-to-b from-[#caefd7] via-[#f5bfd7] to-[#abc9e9] justify-center p-2 rounded-3xl shadow-2xl ${
+        className={`md:flex md:flex-col items-center  justify-center p-2 rounded-3xl shadow-2xl ${
           isScreenSmall
             ? "w-full"
             : fromWhere === "homePage"
@@ -94,8 +94,8 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
           {fromWhere === "homePage" ? (
             <div>
               <p
-                className="text-2xl font-bold text-gray-800 mb-4"
-                style={{ margin: "20px" }}
+                className="text-2xl font-bold text-[#121212] mb-4 mt-5 ml-4"
+                //style={{ margin: "20px" }}
               >
                 Book Your Ride !
               </p>
@@ -106,7 +106,7 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
                   onClick={() => setOpenModal(!openModal)}
                 ></img>{" "}
                 <span
-                  className="cursor-pointer font-extralight text-[17px]"
+                  className="cursor-pointer font-extralight text-[17px] text-[#121212]"
                   style={{ marginLeft: "5px" }}
                   onClick={() => setOpenModal(!openModal)}
                 >
@@ -115,7 +115,7 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
               </div>
             </div>
           ) : (
-            <div className="text-start">
+            <div className="text-start ">
               <p>Select Date & Time</p>
               <p className="flex">
                 Ride Duration - {rideDuration}{" "}
@@ -126,7 +126,7 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
         </div>
 
         <p
-          className="text-[17px] text-start w-full "
+          className="text-[17px] text-start w-full text-[#121212] "
           style={{
             marginLeft: fromWhere === "homePage" ? "10px" : "0",
             marginBottom: fromWhere === "homePage" ? "5px" : "0",
@@ -137,9 +137,10 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
         <div className="flex  items-center justify-center w-full mb-5">
           <div className="w-1/2">
             <Calendar
-              className={`${
-                fromWhere === "homePage" ? "w-full h-10" : "h-14 w-full"
+              className={`  ${
+                fromWhere === "homePage" ? "w-full h-10" : "h-14 w-full te"
               }`}
+              
               id="buttondisplay"
               value={pickUpDate}
               placeholder="Pickup Date"
@@ -192,15 +193,15 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
         </div>
 
         <p
-          className="text-[17px] text-start w-full "
+          className="text-[17px] text-start w-full text-[#121212] "
           style={{
-            marginLeft: fromWhere === "homePage" ? "10px" : "0",
-            marginBottom: fromWhere === "homePage" ? "5px" : "0",
+            marginLeft: fromWhere === "homePage" ? "10px" : "0px",
+            marginBottom: fromWhere === "homePage" ? "5px" : "0px",
           }}
         >
           Drop Off
         </p>
-        <div className="flex  items-center justify-center w-full mb-5">
+        <div className={`flex  items-center justify-center w-full ${fromWhere =="homePage"?'mb-5':'mb-1'}`}>
           <div className="w-1/2">
             <Calendar
               className={`${
@@ -261,7 +262,7 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
           <button
             type="submit"
             style={{ margin: "20px 20px" }}
-            className="w-[80%] h-[43px] bg-gradient-to-r from-[#6578ca] to-[#9cb0f1] text-white text-[18px] font-medium rounded-full focus:outline-none cursor-pointer"
+            className="w-[80%] h-[43px] bg-[#121212] text-white text-[18px] font-medium rounded-full focus:outline-none cursor-pointer"
           >
             Search
           </button>

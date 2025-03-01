@@ -3,9 +3,9 @@ import "./Reviews.css";
 const Reviews = () => {
   return (
     <div>
-      <div id="reviews">
+      <div id="Reviews">
         <div class="heading">
-          <span style={{color:"#6f82c6"}}>Reviews</span>
+          <span style={{color:"#121212"}}>Reviews</span>
           <h1>What Our Coustmer Says</h1>
         </div>
         <div className="reviews-container">

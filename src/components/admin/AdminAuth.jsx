@@ -80,7 +80,7 @@ const AdminAuth = () => {
         className="flex flex-col justify-center items-center w-[30%] bg-gray-50 rounded-lg shadow-2xl"
         style={{ padding: "20px" }}
       >
-        <h1 className="text-xl font-semibold text-[#6e81c7]">Admin Login</h1>
+        <h1 className="text-xl font-semibold text-[#121212]">Admin Login</h1>
         <div className="w-[85%] " style={{ marginRight: "10px" }}>
           <label
             className="block  mb-1"
@@ -116,15 +116,15 @@ const AdminAuth = () => {
           />
         </div>
         <button
-          style={{
-            padding: "8px",
-            margin: "27px 0px",
-            marginLeft: "0%",
-            marginTop: "25px",
-          }}
+          // style={{
+          //   padding: "8px",
+          //   margin: "27px 0px",
+          //   marginLeft: "0%",
+          //   marginTop: "25px",
+          // }}
           type="submit"
           onClick={() => handleSubmit()}
-          className="bg-[#6e81c7] w-9/12 hover:bg-[#5a6aa1] text-medium py-2 px-5 rounded-full text-white  shadow-lg transition-colors duration-300"
+          className="bg-[#121212] w-9/12 mt-7 hover:bg-[#121212] text-medium py-2 px-5 rounded-full text-white hover:scale-105 shadow-lg transition-colors duration-300"
         >
           Submit
         </button>

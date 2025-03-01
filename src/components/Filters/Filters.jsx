@@ -32,8 +32,7 @@ const Filters = ({ userSelectedDates }) => {
     <div>
       <div className="h-full hidden lg:flex flex-col">
         <div
-          className="flex justify-between items-center  w-full "
-          style={{ padding: "10px", paddingTop: "15px" }}
+          className="flex justify-between items-center  w-full py-1 pt-0"
         >
           <div className="">
             <p className="text-xl font-semibold">Filter </p>
@@ -63,7 +62,7 @@ const Filters = ({ userSelectedDates }) => {
         >
           {" "}
         </div>
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col space-y-2  mx-1  rounded-lg shadow-2xs pb-3">
           <p
             className="text-start text-lg font-semibold"
             style={{ margin: "10px", marginTop: "5px" }}
@@ -71,7 +70,7 @@ const Filters = ({ userSelectedDates }) => {
             Vehicle Models{" "}
           </p>
           <div
-            className="no-scrollbar m-2  h-[200px] overflow-y-auto bg-white rounded-2xl shadow-xl p-2"
+            className="no-scrollbar m-2  h-[210px] overflow-y-auto bg-gray-50 rounded-2xl shadow-xl p-2 pb-0"
             style={{ padding: "15px 20px", margin: "0px 10px" }}
           >
             {[
@@ -102,20 +101,19 @@ const Filters = ({ userSelectedDates }) => {
               </label>
             ))}
           </div>
-
-          <div
+        </div>
+        <div
             className="flex items-center justify-center"
             style={{ marginTop: "10px" }}
           >
             <button
-              className="w-[180px] py-2 h-[40px] text-sm bg-[#6f82c6] font-medium border border-[#6f82c6] text-white rounded-lg shadow-md transition-all duration-300 ease-in-out 
-  hover:bg-[#5a6bab] hover:border-[#5a6bab] hover:shadow-lg hover:scale-105 
-  active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#6f82c6]"
+              className="w-[180px] py-2 h-[40px] cursor-pointer text-sm bg-[#121212] font-medium border border-[#121212] text-white rounded-lg shadow-md transition-all duration-300 ease-in-out 
+  hover:bg-[#121212] hover:border-[#121212] hover:shadow-lg hover:scale-105 
+  active:scale-95 focus:outline-none focus:ring-2 focus:ring-[#121212]"
             >
               Apply Filters
             </button>
           </div>
-        </div>
       </div>
 
       {isScreenSize && (

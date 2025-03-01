@@ -141,7 +141,7 @@ const MyBookings = () => {
                     <td className="px-6 py-4">
                       <a
                         href="#"
-                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                        className="font-medium text-[#121212] hover:underline"
                         key={booking.booking_id}
                         style={{ cursor: "pointer", transition: "background 0.3s" }}
                         onClick={() => {

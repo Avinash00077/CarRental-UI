@@ -134,9 +134,9 @@ const FileUpload = ({ onUpload, type }) => {
           } z-50`}
           style={isScreenSmall ? {} : { marginLeft: "30%", padding: "20px" }}
         >
-          <div className="bg-gradient-to-b from-[#caefd7] via-[#f5bfd7] to-[#abc9e9]  relative flex flex-col items-center justify-center rounded-lg shadow-2xl w-[90%] mx-4 md:mx-0 p-8 space-y-8">
+          <div className=" bg-white relative flex flex-col items-center justify-center rounded-lg shadow-2xl w-[90%] mx-4 md:mx-0 p-8 space-y-8">
             <h1
-              className="text-[#6f82c6] font-semibold text-lg"
+              className="text-[#121212] font-semibold text-lg"
               style={{ margin: "10px 0px" }}
             >
               View Preview
@@ -146,10 +146,10 @@ const FileUpload = ({ onUpload, type }) => {
                 className=" w-full"
                 style={{ margin: "5px 10px", padding: " 10px 20px" }}
               >
-                <label className="block font-medium">Drivers Licence:</label>
+                <label className="block font-medium">Drivers License:</label>
                 <input
                   type="text"
-                  name="phone_number"
+                  name="Enter valid license num"
                   value={LisenceValue}
                   onChange={handleLicenceChange}
                   onBlur={validateLicence}
@@ -160,10 +160,10 @@ const FileUpload = ({ onUpload, type }) => {
                 {error.licence && (
                   <p className="text-red-500">{error.licence}</p>
                 )}
-                <label className="block font-medium">Date of Birth</label>
+                <label className="block font-medium">License Expiry</label>
                 <input
                   type="date"
-                  name="dob"
+                  name="License Expiry"
                   value={expiryDate}
                   onChange={handleExpiryChange}
                   onBlur={validateExpiry}
@@ -207,7 +207,7 @@ const FileUpload = ({ onUpload, type }) => {
                 Cancel
               </button>
               <button
-                className="w-20  cursor-pointer hover:-translate-y-1  rounded-lg h-10 text-white bg-[#6f82c6]"
+                className="w-20  cursor-pointer hover:-translate-y-1  rounded-lg h-10 text-white bg-[#121212]"
                 onClick={handleSaveImage}
                 style={{ margin: "0px 10px" }}
               >
@@ -229,9 +229,9 @@ const FileUpload = ({ onUpload, type }) => {
           className="hidden"
         />
         {type == "Licence" || type == "Aaadhar" ? (
-          <Pencil size={25} color="#6f82c6" />
+          <Pencil size={25} color="#121212" />
         ) : (
-          <ImagePlus size={30} color="#6f82c6" />
+          <ImagePlus size={30} color="#121212" />
         )}
       </div>
     </div>

@@ -1,8 +1,8 @@
 :root{
-    --main-color:#6f82c6;
-    --second-color:#6f82c6;
+    --main-color:#121212;
+    --second-color:#121212;
     --text-color:#444;
-    --gradient:linear-gradient(#6f82c6, #6f82c6);
+    --gradient:linear-gradient(#121212, #121212);
 }
 .about-container{
     display: grid;
@@ -11,7 +11,7 @@
     margin-top: 2rem;
 }
 #aboutUsId{
-    color: #6f82c6;
+    color: #121212;
 }
 .aboutpadding{
     padding: 40px;

@@ -18,6 +18,10 @@ body{
   scrollbar-width: none;
 }
 
+.p-calendar .p-button {
+  @apply bg-black text-white border-gray-700 hover:bg-gray-800;
+}
+
 .fromScrollBar::-webkit-scrollbar {
   display: none;
 }

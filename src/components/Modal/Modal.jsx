@@ -27,7 +27,7 @@ const Modal = ({ typeOfModal, message, closeModal, onConfirm }) => {
       {typeOfModal === "success" && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div
-            className="relative rounded-lg shadow-2xl w-full max-w-sm h-56 mx-4 md:mx-0 p-8 space-y-8"
+            className="relative bg-white rounded-lg shadow-2xl w-full max-w-sm h-56 mx-4 md:mx-0 p-8 space-y-8"
             //style={{ padding: "20px" }}
           >
             <div className="flex items-center justify-center">

@@ -12,6 +12,7 @@ const UserProfile = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [overallAccountStatus, setOverallAccountStatus] = useState(null);
   const isScreenSize = useScreenSize().isScreenSmall;
   const [editFormInfo, setEditFormInfo] = useState({
     first_name: "",
@@ -34,6 +35,7 @@ const UserProfile = () => {
         },
       });
       setIsLoaderOpen(false);
+      let userData = response?.data?.data[0];
       setUserDeatils(response?.data?.data[0]);
       setEditFormInfo({
         first_name: response?.data?.data[0].first_name || "",
@@ -44,6 +46,13 @@ const UserProfile = () => {
         dob: response?.data?.data[0].dob || "",
         address: response?.data?.data[0].address || "",
       });
+      let overallStatus =
+        userData.aadhar_verified === "Y" &&
+        userData.driving_license_verified === "Y" &&
+        userData.driving_license_expiry === "N"
+          ? "Verified"
+          : "Not Verified";
+      setOverallAccountStatus(overallStatus);
     } catch (error) {
       setIsLoaderOpen(false);
       console.error("Error fetching user data:", error);
@@ -144,17 +153,17 @@ const UserProfile = () => {
         <div className="fixed inset-0  flex items-center justify-center z-50">
           <div
             className="bg-white relative rounded-2xl shadow-2xl w-[570px] h-auto mx-4 md:mx-0 p-8 space-y-8"
-           // style={{ padding: "25px" }}
+            // style={{ padding: "25px" }}
           >
             <h2
-              className="text-xl text-[#6f82c6] font-semibold mb-4 text-center"
+              className="text-xl text-[#121212] font-semibold mb-4 text-center"
               //style={{ marginBottom: "10px" }}
             >
               Edit Your Details
             </h2>
             <form onSubmit={handleSubmit} className="space-y-3">
               <div className="flex justify-center items-center">
-                <div className="w-1/2">
+                <div className="w-1/2 mx-3">
                   <label className="block font-medium">First Name</label>
                   <input
                     type="text"
@@ -162,12 +171,13 @@ const UserProfile = () => {
                     value={editFormInfo.first_name || ""}
                     onChange={handleInputChange}
                     className="w-full p-2 border border-gray-400 rounded-lg"
-                   // style={{ padding: "5px", margin: "5px 0px" }}
+                    // style={{ padding: "5px", margin: "5px 0px" }}
                     placeholder="First Name"
                   />
                 </div>
-                <div className="w-1/2" 
-                //style={{ marginLeft: "10px" }}
+                <div
+                  className="w-1/2 mx-3"
+                  //style={{ marginLeft: "10px" }}
                 >
                   <label className="block font-medium">Last Name</label>
                   <input
@@ -176,35 +186,40 @@ const UserProfile = () => {
                     value={editFormInfo.last_name || userDeatils.last_name}
                     onChange={handleInputChange}
                     className="w-full p-2 border border-gray-400 rounded-lg"
-                   // style={{ padding: "5px", margin: "5px 0px" }}
+                    // style={{ padding: "5px", margin: "5px 0px" }}
                     placeholder="Last Name"
                   />
                 </div>
               </div>
-              <label className="block font-medium">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={editFormInfo.email || ""}
-                onChange={handleInputChange}
-                className="w-full p-2 border border-gray-400 rounded"
-                //style={{ padding: "5px", margin: "5px 0px" }}
-                placeholder="Email"
-              />
+              <div className="flex justify-center items-center">
+                <div className="w-1/2 mx-3">
+                  <label className="block font-medium">Email</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={editFormInfo.email || ""}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border border-gray-400 rounded"
+                    //style={{ padding: "5px", margin: "5px 0px" }}
+                    placeholder="Email"
+                  />
+                </div>
+                <div className="w-1/2 mx-3">
+                  {/* Phone Number */}
+                  <label className="block font-medium">Phone Number</label>
+                  <input
+                    type="text"
+                    name="phone_number"
+                    value={editFormInfo.phone_number || ""}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border border-gray-400 rounded"
+                    //style={{ padding: "5px", margin: "5px 0px" }}
+                    placeholder="Phone Number"
+                  />
+                </div>
+              </div>
 
-              {/* Phone Number */}
-              <label className="block font-medium">Phone Number</label>
-              <input
-                type="text"
-                name="phone_number"
-                value={editFormInfo.phone_number || ""}
-                onChange={handleInputChange}
-                className="w-full p-2 border border-gray-400 rounded"
-                //style={{ padding: "5px", margin: "5px 0px" }}
-                placeholder="Phone Number"
-              />
-
-              {/* Driving lisense expiry date */}
+              {/* Driving lisense expiry date
               <div className="flex justify-center items-center">
                 <div className="w-1/2">
                   <label className="block font-medium">Driving lisense expiry date</label>
@@ -216,9 +231,12 @@ const UserProfile = () => {
                     className="w-full p-2 border border-gray-400 rounded"
                    // style={{ padding: "5px", margin: "5px 0px" }}
                   />
-                </div>
-                <div className="w-1/2" 
-                //style={{ marginLeft: "10px" }}
+                </div> */}
+
+              <div className="flex justify-center items-center">
+                <div
+                  className="w-1/2"
+                  //style={{ marginLeft: "10px" }}
                 >
                   <label className="block font-medium">Gender</label>
                   <select
@@ -226,7 +244,7 @@ const UserProfile = () => {
                     value={editFormInfo.gender || ""}
                     onChange={handleInputChange}
                     className="w-full p-2 border border-gray-400 rounded"
-                   // style={{ padding: "7px", margin: "5px 0px" }}
+                    // style={{ padding: "7px", margin: "5px 0px" }}
                   >
                     <option value="">Select Gender</option>
                     <option value="Male">Male</option>
@@ -254,14 +272,14 @@ const UserProfile = () => {
                   onClick={() => {
                     setIsEditOpen(false);
                   }}
-                  className="bg-gray-300 px-4 py-2 rounded-md"
+                  className="bg-gray-300 px-4 py-2 rounded-md hover:scale-110"
                   //style={{ padding: "5px 10px", margin: "0px 15px" }}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                  className="bg-[#121212] text-white px-4 py-2 rounded-md hover:scale-110"
                   //style={{ padding: "5px 10px", margin: "0px" }}
                 >
                   Save
@@ -276,41 +294,53 @@ const UserProfile = () => {
           <div className="shadow-lg relative">
             <div className="relative">
               <img
-                src={userDeatils?.profile_img_url}
+                src={userDeatils?.cover_img_url}
                 className={`w-full ${
                   isScreenSize ? "h-[200px]" : "h-[260px]"
                 }  object-cover rounded-lg`}
               />
-              <div className="absolute bg-amber-400 bottom-4 right-4 flex p-3 rounded-full shadow-md cursor-pointer">
+              <div className="absolute bottom-4 right-4 flex p-3 rounded-full shadow-md cursor-pointer">
                 <FileUpload
                   type="profile"
                   onUpload={(data) =>
-                    handleUploadImage(data, "profile", "profile_image")
+                    handleUploadImage(data, "cover", "cover_image")
                   }
                 />
               </div>
             </div>
 
-            <div className="rounded-lg"
-            // style={{ padding: "10px" }}
+            <div
+              className="rounded-lg"
+              // style={{ padding: "10px" }}
             >
               <div
                 className={`absolute ${
                   isScreenSize ? "bottom-[50px] left-1" : "bottom-[0px] left-5 "
                 } `}
               >
+                 <div className="relative">
                 <img
-                  src="https://img.freepik.com/premium-vector/silhouette-young-man-profile-against-stark-black-background_1058532-30803.jpg?w=360"
+                  //src="https://img.freepik.com/premium-vector/silhouette-young-man-profile-against-stark-black-background_1058532-30803.jpg?w=360"
+                  src= {userDeatils.profile_img_url}
                   className={` ${
                     isScreenSize ? "w-[90px] h-[90px]" : "w-[110px] h-[110px]"
                   } rounded-full border-4 border-white shadow-lg`}
                 />
+                <div className="absolute  bottom-4 left-18 bg-white flex rounded-full shadow-md cursor-pointer">
+                <FileUpload
+                  type="profile"
+                  onUpload={(data) =>
+                    handleUploadImage(data, "profile", "profile_image")
+                  }
+                />
+                </div>
+                 </div>
               </div>
               <div className="m-2 flex justify-center space-x-8 ">
                 <button
                   className={`px-4 py-2 font-semibold transition-all ${
                     activeTab === "details"
-                      ? "border-b-3 border-blue-500 text-blue-600"
+                      ? "border-b-3 border-[#121212] text-[#121212]"
                       : "text-gray-600"
                   }`}
                   //style={{ padding: "0px 5px", margin: "0px" }}
@@ -322,7 +352,7 @@ const UserProfile = () => {
                 <button
                   className={`px-4 py-2 font-semibold transition-all ${
                     activeTab === "documents"
-                      ? "border-b-3 border-blue-500 text-blue-600"
+                      ? "border-b-3 border-[#121212] text-[#121212]"
                       : "text-gray-600"
                   }`}
                   //style={{ padding: "5px 10px", margin: "10px" }}
@@ -333,7 +363,7 @@ const UserProfile = () => {
                 <button
                   className={`px-4 py-2 font-semibold transition-all ${
                     activeTab === "status"
-                      ? "border-b-3 border-blue-500 text-blue-600"
+                      ? "border-b-3 border-[#121212] text-[#121212]"
                       : "text-gray-600"
                   }`}
                   //style={{ padding: "5px 10px", margin: "10px" }}
@@ -347,22 +377,22 @@ const UserProfile = () => {
 
           <div
             className={`p-6   ${
-              isScreenSize
-                ? "w-[100%] h-[47vh] bg-gradient-to-l from-[#caefd7] via-[#f5bfd7] to-[#abc9e9]"
-                : "h-[41vh] bg-gradient-to-t from-[#caefd7] via-[#f5bfd7] to-[#abc9e9]"
+              isScreenSize ? "w-[100%] h-[47vh]" : "h-[41vh]"
             } no-scrollbar overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200  rounded-lg rounded-b-none shadow-md`}
             //style={{ padding: "20px" }}
           >
             {activeTab === "details" && (
               <div>
                 <div className="flex flex-wrap items-center  justify-between mb-5">
-                  <div className="text-xl font-semibold text-[#6f82c6]">
+                  <div className="text-xl font-semibold text-[#121212]">
                     User Details
                   </div>
                   <div className="flex items-center font-semibold space-x-2 cursor-pointer">
-                    <span 
-                   // style={{ padding: "5px 10px" }}
-                    >Edit</span>
+                    <span
+                    // style={{ padding: "5px 10px" }}
+                    >
+                      Edit
+                    </span>
                     <Pencil size={18} onClick={() => setIsEditOpen(true)} />
                   </div>
                 </div>
@@ -377,38 +407,38 @@ const UserProfile = () => {
                     { label: "Phone Number", value: userDeatils?.phone_number },
                     { label: "Date Of Birth", value: userDeatils?.dob },
                     { label: "Gender", value: userDeatils?.gender },
-                    {
-                      label: "Driving Licence Status",
-                      value:
-                        userDeatils?.driving_license_verified === "Y"
-                          ? "Yes"
-                          : "No",
-                      status:
-                        userDeatils?.driving_license_verified === "Y"
-                          ? "text-green-300"
-                          : "text-red-500",
-                    },
-                    {
-                      label: "Aadhar Verified",
-                      value:
-                        userDeatils?.aadhar_verified === "Y" ? "Yes" : "No",
-                      status:
-                        userDeatils?.aadhar_verified === "Y"
-                          ? "text-green-300"
-                          : "text-red-500",
-                    },
+                    // {
+                    //   label: "Driving Licence Status",
+                    //   value:
+                    //     userDeatils?.driving_license_verified === "Y"
+                    //       ? "Yes"
+                    //       : "No",
+                    //   status:
+                    //     userDeatils?.driving_license_verified === "Y"
+                    //       ? "text-green-300"
+                    //       : "text-red-500",
+                    // },
+                    // {
+                    //   label: "Aadhar Verified",
+                    //   value:
+                    //     userDeatils?.aadhar_verified === "Y" ? "Yes" : "No",
+                    //   status:
+                    //     userDeatils?.aadhar_verified === "Y"
+                    //       ? "text-green-300"
+                    //       : "text-red-500",
+                    // },
                     { label: "User Id", value: "78YTJN986" },
                     { label: "User Address", value: userDeatils?.address },
                   ].map((item, index) => (
                     <div
                       key={index}
-                     // style={{ padding: "10px" }}
-                      className={`p-4 flex items-center rounded-lg shadow-lg transition-transform transform hover:-translate-y-1 hover:bg-[#6f82c6] hover:text-white 
+                      // style={{ padding: "10px" }}
+                      className={`p-4 flex items-center rounded-lg shadow-lg transition-transform transform hover:-translate-y-1 hover:bg-[#121212] hover:text-white 
   ${item.label == "User Address" ? "w-[350px] h-[100px]" : ""} 
   ${item.status || ""}`}
                     >
                       <div
-                        className="font-semibold "
+                        className="font-semibold"
                         //style={{ paddingRight: "10px" }}
                       >
                         {item.label} <span>:</span>
@@ -422,23 +452,37 @@ const UserProfile = () => {
             {activeTab === "documents" && (
               <div>
                 <h2
-                  className="text-xl font-semibold mb-2 text-[#6f82c6]"
+                  className="text-xl font-semibold mb-2 text-[#121212]"
                   //style={{ margin: "10px 0px" }}
                 >
                   User Documents
                 </h2>
-                <div className="md:flex justify-start items-center">
-                  <div className="flex justify-start items-center">
-                    <p
-                     // style={{ margin: "0px 10px", width: "150px" }}
+                <div className="md:flex justify-start items-center  space-x-8">
+                  <div className="flex   justify-start space-x-10 items-start  w-6/12">
+                  <div className="space-y-2">
+                  <p
+                      // style={{ margin: "0px 10px", width: "150px" }}
                       className="text-lg"
                     >
-                      Drivers Licence:
+                      Drivers Licence Details:
                     </p>
-                    <img
+                    <div>
+                    <h1 className="py-1">
+                      Drivers Licence Number :{" "}
+                      {userDeatils.driving_license_number}
+                    </h1>
+                    <h2>
+                      Drivers Licence Expiry :{" "}
+                      {userDeatils.driving_license_expiry}
+                    </h2>
+                  </div>
+
+                    </div>
+                    <div className="flex justify-center items-center">
+                  <img
                       src={userDeatils.driving_license_img_url}
                       className="w-44 h-22 rounded-lg"
-                     // style={{ margin: "10px" }}
+                      // style={{ margin: "10px" }}
                     ></img>
                     <FileUpload
                       onUpload={(data) =>
@@ -451,17 +495,22 @@ const UserProfile = () => {
                       type="Licence"
                     />
                   </div>
-                  <div className="flex justify-start items-center">
-                    <p
-                     // style={{ margin: "0px 10px", width: "150px" }}
+                  </div>
+                  <div className="flex  justify-start items-center space-x-7 w-6/12">
+                  <div>
+                  <p
+                      // style={{ margin: "0px 10px", width: "150px" }}
                       className="text-lg"
                     >
-                      Aadhar Card :
+                      Aadhar Card Details:
                     </p>
+                    <h1>Aadhar Number : {userDeatils.aadhar_number}</h1>
+                  </div>
+                  <div className="flex justify-center items-center">
                     <img
                       src={userDeatils?.aadhar_img_url}
                       className="w-44 h-22 rounded-lg"
-                     // style={{ margin: "10px" }}
+                      // style={{ margin: "10px" }}
                     ></img>
                     <FileUpload
                       onUpload={(data) =>
@@ -470,13 +519,33 @@ const UserProfile = () => {
                       type="Aaadhar"
                     />
                   </div>
+                  </div>
                 </div>
               </div>
             )}
             {activeTab === "status" && (
               <div>
-                <h2 className="text-xl font-semibold mb-2">Account Status</h2>
-                <p>Status: Active</p>
+                <div>
+                  <h2 className="text-xl font-semibold mb-2">
+                    Account Status :{overallAccountStatus}
+                  </h2>
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold mb-2">
+                    Driving Licence Status :{" "}
+                    {userDeatils?.driving_license_verified === "Y"
+                      ? "Verfied"
+                      : "Not Verfied"}{" "}
+                  </h2>
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold mb-2">
+                    Aadhar Verified :{" "}
+                    {userDeatils?.aadhar_verified === "Y"
+                      ? "Verfied"
+                      : "Not Verfied"}{" "}
+                  </h2>
+                </div>
               </div>
             )}
           </div>
