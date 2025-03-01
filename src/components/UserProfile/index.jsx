@@ -399,8 +399,9 @@ const UserProfile = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {[
+                     { label: "UserName", value: userDeatils.user_name },
                     {
-                      label: "UserName",
+                      label: "FullName",
                       value: `${userDeatils?.first_name} ${userDeatils?.last_name}`,
                     },
                     { label: "Email", value: userDeatils?.email },
@@ -427,7 +428,7 @@ const UserProfile = () => {
                     //       ? "text-green-300"
                     //       : "text-red-500",
                     // },
-                    { label: "User Id", value: "78YTJN986" },
+                   
                     { label: "User Address", value: userDeatils?.address },
                   ].map((item, index) => (
                     <div
