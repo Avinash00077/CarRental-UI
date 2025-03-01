@@ -16,7 +16,7 @@ import UserVerification from "./components/admin/user/UserVerfication";
 import CurrentBookings from "./components/admin/bookings/CurrentBookings";
 import Locations from "./components/admin/location/Locations";
 import CarBrands from "./components/admin/cars/CarBrands";
-import AdminRoute from "./routes/adminRoute";
+//import AdminRoute from "./routes/adminRoute";
 
 const App = () => {
   const [isLogin, setIsLogin] = useState(false);
