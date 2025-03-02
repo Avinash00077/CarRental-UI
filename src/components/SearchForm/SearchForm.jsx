@@ -148,7 +148,7 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
               id="buttondisplay"
               value={pickUpDate}
               placeholder="Pickup Date"
-              onChange={(e) => {setPickUpDate(e.value); setDropOffDate(e.value)}}
+              onChange={(e) => {setPickUpDate(e.value)}}
               minDate={new Date()}
               showIcon
             />
