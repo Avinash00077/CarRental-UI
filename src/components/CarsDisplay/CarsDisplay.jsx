@@ -95,6 +95,7 @@ const CarsDisplay = ({ category }) => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  console.log(carList,"CarList value is Hello")
   return (
     <div>
       <div className="w-full">
@@ -189,6 +190,7 @@ const CarsDisplay = ({ category }) => {
                     availability={item.availability}
                     daily_rent={item.daily_rent}
                     model_year={item.model_year}
+                    car_reviews={item.car_reviews}
                     registration_number={item.registration_number}
                     name={item.name}
                     description={item.description}

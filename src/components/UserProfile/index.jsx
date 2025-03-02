@@ -24,6 +24,8 @@ const UserProfile = () => {
     address: "",
   });
   const token = localStorage.getItem("authToken");
+  const userDetails = localStorage.getItem("userDetails");
+  const { driving_license_expiry } = JSON.parse(userDetails);
   const fetchUserData = async () => {
     setIsLoaderOpen(true);
 
@@ -46,10 +48,11 @@ const UserProfile = () => {
         dob: response?.data?.data[0].dob || "",
         address: response?.data?.data[0].address || "",
       });
+      console.log(userData)
       let overallStatus =
         userData.aadhar_verified === "Y" &&
         userData.driving_license_verified === "Y" &&
-        userData.driving_license_expiry === "N"
+        driving_license_expiry === "N"
           ? "Verified"
           : "Not Verified";
       setOverallAccountStatus(overallStatus);

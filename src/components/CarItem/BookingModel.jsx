@@ -24,7 +24,10 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
       ? "2025/02/27"
       : parseDate(userSelectedDates?.dropOffDate) || ""
   );
+  const [baseAmount, setBaseAmount] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [gstAmount, setGstAmount] = useState(0);
+  const [rentalTaxAmount, setRentalTaxAmount] = useState(0);
   const [tACValue, setTACValue] = useState(false);
   const [openTAC, setOpenTAc] = useState(false);
   const [totalDays, setTotalDays] = useState(0);
@@ -36,6 +39,8 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
   const [isLoaderOpen, setLoaderOpen] = useState(false);
   const [selectedTodatesInfo, setSelectedTodatesInfo] = useState(null);
   const [openToDateInputs, setOpenToDateInputs] = useState(false);
+  const gstRate = 0.18; // 18% GST
+  const rentalTaxRate = 0.05; // 5% Rental Tax
   // Function to calculate total days and amount
   // const calculateDaysBetween = (fromDate, toDate) => {
   //   if (!fromDate || !toDate) return 0;
@@ -66,14 +71,22 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
     : [];
 
   useEffect(() => {
-    if (userSelectedDates) {
-      const duration = calculateDaysBetween(startDate, endDate);
+    if (selectedDate && selectedToDate && selectedToTime) {
+      const duration = calculateDaysBetween(selectedDate, selectedToDate);
       console.log(duration, " Caliculated duration is ");
       setTotalDays(duration);
       const rentPerDay = parseFloat(carInfo[0].daily_rent);
-      setTotalAmount(rentPerDay * duration);
+
+      const totalRent = parseFloat(rentPerDay * duration);
+      const gstAmount = parseFloat(totalRent * gstRate);
+      const rentalTax = parseFloat(totalRent * rentalTaxRate);
+      const totalPayable = parseFloat(totalRent + gstAmount + rentalTax);
+      setBaseAmount(totalRent)
+      setGstAmount(gstAmount);
+      setRentalTaxAmount(rentalTax);
+      setTotalAmount(totalPayable);
     }
-  }, [startDate, endDate]);
+  }, [selectedDate, selectedToDate, selectedToTime]);
 
   // Function to dynamically load the Razorpay script
   const loadRazorpayScript = () => {
@@ -433,6 +446,30 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
                 }
               >
                 Total Days: {totalDays}
+              </p>
+              <p
+                className="font-semibold text-lg"
+                style={
+                  isScreenSize ? { marginTop: "5px" } : { marginTop: "5px" }
+                }
+              >
+                Base Rent: {baseAmount}
+              </p>
+              <p
+                className="font-semibold text-lg"
+                style={
+                  isScreenSize ? { marginTop: "5px" } : { marginTop: "5px" }
+                }
+              >
+                GST (18%): {gstAmount}
+              </p>
+              <p
+                className="font-semibold text-lg"
+                style={
+                  isScreenSize ? { marginTop: "5px" } : { marginTop: "5px" }
+                }
+              >
+                Rental Tax : {rentalTaxAmount}
               </p>
               <p
                 className="font-semibold text-lg text-[#121212] dark:text-blue-400"

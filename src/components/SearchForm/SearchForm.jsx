@@ -17,6 +17,7 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
       return new Date(year, month - 1, day);
     }
   };
+  const authToken = localStorage.getItem("authToken");
   const [selectedLocation, setSelectedLocation] = useState("Hyderabad");
   const [openModal, setOpenModal] = useState(false);
   const [pickUpDate, setPickUpDate] = useState(
@@ -55,13 +56,16 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
     "04:00 PM",
     "05:00 PM",
   ];
+  console.log(!pickUpDate|| !dropOffDate || !pickUpTime || !dropOffTime )
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (pickUpDate !== "" && pickUpTime !== "") {
+    if (pickUpDate !== "" && pickUpTime !== "" && authToken) {
       navigate(
         `/viewCars?pickUpDate=${pickUpDate}&toDate=${dropOffDate}&location=${selectedLocation}&pickupTime=${pickUpTime}&dropoffTime=${dropOffTime}`
       );
+    }else{
+      window.location.href = "/auth";
     }
   };
 
@@ -144,7 +148,7 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
               id="buttondisplay"
               value={pickUpDate}
               placeholder="Pickup Date"
-              onChange={(e) => setPickUpDate(e.value)}
+              onChange={(e) => {setPickUpDate(e.value); setDropOffDate(e.value)}}
               minDate={new Date()}
               showIcon
             />
@@ -211,7 +215,7 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
               value={dropOffDate}
               placeholder="DropOff Date"
               onChange={(e) => setDropOffDate(e.value)}
-              minDate={new Date()}
+              minDate={new Date(pickUpDate)}
               showIcon
             />
           </div>
@@ -262,7 +266,9 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
           <button
             type="submit"
             style={{ margin: "20px 20px" }}
-            className="w-[80%] h-[43px] bg-[#121212] text-white text-[18px] font-medium rounded-full focus:outline-none cursor-pointer"
+            className={`w-[80%] h-[43px] bg-[#121212] text-white text-[18px] font-medium rounded-full focus:outline-none 
+              ${!pickUpDate || !dropOffDate || !pickUpTime || !dropOffTime ? "bg-[#545454] cursor-not-allowed" : 'cursor-pointer '}`}
+              disabled={!pickUpDate || !dropOffDate || !pickUpTime || !dropOffTime}
           >
             Search
           </button>

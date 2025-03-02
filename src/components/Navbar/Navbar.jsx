@@ -153,7 +153,7 @@ const Navbar = () => {
                 onClick={() => handleLogin("login")}
                 className={`mx-2 text-white   ${
                   isScreenSize ? "h-8 w-16" : "h-10 w-24"
-                } bg-[#121212] font-medium rounded-full hover:text-white transition-colors duration-300 ease-in-out transform hover:scale-105 shadow-md hover:shadow-lg`}
+                } bg-[#121212] font-medium rounded-full hover:text-white transition-colors duration-300 ease-in-out transform hover:scale-105 shadow-md hover:bg-[#545454]`}
                 //style={{ marginRight: "10px" }}
               >
                 Login
