@@ -74,6 +74,7 @@ const AuthModal = () => {
   };
   const handleRestInputChange = (e) => {
     const { name, value } = e.target;
+    cons
     setResetFormData({ ...resetformData, [name]: value });
   };
 
@@ -323,8 +324,8 @@ const AuthModal = () => {
       <div
         className="absolute inset-0 "
         style={{
-          backgroundImage:
-            "url('https://ideogram.ai/assets/image/lossless/response/dcXzY0mIS8uKgte_QClBvQ')",
+          // backgroundImage:
+          //   "url('https://ideogram.ai/assets/image/lossless/response/dcXzY0mIS8uKgte_QClBvQ')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           opacity: "0.5",
@@ -645,15 +646,16 @@ const AuthModal = () => {
                     style={{ marginLeft: "3%", marginBottom: "10px" }}
                   >
                     <label className="text-sm w-24 text-black">
-                      UserName :{" "}
+                      UserName:
                     </label>
                     <input
                       type="text"
                       name="userName"
                       value={formData.userName}
+                          onChange={handleInputChange}
                       placeholder="Type your user name"
                       className="text-sm  h-10  bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none w-full"
-                      disabled
+                      disabled={authStatus !== "verifyEmail" }
                     />
                   </div>
                   {openResetPassword && (
@@ -720,7 +722,7 @@ const AuthModal = () => {
                       marginTop: "25px",
                     }}
                     type="submit"
-                    className="bg-[#121212] w-5/12 hover:bg-[#5a6aa1] text-medium py-2 px-5 rounded-full text-white  shadow-lg transition-colors duration-300 cursor-pointer"
+                    className="bg-[#121212] w-5/12 hover:bg-[#121212] hover:scale-105 text-medium py-2 px-5 rounded-full text-white  shadow-lg transition-colors duration-300 cursor-pointer"
                   >
                     {authStatus == "verifyEmail" ? "Send Otp" : "Submit"}
                   </button>

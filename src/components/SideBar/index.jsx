@@ -22,8 +22,8 @@ const SideBar = ({ setIsSidebarHovered }) => {
  menuItems = [
   { route: "/", label: "Home", icon: Home },
   { route: "/bookings", label: "Bookings", icon: CalendarCheck },
-  { route: "/ride", label: "Ride", icon: Car },
-  { route: "/reviews", label: "Reviews", icon: Star },
+  { route: "/viewCars", label: "Ride", icon: Car },
+  //{ route: "/reviews", label: "Reviews", icon: Star },
   { route: "/userProfile", label: "Profile", icon: User },
 ];
     }
@@ -97,7 +97,7 @@ const SideBar = ({ setIsSidebarHovered }) => {
       )}
       {isScreenSmall && (
         <div
-          className="fixed bottom-0 left-0 right-0 bg-gradient-to-l from-[#caefd7] via-[#f5bfd7] to-[#abc9e9] shadow-md  flex justify-around py-2 z-999"
+          className="fixed bottom-0 left-0 right-0 bg-[#121212] shadow-md  flex justify-around py-2 z-999"
           style={{ padding: "10px 0px" }}
         >
           {menuItems.map(({ route, label, icon: Icon }) => (
@@ -105,7 +105,7 @@ const SideBar = ({ setIsSidebarHovered }) => {
               key={route}
               to={route}
               className={`flex flex-col items-center text-xs ${
-                activeMenu === route ? "text-blue-600" : "text-gray-600"
+                activeMenu === route ? "text-white" : "text-gray-600"
               }`}
               onClick={() => setActiveMenu(route)}
             >

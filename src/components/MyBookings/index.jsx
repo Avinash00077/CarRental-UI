@@ -56,6 +56,8 @@ const MyBookings = () => {
         );
         if (response.status === 200) {
           setBookingsData(response.data.data);
+          setLoaderOpen(false);
+          setModalOpen(false);
         }
       } catch (error) {
         console.error(error);
@@ -133,6 +135,7 @@ const MyBookings = () => {
     setIsWhichModal(screen);
   };
   const handleRatingSubmit = async (booking_id, review_id) => {
+    setLoaderOpen(true);
     try {
       if (!review_id) {
         const response = await axios.post(
@@ -165,8 +168,7 @@ const MyBookings = () => {
           }
         );
       }
-      setModalOpen(false);
-      location.reload();
+      getUserBookings();
     } catch (error) {
       console.error(error);
       setModalOpen(true);
@@ -306,7 +308,9 @@ const MyBookings = () => {
           {bookingsData.map((booking) => (
             <div
               key={booking.booking_id}
-              className="flex items-center w-[80%] justify-between bg-white dark:bg-gray-800 shadow-md rounded-lg p-4"
+              className={ !isScreenSize ? `flex items-center w-[80%] justify-between bg-white dark:bg-gray-800 shadow-md rounded-lg p-4` : 
+                `flex items-center w-full justify-between bg-white dark:bg-gray-800 shadow-md rounded-lg p-4`
+              }
             >
               {/* Car Image */}
               <img
@@ -331,6 +335,18 @@ const MyBookings = () => {
               >
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                   {booking.car_name}
+                  <div className="flex gap-1 mb-3">
+              {booking.ride_status === 'COMPLETED' && ([1, 2, 3, 4, 5].map((star) => (
+                <span
+                  key={star}
+                  className={`text-lg cursor-pointer ${
+                    booking.rating >= star ? "text-yellow-500" : "text-gray-300"
+                  }`}
+                >
+                  ★
+                </span>
+              )))}
+            </div>
                 </h2>
                 <p className="text-sm text-gray-500">
                   ₹{booking.total_price} • {booking.start_date} -{" "}
@@ -353,7 +369,7 @@ const MyBookings = () => {
               </div>
 
               {/* Review Button */}
-              {booking.ride_status === "COMPLETED" && (
+              {booking.ride_status === "COMPLETED"  && booking.booking_status === 'CONFIRMED' && (
                 <button
                   onClick={() => {
                     setSelectedBooking(booking);
@@ -479,36 +495,45 @@ const MyBookings = () => {
 
       {modalOpen && isWhichModal === "View" && selectedBooking && (
         <div
-          className={`${
-            isScreenSize ? "h-[90vh] pt-80 " : "h-[98vh] "
-          } no-scrollbar overflow-y-auto w-full scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 fixed inset-0 flex justify-center items-center z-50 bg-opacity-40`}
+          className={`  ${
+            isScreenSize ? "bg-white" : "h-[98vh] mt-10  "
+          } no-scrollbar overflow-y-auto  w-full  scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 fixed inset-0 flex justify-center items-center z-50 bg-opacity-40`}
         >
-          <div className="bg-white bg-opacity-90 p-6 rounded-lg shadow-xl w-11/12 max-w-4xl flex flex-col md:flex-row relative">
+          <div className=" bg-opacity-90 lg:bg-white  lg:mt-0 p-6 lg:border lg:border-gray-300    lg:rounded-lg lg:shadow-xl w-full lg:w-11/12 h-full lg:h-[540px] max-w-4xl flex flex-col md:flex-row relative">
             <button
-              className="absolute top-0 right-3 to-black px-3 py-1 rounded-full text-lg hover:bg-gray-200 transition"
+              className="absolute top-0 right-3 to-black px-3  py-1  rounded-full text-lg hover:bg-gray-200 transition"
               onClick={() => setModalOpen(false)}
             >
               ✕
             </button>
 
             <div className="w-full md:w-1/2">
-              <img
+            <div>
+            <img
                 src={selectedBooking.car_cover_img_url}
                 alt={selectedBooking.car_name}
-                className="w-full h-[300px] md:h-full object-cover rounded-lg shadow-md"
+                className="w-full h-[44] lg:h-[240px]  mt-3 lg:mt-0 object-cover rounded-lg shadow-md"
               />
             </div>
-
-            <div className="w-full md:w-1/2 p-6 space-y-3">
-              <h2 className="text-2xl font-bold text-gray-800">
+              <div className="my-4 space-y-2">
+            <h2 className="text-2xl font-bold text-gray-800">
                 {selectedBooking.car_name}
               </h2>
+              <div className="flex lg:flex-col space-x-5">
               <p className="text-gray-700">
                 <strong>Brand:</strong> {selectedBooking.brand}
               </p>
               <p className="text-gray-700">
                 <strong>Model Year:</strong> {selectedBooking.model_year}
               </p>
+              </div>
+              <p className="text-gray-700 ">
+                <strong>Car Description:</strong> <span className="text-center">{selectedBooking.model_year} Helloejeeeeeeeeeeeeee</span>
+              </p>
+              </div>
+            </div>
+
+            <div className="w-full md:w-1/2 lg:p-6 lg:pt-0  space-y-3">
               <p className="text-gray-700">
                 <strong>Location:</strong> {selectedBooking.car_location}
               </p>
@@ -559,13 +584,13 @@ const MyBookings = () => {
                 <strong>End Date:</strong> {selectedBooking.end_date} (
                 {selectedBooking.end_time})
               </p>
-              <p className="text-gray-900 font-semibold text-lg">
+              <p className="text-gray-900 font-semibold text-md">
                 <strong>Total Price:</strong> ₹{selectedBooking.total_price}
               </p>
               <p className="text-gray-700">
                 <strong>Payment Mode:</strong> {selectedBooking.payment_mode}
               </p>
-              <p className="font-bold text-lg">
+              <p className="font-bold text-sm">
                 Status:
                 <strong
                   className={`${
@@ -584,7 +609,7 @@ const MyBookings = () => {
 
               {selectedBooking.booking_status === "CONFIRMED" && (
                 <button
-                  className="mt-4 w-full bg-red-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition"
+                  className="mt-4 mb-3 lg:mb-0 w-full bg-red-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition"
                   onClick={() =>
                     handleCancelBooking(selectedBooking.booking_id)
                   }
