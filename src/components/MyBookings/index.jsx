@@ -9,7 +9,7 @@ import Modal from "../Modal/Modal";
 import { getUserToken } from "../../utils/getToken";
 import { useScreenSize } from "../../context/screenSizeContext";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import L from "leaflet";
+import L from "leaflet"; 
 import "leaflet/dist/leaflet.css";
 
 const MyBookings = () => {

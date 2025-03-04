@@ -6,6 +6,7 @@ import axios from "axios";
 import constants from "../../config/constants";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Filters from "../Filters/Filters";
 import Loader from "../Loader/Loader";
 import { useScreenSize } from "../../context/screenSizeContext";
@@ -23,9 +24,13 @@ const CarsDisplay = ({ category }) => {
   const [isLoaderOpen, setIsLoderOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const isScreenSize = useScreenSize().isScreenSmall;
+  const [isFilterOpen, setIsFilterOpen] = useState(true);
   const [selectedCar, setSelectedCar] = useState([]);
+  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [filteredCars, setFilteredCars] = useState([]);
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
     if (authToken) {
@@ -40,6 +45,10 @@ const CarsDisplay = ({ category }) => {
     )}/${String(date.getDate()).padStart(2, "0")}`;
   };
 
+  const handleFilter = (filteredCars) => {
+    console.log(filteredCars, " jdddddddd");
+    setFilteredCars(filteredCars);
+  };
   const pickUpDate = pickUpDateString ? new Date(pickUpDateString) : null;
   const formattedDropOffDate = dropOffDate ? formatDate(dropOffDate) : null;
   const formattedPickUpDate =
@@ -59,22 +68,25 @@ const CarsDisplay = ({ category }) => {
     const fetchData = async () => {
       const token = localStorage.getItem("authToken");
       try {
-        console.log(formattedPickUpDate, " formated pickup date ");
         const response = await axios.get(`${constants.API_BASE_URL}/user/car`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
             location: userLocation || "",
-            start_date: isScreenSize ? "2025/02/26" : formattedPickUpDate,
-            end_date: isScreenSize ? "2025/02/27" : formattedDropOffDate,
+            start_date: formattedPickUpDate,
+            end_date: formattedDropOffDate,
             end_time: dropOffTime || "11:00",
             start_time: pickupTime || "10:00",
           },
         });
         //start_date: formattedPickUpDate|| "2025/02/21",
         // end_date: formattedDropOffDate ||"2025/02/23",
-
+        console.log(
+          response.data.data,
+          " Helelo data ta sjsjsjs heelo sudheer how are you"
+        );
         setCarList(response.data.data);
+        setFilteredCars(response.data.data);
         setIsLoderOpen(false);
       } catch (error) {
         console.error("Error fetching car list:", error);
@@ -89,19 +101,26 @@ const CarsDisplay = ({ category }) => {
   }, []);
   const handleBookNow = (id) => {
     const currentItems = carList.filter((x) => x.car_id == id);
+    navigate(
+      `/BookRide?startDate=${formattedPickUpDate}&carId=${
+        currentItems[0].car_id
+      }&endDate=${formattedDropOffDate}&startTime=${
+        pickupTime || "10:00"
+      }&endTime=${pickupTime || "10:00"}`
+    );
     setIsBookingOpen(!isBookingOpen);
-    setSelectedCar(currentItems);
+    setIsFilterOpen(false);
+    setSelectedCar(currentItems[0]);
   };
   const closeModal = () => {
     setIsModalOpen(false);
   };
-  console.log(carList,"CarList value is Hello")
   return (
     <div>
       <div className="w-full">
         {isBookingOpen && (
           <BookingModel
-            carInfo={selectedCar}
+            car={selectedCar}
             userSelectedDates={userSelectedDates}
             closeModal={() => setIsBookingOpen(false)}
           />
@@ -156,11 +175,16 @@ const CarsDisplay = ({ category }) => {
             marginTop: isScreenSize ? "0px" : "80px",
           }}
         >
-          {isScreenSize && <Filters userSelectedDates={userSelectedDates} />}
+          {/* {isScreenSize && isFilterOpen && (
+            <Filters userSelectedDates={userSelectedDates} />
+          )} */}
 
           {!isScreenSize && (
             <div className="w-[99%]">
-              <Filters userSelectedDates={userSelectedDates} />
+              <Filters
+                cars={carList} // Pass car list to Filters
+                onFilter={handleFilter}
+              />
             </div>
           )}
           <div className="w-[1%] relative left-1 hidden lg:flex">
@@ -175,32 +199,15 @@ const CarsDisplay = ({ category }) => {
             marginTop: isScreenSize ? "12%" : "0%",
           }}
         >
-          {carList.length > 0 ? (
+          {filteredCars.length > 0 ? (
             <div
               className={`${
                 isScreenSize ? "h-[73vh] " : "h-[630px] "
               } no-scrollbar overflow-y-auto w-full scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200`}
             >
               <div className="md:grid md:grid-cols-3 md:gap-4 w-full">
-                {carList.map((item, index) => (
-                  <CarItem
-                    key={index}
-                    id={item.car_id}
-                    brand={item.brand}
-                    availability={item.availability}
-                    daily_rent={item.daily_rent}
-                    model_year={item.model_year}
-                    car_reviews={item.car_reviews}
-                    registration_number={item.registration_number}
-                    name={item.name}
-                    description={item.description}
-                    price={item.price}
-                    userSelectedDates={userSelectedDates}
-                    image={item.car_cover_img_url}
-                    image_ext={item.image_ext}
-                    location={item.location}
-                    onBookNow={handleBookNow}
-                  />
+                {filteredCars.map((item, index) => (
+                  <CarItem car={item} onBookNow={handleBookNow} />
                 ))}
               </div>
             </div>
@@ -209,7 +216,7 @@ const CarsDisplay = ({ category }) => {
               className=" w-full  flex justify-center items-center h-[579px]"
               style={{ paddingLeft: "6%" }}
             >
-              {!isLoaderOpen && (
+              {!isLoaderOpen || filteredCars.length <=0 && (
                 <img
                   src="https://ideogram.ai/assets/progressive-image/balanced/response/9s0QYH0tSRy_M0ThsX0BPw"
                   className="full  opacity-80"

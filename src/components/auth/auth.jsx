@@ -74,7 +74,7 @@ const AuthModal = () => {
   };
   const handleRestInputChange = (e) => {
     const { name, value } = e.target;
-    cons
+    console.log(name, value, " Hello I am here ");
     setResetFormData({ ...resetformData, [name]: value });
   };
 
@@ -270,7 +270,7 @@ const AuthModal = () => {
     const month = (convertDOB.getMonth() + 1).toString().padStart(2, "0");
     const day = convertDOB.getDate().toString().padStart(2, "0");
     const formattedDOB = `${year}-${month}-${day}`;
-    return formattedDOB
+    return formattedDOB;
   };
 
   const handleDOB = (e) => {
@@ -525,7 +525,7 @@ const AuthModal = () => {
     }`}
                         id="buttondisplay"
                         placeholder="Select your DOB"
-                        onChange={(e)=>handleDOB(e)}
+                        onChange={(e) => handleDOB(e)}
                         //style={{ padding: "1px", backgroundColor: "beige" }}
                         showIcon
                       />
@@ -645,17 +645,15 @@ const AuthModal = () => {
                     className="flex items-center justify-start space-x-1"
                     style={{ marginLeft: "3%", marginBottom: "10px" }}
                   >
-                    <label className="text-sm w-24 text-black">
-                      UserName:
-                    </label>
+                    <label className="text-sm w-24 text-black">UserName:</label>
                     <input
                       type="text"
                       name="userName"
                       value={formData.userName}
-                          onChange={handleInputChange}
+                      onChange={handleInputChange}
                       placeholder="Type your user name"
                       className="text-sm  h-10  bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none w-full"
-                      disabled={authStatus !== "verifyEmail" }
+                      disabled={authStatus !== "verifyEmail"}
                     />
                   </div>
                   {openResetPassword && (
@@ -665,7 +663,7 @@ const AuthModal = () => {
                         style={{ marginLeft: "3%" }}
                       >
                         <label className="block text-sm mb-1 w-24">
-                          Enter Opt
+                          Enter Otp
                         </label>
                         <input
                           type="text"

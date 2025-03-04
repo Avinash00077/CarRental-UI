@@ -81,7 +81,7 @@ const LocationModal = ({ closeModal, onSelectLocation }) => {
     <div>
       <div className="fixed inset-0 flex items-center justify-center  z-50">
         <div
-          className={`relative rounded-lg shadow-2xl bg-gradient-to-b from-[#f5bfd7] to-[#abc9e9]  ${
+          className={`relative rounded-lg shadow-2xl bg-white  ${
             isScreenSize ? " flex w-[93%] h-[300px]" : "w-[40%] h-auto"
           }  mx-4 md:mx-0 p-8 space-y-8`}
           style={{ padding: "20px" }}
@@ -93,20 +93,20 @@ const LocationModal = ({ closeModal, onSelectLocation }) => {
           </div>
           <div className="flex items-center justify-center">
             {locationsData.length > 0 && (
-              <div className="grid grid-cols-4 sm:grid-cols-2 md:grid-cols-4 gap-4 px-4">
+              <div className={isScreenSize ? `grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 mt-3 px-4` :`grid grid-cols-4 sm:grid-cols-2 md:grid-cols-4 gap-4 px-4`}>
                 {locationsData.map((location, index) => (
                   <div
                     key={index}
                     className="flex flex-col items-center justify-center p-4 cursor-pointer hover:scale-105 transition-transform"
-                    style={{ padding: "10px" }}
+                    //style={{ padding: "10px" }}
                     onClick={() => selectedLocation(location.name)}
                   >
                     <img
                       src={location.image}
                       alt={location.name}
-                      className="w-2o h-20 object-fit"
+                      className={ isScreenSize ? 'w-10 h-10 object-fit' : `w-2o h-20 object-fit`}
                     />
-                    <h1 className="text-lg font-semibold mt-2 text-gray-800">
+                    <h1 className={`{font-bold mt-2 text-black md ${isScreenSize ? "text-20px": "text-lg" }}`}>
                       {location.name}
                     </h1>
                   </div>

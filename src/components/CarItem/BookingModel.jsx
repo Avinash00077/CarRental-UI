@@ -4,6 +4,7 @@ import constants from "../../config/constants";
 import Loader from "../../components/Loader/Loader";
 import { Calendar } from "primereact/calendar";
 import { FaArrowLeft } from "react-icons/fa6";
+import { Star } from "lucide-react";
 import "primereact/resources/primereact.min.css";
 import {
   calculateDaysBetween,
@@ -13,17 +14,8 @@ import {
 import { useScreenSize } from "../../context/screenSizeContext";
 import "primereact/resources/themes/lara-light-blue/theme.css";
 
-const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
-  console.log(carInfo, "car info is ");
-  const isScreenSize = useScreenSize().isScreenSmall;
-  const [startDate, setStartDate] = useState(
-    isScreenSize ? "2025/02/26" : parseDate(userSelectedDates?.fromDate) || ""
-  );
-  const [endDate, setEndDate] = useState(
-    isScreenSize
-      ? "2025/02/27"
-      : parseDate(userSelectedDates?.dropOffDate) || ""
-  );
+const BookingModel = ({ car, closeModal, userSelectedDates }) => {
+  console.log(car, "ooooooooooooooooooooo");
   const [baseAmount, setBaseAmount] = useState(0);
   const [totalAmount, setTotalAmount] = useState(0);
   const [gstAmount, setGstAmount] = useState(0);
@@ -37,7 +29,7 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
   const [selectedToTime, setSelectedToTime] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [isLoaderOpen, setLoaderOpen] = useState(false);
-  const [selectedTodatesInfo, setSelectedTodatesInfo] = useState(null);
+  const [selectedTodatesInfo, setSelectedTodatesInfo] = useState([]);
   const [openToDateInputs, setOpenToDateInputs] = useState(false);
   const gstRate = 0.18; // 18% GST
   const rentalTaxRate = 0.05; // 5% Rental Tax
@@ -59,12 +51,21 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
   //   return differenceInDays;
   // };
 
+  console.log(car, "car info is ");
+  const isScreenSize = useScreenSize().isScreenSmall;
+  const [startDate, setStartDate] = useState(
+    isScreenSize ? "2025/02/26" : parseDate(userSelectedDates?.fromDate) || ""
+  );
+  const [endDate, setEndDate] = useState(
+    isScreenSize
+      ? "2025/02/27"
+      : parseDate(userSelectedDates?.dropOffDate) || ""
+  );
   const timeSlots = selectedDate
-    ? carInfo[0].available_slots.find(
-        (slot) => slot.available_date === selectedDate
-      )?.time_slots || []
+    ? car.available_slots.find((slot) => slot.available_date === selectedDate)
+        ?.time_slots || []
     : [];
-
+  console.log(selectedTodatesInfo);
   const toDateSlots = selectedToDate
     ? selectedTodatesInfo.find((slot) => slot.available_date === selectedToDate)
         ?.time_slots || []
@@ -75,13 +76,13 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
       const duration = calculateDaysBetween(selectedDate, selectedToDate);
       console.log(duration, " Caliculated duration is ");
       setTotalDays(duration);
-      const rentPerDay = parseFloat(carInfo[0].daily_rent);
+      const rentPerDay = parseFloat(car.daily_rent);
 
       const totalRent = parseFloat(rentPerDay * duration);
       const gstAmount = parseFloat(totalRent * gstRate);
       const rentalTax = parseFloat(totalRent * rentalTaxRate);
       const totalPayable = parseFloat(totalRent + gstAmount + rentalTax);
-      setBaseAmount(totalRent)
+      setBaseAmount(totalRent);
       setGstAmount(gstAmount);
       setRentalTaxAmount(rentalTax);
       setTotalAmount(totalPayable);
@@ -247,7 +248,6 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
     setSelectedTime(e.target.value);
     fetchBookingSlots(e.target.value);
   };
-  console.log(selectedTodatesInfo, " heeeeeeeeeeeeeeeeeeee");
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div
@@ -532,6 +532,43 @@ const BookingModel = ({ carInfo, closeModal, userSelectedDates }) => {
       </div>
     </div>
   );
+  // return (
+  //   <div className="max-w-5xl mx-auto p-4">
+  //     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  //       <div>
+  //         <img src="/car-image.jpg" alt="Car" className="rounded-lg w-full h-72 object-cover" />
+  //       </div>
+  //       <div>
+  //         <h1 className="text-2xl font-bold">{car.name}</h1>
+  //         <p className="text-gray-500">{car.fuelType} • {car.seats} Seats</p>
+  //         <div className="mt-2 flex items-center text-yellow-500">
+  //           <Star size={20} fill="currentColor" />
+  //           <span className="ml-1 text-lg">{car.rating}</span>
+  //         </div>
+  //         <div className="mt-4 border p-4 rounded-lg shadow">
+  //           <p className="text-gray-600">Trip Protection Fee: ₹{car.protectionFee}</p>
+  //           <p className="text-xl font-semibold">Total Price: ₹{car.price}</p>
+  //           {/* <Button className="w-full mt-3 bg-green-600 hover:bg-green-700">Login to Continue</Button> */}
+  //         </div>
+  //       </div>
+  //     </div>
+  //     <div className="mt-8">
+  //       <h2 className="text-xl font-semibold">Ratings & Reviews</h2>
+  //       {/* {car.reviews.map((review, index) => (
+  //         <Card key={index} className="p-4 mt-3">
+  //           <p className="font-medium">{review.name}</p>
+  //           <p className="text-sm text-gray-500">{review.date}</p>
+  //           <div className="flex items-center text-yellow-500">
+  //             {[...Array(review.rating)].map((_, i) => (
+  //               <Star key={i} size={16} fill="currentColor" />
+  //             ))}
+  //           </div>
+  //           <p className="text-gray-700 mt-2">{review.text}</p>
+  //         </Card>
+  //       ))} */}
+  //     </div>
+  //   </div>
+  // );
 };
 
 export default BookingModel;

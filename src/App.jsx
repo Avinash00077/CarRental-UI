@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
 import Auth from "./components/auth/auth";
@@ -7,6 +8,7 @@ import CarsDisplay from "./components/CarsDisplay/CarsDisplay";
 import AdminAuth from "./components/admin/AdminAuth";
 import PlaceOrder from "./pages/PlaceOrder/PlaceOrder";
 import { useScreenSize } from "../src/context/screenSizeContext";
+import { useNavigate } from "react-router-dom";
 import SideBar from "./components/SideBar";
 import MyBookings from "./components/MyBookings";
 import PaymentPage from "./components/PaymentPage/PaymentPage";
@@ -14,6 +16,7 @@ import UserProfile from "./components/UserProfile";
 import AdminCarUpload from "./components/admin/cars/car-upload-edit";
 import UserVerification from "./components/admin/user/UserVerfication";
 import CurrentBookings from "./components/admin/bookings/CurrentBookings";
+import BookRide from "./components/bookingRide"
 import Locations from "./components/admin/location/Locations";
 import CarBrands from "./components/admin/cars/CarBrands";
 //import AdminRoute from "./routes/adminRoute";
@@ -23,7 +26,9 @@ const App = () => {
   const [isAdminLogin, setIsAdminLogin] = useState(false);
   const [isSidebarHovered, setIsSidebarHovered] = useState(false);
   const { isScreenSmall } = useScreenSize();
-
+  const location = useLocation();
+  const navigate = useNavigate();
+  console.log(location," Location value is ")
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
     if (authToken) {
@@ -32,6 +37,11 @@ const App = () => {
     const adminAuthToken = localStorage.getItem("adminAuthToken");
     if (adminAuthToken) {
       setIsAdminLogin(true);
+      if(location.pathname ==="/"){
+        navigate("/admin/bookings")
+      }
+    }else{
+      localStorage.removeItem("adminAuthToken")
     }
   }, []);
 
@@ -74,6 +84,7 @@ const App = () => {
           <Route path="/booking" element={<PaymentPage />} />
           <Route path="/admin" element={<AdminAuth />} />
           <Route path="/userProfile" element={<UserProfile />} />
+          <Route path="/BookRide" element={<BookRide/>}/>
 
           {/* <Route element={<AdminRoute isAdminLogin={isAdminLogin} />}> */}
             <Route path="/admin/car-upload" element={<AdminCarUpload />} />
