@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useScreenSize } from "../../context/screenSizeContext";
-import user from "../../assets/user.png";
+import user from "../../assets/boy.png";
 import Modal from "../Modal/Modal";
 const Navbar = () => {
   const [menu, setMenu] = useState("Home");
