@@ -18,7 +18,7 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
     }
   };
   const authToken = localStorage.getItem("authToken");
-  const [selectedLocation, setSelectedLocation] = useState("Hyderabad");
+  const [selectedLocation, setSelectedLocation] = useState(localStorage.getItem("location") || "Hyderabad");
   const [openModal, setOpenModal] = useState(false);
   const [pickUpDate, setPickUpDate] = useState(
     parseDate(userSelectedDates?.fromDate) || ""
@@ -59,6 +59,7 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
   console.log(!pickUpDate|| !dropOffDate || !pickUpTime || !dropOffTime )
 
   const handleSubmit = (e) => {
+    console.log(pickUpDate)
     e.preventDefault();
     if (pickUpDate !== "" && pickUpTime !== "" && authToken) {
       navigate(
@@ -69,6 +70,18 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
     }
   };
 
+  useEffect(()=>{
+    const loaction = localStorage?.getItem("location");
+    if(!loaction){
+      console.log(loaction," Location modale isnnssssssssss")
+      setOpenModal(true)
+    }
+  },[selectedLocation])
+  const handleLocation = (location)=>{
+    setSelectedLocation(location)
+    localStorage.setItem("location",location)
+  }
+
   return (
     <form
       className="flex  flex-col items-center  justify-center"
@@ -77,7 +90,7 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
       {openModal && fromWhere === "homePage" && (
         <LocationModal
           closeModal={() => setOpenModal(false)}
-          onSelectLocation={(location) => setSelectedLocation(location)}
+          onSelectLocation={(location) =>handleLocation(location) }
         />
       )}
       <div

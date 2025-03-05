@@ -4,6 +4,7 @@ import axios from "axios";
 import { Star } from "lucide-react";
 import { getUserToken} from "../../utils/getToken"
 import Modal from "../Modal/Modal";
+import { MessageSquare } from "lucide-react";
 import Loader from "../Loader/Loader";
 
 const Contact = () => {
@@ -88,6 +89,9 @@ const Contact = () => {
       {openFeedBackForm && (
         <div className="fixed inset-0 flex items-center justify-center z-10">
           <div className="w-lg mx-auto p-4 shadow-lg rounded-2xl border border-gray-200 bg-white">
+          <div className="flex justify-end" onClick={()=>setFeedBackForm(false)}>
+              <span className="material-icons cursor-pointer text-xl">X</span>
+            </div>
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-4">
                 <img
@@ -135,14 +139,14 @@ const Contact = () => {
       )}
       <div className="flex justify-center items-center">
         <div
-          className="bg-[#121212] rounded-[15px] flex flex-col items-center w-full h-[20vh] p-24"
+          className="bg-[#121212] rounded-[15px] flex flex-col items-center w-full h-[22vh] p-24"
           style={{ padding: "20px" }}
         >
           <h2 className="text-white text-2xl p-2">
-            <marquee direction="right">Contact Us</marquee>
+            <h1 direction="right">Contact Us</h1>
           </h2>
           <div
-            className="mt-4  rounded-lg px-2 py-1 w-[350px] flex justify-between items-center"
+            className="mt-4  rounded-lg px-2 py-1 w-[480px] flex justify-between items-center space-x-5"
             style={{ padding: "20px" }}
           >
             {/* Email */}
@@ -175,12 +179,9 @@ const Contact = () => {
               +918328289090
             </p>
             {userDetails && (
-              <p
-                className="flex items-center  rounded-2xl text-white pb-2 ml-10 cursor-pointer"
-                onClick={() => setFeedBackForm(!openFeedBackForm)}
-              >
-                FeedBack Us
-              </p>
+           <p className="flex items-center rounded-2xl text-white pb-2 cursor-pointer whitespace-nowrap" onClick={()=>setFeedBackForm(true)}>
+          <MessageSquare size={20}  /> <span className="pl-3">FeedBack Us</span> 
+         </p>
             )}
           </div>
         </div>

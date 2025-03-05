@@ -216,7 +216,7 @@ const CarsDisplay = ({ category }) => {
               className=" w-full  flex justify-center items-center h-[579px]"
               style={{ paddingLeft: "6%" }}
             >
-              {!isLoaderOpen || filteredCars.length <=0 && (
+              {!isLoaderOpen  && (
                 <img
                   src="https://ideogram.ai/assets/progressive-image/balanced/response/9s0QYH0tSRy_M0ThsX0BPw"
                   className="full  opacity-80"

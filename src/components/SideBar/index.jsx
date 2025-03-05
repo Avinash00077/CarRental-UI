@@ -22,7 +22,7 @@ const SideBar = ({ setIsSidebarHovered }) => {
  menuItems = [
   { route: "/", label: "Home", icon: Home },
   { route: "/bookings", label: "Bookings", icon: CalendarCheck },
-  { route: "/viewCars", label: "Ride", icon: Car },
+  { route: "/rides", label: "Ride", icon: Car },
   //{ route: "/reviews", label: "Reviews", icon: Star },
   { route: "/userProfile", label: "Profile", icon: User },
 ];

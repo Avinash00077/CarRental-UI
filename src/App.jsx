@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Home from "./pages/Home/Home";
 import Auth from "./components/auth/auth";
+import RideCars from "./components/RideCars";
 import CarsDisplay from "./components/CarsDisplay/CarsDisplay";
 import AdminAuth from "./components/admin/AdminAuth";
 import PlaceOrder from "./pages/PlaceOrder/PlaceOrder";
@@ -83,6 +84,7 @@ const App = () => {
           <Route path="/bookings" element={<MyBookings />} />
           <Route path="/booking" element={<PaymentPage />} />
           <Route path="/admin" element={<AdminAuth />} />
+          <Route path="/rides" element={<RideCars />} />
           <Route path="/userProfile" element={<UserProfile />} />
           <Route path="/BookRide" element={<BookRide/>}/>
 

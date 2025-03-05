@@ -75,6 +75,7 @@ const LocationModal = ({ closeModal, onSelectLocation }) => {
 
   const selectedLocation = (location) => {
     onSelectLocation(location);
+    //localStorage.setItem("location",location)
     closeModal();
   };
   return (
