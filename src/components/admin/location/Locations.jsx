@@ -61,9 +61,9 @@ const Locations = () => {
                   <th scope="col" className="px-6 py-3">
                     Status
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  {/* <th scope="col" className="px-6 py-3">
                     Action
-                  </th>
+                  </th> */}
                 </tr>
               </thead>
               <tbody>
@@ -77,7 +77,7 @@ const Locations = () => {
                       {location.activeInd === "Y" ? "Active" : "Inactive"}{" "}
                     </td>
 
-                    <td className="px-6 py-4">
+                    {/* <td className="px-6 py-4">
                       <a
                         href="#"
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -94,7 +94,7 @@ const Locations = () => {
                       >
                         Edit
                       </a>
-                    </td>
+                    </td> */}
                   </tr>
                 ))}
               </tbody>

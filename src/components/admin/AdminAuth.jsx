@@ -45,7 +45,7 @@ const AdminAuth = () => {
       console.log(response, "Response Value is");
       setOpenModal(true);
       setTimeout(() => {
-        window.location.href = "/admin/car-upload";
+        window.location.href = "/admin/bookings";
       }, 4000);
    
     } catch (error) {

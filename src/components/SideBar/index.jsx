@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, CalendarCheck, Car, Star, User, BookAIcon, LoaderCircle, CarFrontIcon } from "lucide-react";
+import { Home, CalendarCheck, Car, GalleryVerticalEnd , User, ShieldCheck , CarFrontIcon, UserCircle2Icon, LocateFixed  } from "lucide-react";
 import { useScreenSize } from "../../context/screenSizeContext";
 
 const SideBar = ({ setIsSidebarHovered }) => {
@@ -11,12 +11,13 @@ const SideBar = ({ setIsSidebarHovered }) => {
       const {user_type} = JSON.parse(adminDetails);
       menuItems = [
         { route: "/admin/car-upload", label: "Car Upload", icon: Car },
-        { route: "/admin/bookings", label: "Bookings", icon: BookAIcon },
+        { route: "/admin/bookings", label: "Bookings", icon: GalleryVerticalEnd  },
       ];
       if(user_type === 'super_user'){
-        menuItems.push({ route: "/admin/user-verification", label: "User Verfication", icon: User })
-        menuItems.push({ route: "/admin/locations", label: "Locations", icon: LoaderCircle })
+        menuItems.push({ route: "/admin/user-verification", label: "User Verfication", icon: ShieldCheck  })
+        menuItems.push({ route: "/admin/locations", label: "Locations", icon: LocateFixed  })
         menuItems.push({ route: "/admin/cars-brands", label: "Car Brands", icon: CarFrontIcon })
+        menuItems.push({ route: "/admin/admin-users", label: "Admins", icon: UserCircle2Icon })
       }
     }else{
  menuItems = [

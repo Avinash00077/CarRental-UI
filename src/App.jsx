@@ -17,9 +17,10 @@ import UserProfile from "./components/UserProfile";
 import AdminCarUpload from "./components/admin/cars/car-upload-edit";
 import UserVerification from "./components/admin/user/UserVerfication";
 import CurrentBookings from "./components/admin/bookings/CurrentBookings";
-import BookRide from "./components/bookingRide"
+import BookRide from "./components/bookingRide";
 import Locations from "./components/admin/location/Locations";
 import CarBrands from "./components/admin/cars/CarBrands";
+import Admins from "./components/admin/admins/AdminUsers";
 //import AdminRoute from "./routes/adminRoute";
 
 const App = () => {
@@ -29,7 +30,7 @@ const App = () => {
   const { isScreenSmall } = useScreenSize();
   const location = useLocation();
   const navigate = useNavigate();
-  console.log(location," Location value is ")
+  console.log(location, " Location value is ");
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
     if (authToken) {
@@ -38,11 +39,11 @@ const App = () => {
     const adminAuthToken = localStorage.getItem("adminAuthToken");
     if (adminAuthToken) {
       setIsAdminLogin(true);
-      if(location.pathname ==="/"){
-        navigate("/admin/bookings")
+      if (location.pathname === "/") {
+        navigate("/admin/bookings");
       }
-    }else{
-      localStorage.removeItem("adminAuthToken")
+    } else {
+      localStorage.removeItem("adminAuthToken");
     }
   }, []);
 
@@ -67,7 +68,9 @@ const App = () => {
             : { marginLeft: "0%", padding: "0px" }),
           ...(!isScreenSmall && { fontSize: "14px", padding: "0px" }),
         }}
-        className={`transition-all duration-300 ${isScreenSmall && "w-full"} p-4 ${
+        className={`transition-all duration-300 ${
+          isScreenSmall && "w-full"
+        } p-4 ${
           isLogin
             ? isSidebarHovered
               ? "ml-[5%] w-[calc(100%-14%)]"
@@ -86,14 +89,18 @@ const App = () => {
           <Route path="/admin" element={<AdminAuth />} />
           <Route path="/rides" element={<RideCars />} />
           <Route path="/userProfile" element={<UserProfile />} />
-          <Route path="/BookRide" element={<BookRide/>}/>
+          <Route path="/BookRide" element={<BookRide />} />
 
           {/* <Route element={<AdminRoute isAdminLogin={isAdminLogin} />}> */}
-            <Route path="/admin/car-upload" element={<AdminCarUpload />} />
-            <Route path="/admin/user-verification" element={<UserVerification />} />
-            <Route path="/admin/bookings" element={<CurrentBookings />} />
-            <Route path="/admin/locations" element={<Locations />} />
-            <Route path="/admin/cars-brands" element={< CarBrands />} />
+          <Route path="/admin/car-upload" element={<AdminCarUpload />} />
+          <Route
+            path="/admin/user-verification"
+            element={<UserVerification />}
+          />
+          <Route path="/admin/bookings" element={<CurrentBookings />} />
+          <Route path="/admin/locations" element={<Locations />} />
+          <Route path="/admin/cars-brands" element={<CarBrands />} />
+          <Route path="/admin/admin-users" element={<Admins />} />
           {/* </Route> */}
         </Routes>
       </div>
