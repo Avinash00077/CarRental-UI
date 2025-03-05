@@ -14,12 +14,11 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-
 const BookRide = () => {
-   const carIcon = new L.Icon({
-      iconUrl: "https://cdn-icons-png.flaticon.com/512/252/252025.png", // Car marker icon
-      iconSize: [35, 35],
-    });
+  const carIcon = new L.Icon({
+    iconUrl: "https://cdn-icons-png.flaticon.com/512/252/252025.png", // Car marker icon
+    iconSize: [35, 35],
+  });
   const [searchParams] = useSearchParams();
   const startDate = searchParams.get("startDate");
   const carId = searchParams.get("carId");
@@ -144,13 +143,15 @@ const BookRide = () => {
       );
       setCar(response.data.data);
       setAvilableSLots(response.data.data[0].available_slots);
-      console.log( response.data.data[0].latitude,
-        response.data.data[0].longitude)
-      setLocation([
+      console.log(
         response.data.data[0].latitude,
         response.data.data[0].longitude
+      );
+      setLocation([
+        response.data.data[0].latitude,
+        response.data.data[0].longitude,
       ]);
-      console.log(location)
+      console.log(location);
       setLoaderOpen(false);
     } catch (error) {
       console.log(error);
@@ -172,41 +173,22 @@ const BookRide = () => {
     setOpenTAc(false);
     value == "accept" ? setTACValue(true) : setTACValue(false);
   };
-  const postBooking = async () => {
-    setLoaderOpen(true);
-
-    const payload = {
-      car_id: car[0].car_id,
-      start_date: formatDateToYYYYMMDD(startDate),
-      end_date: formatDateToYYYYMMDD(endDate),
-      start_time: selectedTime || "10:00",
-      end_time: selectedToTime || "11:00",
-      payment_mode: "ONLINE",
-      total_price: totalAmount,
-    };
-
-    try {
-      const response = await axios.post(
-        `${constants.API_BASE_URL}/user/booking`,
-        payload,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getUserToken()}`,
-          },
-        }
-      );
-
-      if (response.data) {
-        setLoaderOpen(false);
-        startRazorpayPayment(response.data.data.booking_id, totalAmount);
-      } else {
-        console.error("Booking failed: Invalid response format", response);
+  // Function to dynamically load the Razorpay script
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if (window.Razorpay) {
+        resolve(true);
+        return;
       }
-    } catch (error) {
-      console.error("Error while booking:", error);
-    }
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.async = true;
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
   };
+
   const updateBookingStatus = async (booking_id, transaction_id) => {
     const payload = {
       booking_id: booking_id,
@@ -220,7 +202,7 @@ const BookRide = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${getUserToken()}`,
           },
         }
       );
@@ -238,22 +220,11 @@ const BookRide = () => {
       console.error("Error while booking update:", error);
     }
   };
-  const loadRazorpayScript = () => {
-    return new Promise((resolve) => {
-      if (window.Razorpay) {
-        resolve(true);
-        return;
-      }
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.async = true;
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
-    });
-  };
+
+  // Function to start the Razorpay payment process
   const startRazorpayPayment = async (bookingId, amount) => {
     const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+    console.log(userDetails);
     const isLoaded = await loadRazorpayScript();
     if (!isLoaded) {
       console.error("Failed to load Razorpay script");
@@ -286,6 +257,48 @@ const BookRide = () => {
 
     const rzp = new window.Razorpay(options);
     rzp.open();
+  };
+
+  // Function to handle the booking API call
+  const postBooking = async () => {
+    setLoaderOpen(true);
+    console.log("Initiating booking...");
+
+    const payload = {
+      car_id: carId,
+      start_date: formatDateToYYYYMMDD(selectedDate),
+      end_date: formatDateToYYYYMMDD(selectedToDate),
+      start_time: selectedTime || "10:00",
+      end_time: selectedToTime || "11:00",
+      payment_mode: "ONLINE",
+      total_price: totalAmount,
+    };
+
+    try {
+      const response = await axios.post(
+        `${constants.API_BASE_URL}/user/booking`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getUserToken()}`,
+          },
+        }
+      );
+
+      if (response.data) {
+        console.log(
+          "Booking successful! Opening Razorpay...",
+          response.data.data
+        );
+        setLoaderOpen(false);
+        startRazorpayPayment(response.data.data.booking_id, totalAmount);
+      } else {
+        console.error("Booking failed: Invalid response format", response);
+      }
+    } catch (error) {
+      console.error("Error while booking:", error);
+    }
   };
   return (
     <div className="  space-y-3  mt-[65px]">
