@@ -3,6 +3,7 @@ import "slick-carousel/slick/slick.css"; // Import Slick CSS
 import "slick-carousel/slick/slick-theme.css"; // Import Slick Theme CSS
 import Slider from "react-slick";
 import { useScreenSize } from "../../context/screenSizeContext";
+import car50 from '../../assets/car_50.png'
 import "./Courosel.css";
 
 const Courosel = () => {
@@ -40,7 +41,7 @@ const Courosel = () => {
               className={`w-full ${
                 isScreenSmall ? "h-[200px]" : "h-[500px]"
               } rounded-xl`}
-              src="https://ideogram.ai/assets/progressive-image/balanced/response/D17ZC5YvSWSNgStjrg6JzQ"
+              src={car50}
               alt="slide 2"
             />
           </div>
