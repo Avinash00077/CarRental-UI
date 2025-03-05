@@ -104,7 +104,7 @@ const AdminCarUpload = () => {
     mileage: "",
     car_type: "",
     seater: "",
-    fastag_availability: "Y",
+    fastag_availability: "",
     location_address: "",
   });
 
@@ -224,7 +224,7 @@ const AdminCarUpload = () => {
   };
 
   return (
-    <div>
+    <div className="ml-[10%]">
       {isLoaderOpen && <Loader />}
       {isCarOpen ? (
         <div
@@ -441,6 +441,7 @@ const AdminCarUpload = () => {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#121212]"
                         required
                       >
+                        <option  defaultChecked value="">Select Location</option>
                         <option value="Y">Yes</option>
                         <option value="N">No</option>
                       </select>

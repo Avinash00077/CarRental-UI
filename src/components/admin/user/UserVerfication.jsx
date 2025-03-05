@@ -86,7 +86,7 @@ export default function UserVerification() {
   console.log(users, users.length);
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center ml-[10%]">
         {isLoaderOpen && <Loader />}
       {users?.length > 0 ? (
         <div

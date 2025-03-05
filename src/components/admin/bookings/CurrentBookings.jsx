@@ -36,7 +36,7 @@ const CurrentBookings = () => {
   console.log(selectedBooking)
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center ml-[10%]">
       {isLoaderOpen && <Loader />}
       {bookings?.length > 0 ? (
         <div
