@@ -176,7 +176,7 @@ const Contact = () => {
             </p>
             {userDetails && (
               <p
-                className="flex items-center bg-gray-300 rounded-2xl text-white pb-2 ml-10 cursor-pointer"
+                className="flex items-center  rounded-2xl text-white pb-2 ml-10 cursor-pointer"
                 onClick={() => setFeedBackForm(!openFeedBackForm)}
               >
                 FeedBack Us
