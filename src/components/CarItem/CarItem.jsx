@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { MdDirectionsWalk } from "react-icons/md";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useScreenSize } from "../../context/screenSizeContext";
 
 const CarItem = ({ car, onBookNow }) => {
   const [openWarning, setOpenWarning] = useState(false);
   const userDetails = localStorage.getItem("userDetails");
+    const isScreenSize = useScreenSize().isScreenSmall;
   const navigate = useNavigate();
 
   const onBookNowClick = (id) => {
@@ -41,7 +43,7 @@ const CarItem = ({ car, onBookNow }) => {
     <div>
       {openWarning && (
         <div className="fixed inset-0 flex items-center justify-center z-5 bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3 h-2/5 text-center">
+          <div className = {`bg-white p-6 rounded-lg shadow-lg text-center ${isScreenSize ? "" : "w-1/3 h-2/5"}`}>
             <h2 className="text-xl font-semibold mb-2">
               Verify to Proceed Booking
             </h2>
@@ -76,7 +78,7 @@ const CarItem = ({ car, onBookNow }) => {
       )}
       {
         <div
-          className="bg-white rounded-lg shadow-md p-3 w-80 hover:cursor-pointer"
+          className={`bg-white rounded-lg shadow-md p-3 hover:cursor-pointer ${isScreenSize ? "w-full p-4" : "w-80 "}`}
           onClick={() => onBookNowClick(car.car_id)}
         >
           <img

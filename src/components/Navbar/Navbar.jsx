@@ -52,10 +52,12 @@ const Navbar = () => {
     if (adminAuthToken) {
       localStorage.removeItem("adminAuthToken");
       localStorage.removeItem("adminDetails");
+      localStorage.removeItem('location')
       navigate("/admin");
     } else {
       localStorage.removeItem("authToken");
       localStorage.removeItem("userDetails");
+      localStorage.removeItem('location')
       navigate("/");
     }
     setUserName(null);
