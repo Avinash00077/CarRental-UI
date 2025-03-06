@@ -47,7 +47,7 @@ const Contact = () => {
     }
   };
   useEffect(() => {
-    GetUserFeedback()
+    
     if (!userDetails) {
       const userDetails = JSON?.parse(localStorage.getItem("userDetails"));
       setUserDeatils(userDetails);
@@ -62,6 +62,8 @@ const Contact = () => {
           profile_img_url: userDetails.profile_img_url || user,
         }));
       }
+    }else{
+      GetUserFeedback()
     }
   }, [userDetails]);
   console.log(userDetails, " Use Deatils are ");
