@@ -9,8 +9,9 @@ import Modal from "../Modal/Modal";
 import { getUserToken } from "../../utils/getToken";
 import { useScreenSize } from "../../context/screenSizeContext";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import L from "leaflet"; 
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import bored from "../../assets/bored.gif";
 
 const MyBookings = () => {
   const [loaderOpen, setLoaderOpen] = useState(true);
@@ -204,102 +205,6 @@ const MyBookings = () => {
         />
       )}
 
-      {/* {bookingsData.length > 0 ? (
-        <div
-          className={`${
-            isScreenSize ? "h-[90vh] " : "h-[98vh] "
-          } no-scrollbar overflow-y-auto w-full scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200`}
-        >
-          <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white mt-20 align-middle">
-            My bookings
-          </h1>
-          <div className="relative overflow-x-auto shadow-md w-full sm:rounded-lg">
-            <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="px-6 py-3">
-                    Car
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Start Date
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    End Date
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Total Price
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Status
-                  </th>
-                  <th scope="col" className="px-6 py-3">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {bookingsData.map((booking) => (
-                  <tr
-                    className="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700 border-gray-200"
-                    // key={booking.booking_id}
-                    // style={{ cursor: "pointer", transition: "background 0.3s" }}
-                    // onMouseEnter={(e) =>
-                    //   (e.currentTarget.style.backgroundColor = "#f8f8f8")
-                    // }
-                    // onMouseLeave={(e) =>
-                    //   (e.currentTarget.style.backgroundColor = "transparent")
-                    // }
-                    // onClick={() => {
-                    //   setSelectedBooking(booking);
-                    //   setModalOpen(true);
-                    // }}
-                  >
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    >
-                      {booking.car_name}
-                    </th>
-                    <td className="px-6 py-4">{booking.start_date}</td>
-                    <td className="px-6 py-4">{booking.end_date}</td>
-                    <td className="px-6 py-4">₹{booking.total_price}</td>
-                    <td className="px-6 py-4">{booking.booking_status}</td>
-                    <td className="px-6 py-4">
-                      <a
-                        href="#"
-                        className="font-medium text-[#121212] hover:underline"
-                        key={booking.booking_id}
-                        style={{
-                          cursor: "pointer",
-                          transition: "background 0.3s",
-                        }}
-                        onClick={() => {
-                          setSelectedBooking(booking);
-                          isWhichScreen(booking);
-                          setModalOpen(true);
-                        }}
-                      >
-                        {booking.booking_status === "CONFIRMED" &&
-                        booking.ride_status === "NOT_STARTED"
-                          ? "Edit"
-                          : booking.ride_status === "COMPLETED" && !booking.review_id
-                          ? "RateNow"
-                          : booking.ride_status === "COMPLETED" &&
-                            booking.review_id
-                          ? "EditReview"
-                          : "View"}
-                      </a>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      ) : (
-        <p style={{ color: "#666", marginTop: "16px" }}>No bookings found.</p>
-      )} */}
-
       {bookingsData.length > 0 ? (
         <div className="space-y-4 justify-items-center mt-16">
           <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white mt-20 align-middle">
@@ -308,8 +213,10 @@ const MyBookings = () => {
           {bookingsData.map((booking) => (
             <div
               key={booking.booking_id}
-              className={ !isScreenSize ? `flex items-center w-[80%] justify-between bg-white dark:bg-gray-800 shadow-md rounded-lg p-4` : 
-                `flex items-center w-full justify-between bg-white dark:bg-gray-800 shadow-md rounded-lg p-4`
+              className={
+                !isScreenSize
+                  ? `flex items-center w-[80%] justify-between bg-white dark:bg-gray-800 shadow-md rounded-lg p-4`
+                  : `flex items-center w-full justify-between bg-white dark:bg-gray-800 shadow-md rounded-lg p-4`
               }
             >
               {/* Car Image */}
@@ -336,17 +243,20 @@ const MyBookings = () => {
                 <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
                   {booking.car_name}
                   <div className="flex gap-1 mb-3">
-              {booking.ride_status === 'COMPLETED' && ([1, 2, 3, 4, 5].map((star) => (
-                <span
-                  key={star}
-                  className={`text-lg cursor-pointer ${
-                    booking.rating >= star ? "text-yellow-500" : "text-gray-300"
-                  }`}
-                >
-                  ★
-                </span>
-              )))}
-            </div>
+                    {booking.ride_status === "COMPLETED" &&
+                      [1, 2, 3, 4, 5].map((star) => (
+                        <span
+                          key={star}
+                          className={`text-lg cursor-pointer ${
+                            booking.rating >= star
+                              ? "text-yellow-500"
+                              : "text-gray-300"
+                          }`}
+                        >
+                          ★
+                        </span>
+                      ))}
+                  </div>
                 </h2>
                 <p className="text-sm text-gray-500">
                   ₹{booking.total_price} • {booking.start_date} -{" "}
@@ -354,12 +264,12 @@ const MyBookings = () => {
                 </p>
                 <p
                   className={`text-sm font-medium ${
-                    booking.booking_status === "CANCELLED" ||
-                    booking.booking_status === "FAILURE"
-                      ? "text-red-600"
-                      : booking.ride_status === "PENDING"
-                      ? "text-orange-500"
-                      : "text-green-600"
+                    booking?.booking_status === "CONFIRMED" ||
+                    booking?.booking_status === "COMPLETED"
+                      ? "text-green-600"
+                      : booking?.booking_status === "PENDING"
+                      ? "text-amber-300"
+                      : " text-red-600"
                   }`}
                 >
                   {booking.booking_status === "CONFIRMED"
@@ -369,34 +279,33 @@ const MyBookings = () => {
               </div>
 
               {/* Review Button */}
-              {booking.ride_status === "COMPLETED"  && booking.booking_status === 'CONFIRMED' && (
-                <button
-                  onClick={() => {
-                    setSelectedBooking(booking);
+              {booking.ride_status === "COMPLETED" &&
+                booking.booking_status === "COMPLETED" && (
+                  <button
+                    onClick={() => {
+                      setSelectedBooking(booking);
 
-                    isWhichScreen(booking, "RateNow");
-                    setModalOpen(true);
-                  }}
-                  className="flex items-center text-blue-600 hover:underline"
-                >
-                  <Star className="w-4 h-4 text-yellow-500 mr-1" />
-                  {booking.review_id ? "Edit Review" : "Rate & Review"}
-                </button>
-              )}
+                      isWhichScreen(booking, "RateNow");
+                      setModalOpen(true);
+                    }}
+                    className="flex items-center text-blue-600 hover:underline"
+                  >
+                    <Star className="w-4 h-4 text-yellow-500 mr-1" />
+                    {booking.review_id ? "Edit Review" : "Rate & Review"}
+                  </button>
+                )}
 
               {/* Ride Status */}
               {booking.ride_status !== "COMPLETED" && (
                 <button
                   className={`px-6 py-4 font-medium ${
-                    booking.ride_status === "CANCELLED"
-                      ? "text-red-600"
+                    booking.ride_status === " COMPLETED"
+                      ? "text-green-600"
                       : booking.ride_status === "NOT_STARTED"
                       ? "text-black"
                       : booking.ride_status === "ONGOING"
                       ? "text-orange-500"
-                      : booking.ride_status === "COMPLETED"
-                      ? "text-green-600"
-                      : "text-gray-500"
+                      : "text-red-600"
                   }`}
                 >
                   {booking.ride_status}
@@ -406,92 +315,13 @@ const MyBookings = () => {
           ))}
         </div>
       ) : (
-        <p className="text-gray-500 text-center">No bookings found.</p>
-      )}
-
-      {/* {modalOpen && isWhichModal === "View" && selectedBooking && (
-        <div
-          className={`${
-            isScreenSize ? "h-[90vh] pt-80 " : "h-[98vh] "
-          } no-scrollbar overflow-y-auto w-full scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 fixed inset-0 flex justify-center items-center z-50 bg-opacity-40`}
-        >
-          <div className="bg-white bg-opacity-90 p-6 rounded-lg shadow-xl w-11/12 max-w-4xl flex flex-col md:flex-row relative">
-            
-            <button
-              className="absolute top-0 right-3 to-black px-3 py-1 rounded-full text-lg hover:bg-as transition"
-              onClick={() => setModalOpen(false)}
-            >
-              ✕
-            </button>
-
-           
-            <div className="w-full md:w-1/2">
-              <img
-                src={selectedBooking.car_cover_img_url}
-                alt={selectedBooking.car_name}
-                className="w-full h-[300px] md:h-full object-cover rounded-lg shadow-md"
-              />
-            </div>
-
-           
-            <div className="w-full md:w-1/2 p-6 space-y-3">
-              <h2 className="text-2xl font-bold text-gray-800">
-                {selectedBooking.car_name}
-              </h2>
-              <p className="text-gray-700">
-                <strong>Brand:</strong> {selectedBooking.brand}
-              </p>
-              <p className="text-gray-700">
-                <strong>Model Year:</strong> {selectedBooking.model_year}
-              </p>
-              <p className="text-gray-700">
-                <strong>Location:</strong> {selectedBooking.car_location}
-              </p>
-              <p className="text-gray-700">
-                <strong>Start Date:</strong> {selectedBooking.start_date} (
-                {selectedBooking.start_time})
-              </p>
-              <p className="text-gray-700">
-                <strong>End Date:</strong> {selectedBooking.end_date} (
-                {selectedBooking.end_time})
-              </p>
-              <p className="text-gray-900 font-semibold text-lg">
-                <strong>Total Price:</strong> ₹{selectedBooking.total_price}
-              </p>
-              <p className="text-gray-700">
-                <strong>Payment Mode:</strong> {selectedBooking.payment_mode}
-              </p>
-              <p className={`font-bold text-lg `}>
-                Status:
-                <strong
-                  className={`${
-                    selectedBooking.booking_status === "FAILURE" || selectedBooking.booking_status === "CANCELLED"
-                      ? "text-red-600"
-                      : selectedBooking.booking_status === "PENDING"
-                      ? "text-amber-300"
-                      : "text-green-600"
-                  }`}
-                >
-                  {" "}
-                  {selectedBooking.booking_status}{" "}
-                </strong>
-              </p>
-
-     
-              {selectedBooking.booking_status === "CONFIRMED" && (
-                <button
-                  className="mt-4 w-full bg-red-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition"
-                  onClick={() =>
-                    handleCancelBooking(selectedBooking.booking_id)
-                  }
-                >
-                  Cancel Booking
-                </button>
-              )}
-            </div>
-          </div>
+        <div className="w-full h-screen  flex justify-center items-center">
+          <h1 className="font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-3xl dark:text-white mt-20 flex items-center gap-2">
+            No Bookings Found
+            <img src={bored} className="h-10 w-10" alt="No Bookings" />
+          </h1>
         </div>
-      )} */}
+      )}
 
       {modalOpen && isWhichModal === "View" && selectedBooking && (
         <div
@@ -508,28 +338,31 @@ const MyBookings = () => {
             </button>
 
             <div className="w-full md:w-1/2">
-            <div>
-            <img
-                src={selectedBooking.car_cover_img_url}
-                alt={selectedBooking.car_name}
-                className="w-full h-[44] lg:h-[240px]  mt-3 lg:mt-0 object-cover rounded-lg shadow-md"
-              />
-            </div>
-              <div className="my-4 space-y-2">
-            <h2 className="text-2xl font-bold text-gray-800">
-                {selectedBooking.car_name}
-              </h2>
-              <div className="flex lg:flex-col space-x-5">
-              <p className="text-gray-700">
-                <strong>Brand:</strong> {selectedBooking.brand}
-              </p>
-              <p className="text-gray-700">
-                <strong>Model Year:</strong> {selectedBooking.model_year}
-              </p>
+              <div>
+                <img
+                  src={selectedBooking.car_cover_img_url}
+                  alt={selectedBooking.car_name}
+                  className="w-full h-[44] lg:h-[240px]  mt-3 lg:mt-0 object-cover rounded-lg shadow-md"
+                />
               </div>
-              <p className="text-gray-700 ">
-                <strong>Car Description:</strong> <span className="text-center">{selectedBooking.model_year} Helloejeeeeeeeeeeeeee</span>
-              </p>
+              <div className="my-4 space-y-2">
+                <h2 className="text-2xl font-bold text-gray-800">
+                  {selectedBooking.car_name}
+                </h2>
+                <div className="flex lg:flex-col space-x-5">
+                  <p className="text-gray-700">
+                    <strong>Brand:</strong> {selectedBooking.brand}
+                  </p>
+                  <p className="text-gray-700">
+                    <strong>Model Year:</strong> {selectedBooking.model_year}
+                  </p>
+                </div>
+                <p className="text-gray-700 ">
+                  <strong>Car Description:</strong>{" "}
+                  <span className="text-center">
+                    {selectedBooking.model_year} Helloejeeeeeeeeeeeeee
+                  </span>
+                </p>
               </div>
             </div>
 
@@ -594,12 +427,12 @@ const MyBookings = () => {
                 Status:
                 <strong
                   className={`${
-                    selectedBooking.booking_status === "FAILURE" ||
-                    selectedBooking.booking_status === "CANCELLED"
-                      ? "text-red-600"
+                    selectedBooking.booking_status === "CONFIRMED" ||
+                    selectedBooking.booking_status === "COMPLETED"
+                      ? "text-green-600"
                       : selectedBooking.booking_status === "PENDING"
                       ? "text-amber-300"
-                      : "text-green-600"
+                      : " text-red-600"
                   }`}
                 >
                   {" "}
@@ -607,16 +440,17 @@ const MyBookings = () => {
                 </strong>
               </p>
 
-              {selectedBooking.booking_status === "CONFIRMED" && (
-                <button
-                  className="mt-4 mb-3 lg:mb-0 w-full bg-red-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition"
-                  onClick={() =>
-                    handleCancelBooking(selectedBooking.booking_id)
-                  }
-                >
-                  Cancel Booking
-                </button>
-              )}
+              {selectedBooking.booking_status === "CONFIRMED" &&
+                selectedBooking.ride_status === "NOT_STARTED" && (
+                  <button
+                    className="mt-4 mb-3 lg:mb-0 w-full bg-red-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition"
+                    onClick={() =>
+                      handleCancelBooking(selectedBooking.booking_id)
+                    }
+                  >
+                    Cancel Booking
+                  </button>
+                )}
             </div>
           </div>
         </div>

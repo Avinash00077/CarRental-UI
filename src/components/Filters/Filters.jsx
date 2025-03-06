@@ -119,7 +119,7 @@ const Filters = ({ cars, onFilter }) => {
           placeholder="🔍 Search cars..."
           value={searchValue}
           onChange={(e) => handlePriceRangeFilter(e, "search", "tte")}
-          className="w-full py-2 px-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm transition-all duration-200 ease-in-out"
+          className="w-full py-2 px-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none shadow-sm transition-all duration-200 ease-in-out"
         />
       </div>
       {/* Price Range */}
@@ -131,7 +131,12 @@ const Filters = ({ cars, onFilter }) => {
           max="5000"
           value={selectedPriceRange[1]}
           onChange={(e) => handlePriceRangeFilter(e, "price", "he")}
-          className="w-full custom-range-slider"
+          className="w-full h-1.5 bg-black rounded-lg appearance-none cursor-pointer 
+             [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 
+             [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-black 
+             [&::-webkit-slider-thumb]:rounded-full 
+             [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 
+             [&::-moz-range-thumb]:bg-black [&::-moz-range-thumb]:rounded-full"
         />
         <p className="text-center text-sm mt-1">
           ₹0 - ₹{selectedPriceRange[1]}
@@ -145,7 +150,12 @@ const Filters = ({ cars, onFilter }) => {
           max="12"
           value={selectedSeatCapacity[1]}
           onChange={(e) => handlePriceRangeFilter(e, "seats", "sks")}
-          className="w-full"
+          className="w-full h-1.5 bg-black rounded-lg appearance-none cursor-pointer 
+             [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 
+             [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-black 
+             [&::-webkit-slider-thumb]:rounded-full 
+             [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 
+             [&::-moz-range-thumb]:bg-black [&::-moz-range-thumb]:rounded-full"
         />
         <p className="text-center text-sm mt-1">
           4 seats - {selectedSeatCapacity[1]} seats

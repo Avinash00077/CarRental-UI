@@ -1,0 +1,32 @@
+.custom-range-slider {
+    -webkit-appearance: none; /* Remove default styles */
+    appearance: none;
+    width: 100%;
+    height: 6px; /* Adjust thickness */
+    background: black; /* Change track color to black */
+    border-radius: 5px;
+    outline: none;
+    opacity: 0.9;
+    transition: opacity 0.2s;
+  }
+  
+  /* Change thumb color */
+  .custom-range-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: black; /* Thumb color */
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  /* Firefox */
+  .custom-range-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: black; /* Thumb color */
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  

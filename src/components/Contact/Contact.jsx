@@ -2,17 +2,18 @@ import React, { useState, useEffect } from "react";
 import constants from "../../config/constants";
 import axios from "axios";
 import { Star } from "lucide-react";
-import { getUserToken} from "../../utils/getToken"
+import { getUserToken } from "../../utils/getToken";
 import Modal from "../Modal/Modal";
 import { MessageSquare } from "lucide-react";
 import Loader from "../Loader/Loader";
+import user from "../../assets/boy.png";
 
 const Contact = () => {
   const [openFeedBackForm, setFeedBackForm] = useState(false);
   const [isloader, setIsLoader] = useState(false);
-   const [isModalOpen, setIsModalOpen] = useState(false);
-     const [modalMessage, setModalMessage] = useState("");
-  const [userDetails,setUserDeatils] = useState()
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [userDetails, setUserDeatils] = useState();
   const [modalType, setModalType] = useState("success");
   const [feedback, setFeedback] = useState({
     user_id: "",
@@ -26,11 +27,31 @@ const Contact = () => {
   const handleChange = (e) => {
     setFeedback({ ...feedback, [e.target.name]: e.target.value });
   };
+
+  const GetUserFeedback = async () => {
+    try {
+      const response = await axios.get(
+        `${constants.API_BASE_URL}/user/user-feedback`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getUserToken()}`,
+          },
+        }
+      );
+      console.log(response.data.data, 'feedback issssssssssssss')
+      if(response.data.data.length > 0){
+      setFeedback(response.data.data[0])}
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    if(!userDetails){
+    GetUserFeedback()
+    if (!userDetails) {
       const userDetails = JSON?.parse(localStorage.getItem("userDetails"));
-      setUserDeatils(userDetails)
-      console.log(userDetails," User Deatils hello is ")
+      setUserDeatils(userDetails);
+      console.log(userDetails, " User Deatils hello is ");
       if (userDetails) {
         setFeedback((prev) => ({
           ...prev,
@@ -38,48 +59,64 @@ const Contact = () => {
           first_name: userDetails.first_name,
           last_name: userDetails.last_name,
           user_name: userDetails.user_name,
-          profile_img_url: userDetails.profile_img_url,
+          profile_img_url: userDetails.profile_img_url || user,
         }));
       }
     }
   }, [userDetails]);
-  console.log(userDetails," Use Deatils are ")
+  console.log(userDetails, " Use Deatils are ");
 
   const handleSubmit = async (e) => {
     setIsLoader(true);
     e.preventDefault();
     try {
-      const response = await axios.post(`${constants.API_BASE_URL}/user/feedback`, {
-        "comments": feedback.comments,
-        "rating": feedback.rating|| 3
-    },
-                {
-                  headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${getUserToken()}`,
-                  },
-                }
-      );
+      if(!feedback.feedback_id){
+      const response = await axios.post(
+        `${constants.API_BASE_URL}/user/feedback`,
+        {
+          comments: feedback.comments,
+          rating: feedback.rating || 3,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getUserToken()}`,
+          },
+        }
+      )}
+      else{
+        const response = await axios.put(
+          `${constants.API_BASE_URL}/user/feedback`,
+          {
+            comments: feedback.comments,
+            rating: feedback.rating || 3,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${getUserToken()}`,
+            },
+          }
+        )
+      };
       setIsLoader(false);
-      setFeedBackForm(!openFeedBackForm)  
-      setModalMessage("Review Submited succesfully")
-      setIsModalOpen(true)
-      setTimeout(()=>{
-        setIsModalOpen(false)
-      },2000)    
+      setFeedBackForm(!openFeedBackForm);
+      setModalMessage("Review Submited succesfully");
+      setIsModalOpen(true);
+      setTimeout(() => {
+        setIsModalOpen(false);
+      }, 2000);
     } catch (error) {
       console.error("Error submitting feedback:", error);
     }
   };
-  const closeModal = ()=>{
-    setIsModalOpen(false)
-  }
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div>
-      {isloader&&(
-        <Loader/>
-      )}
-          {isModalOpen && (
+      {isloader && <Loader />}
+      {isModalOpen && (
         <Modal
           typeOfModal={modalType}
           message={modalMessage}
@@ -89,13 +126,16 @@ const Contact = () => {
       {openFeedBackForm && (
         <div className="fixed inset-0 flex items-center justify-center z-10">
           <div className="w-lg mx-auto p-4 shadow-lg rounded-2xl border border-gray-200 bg-white">
-          <div className="flex justify-end" onClick={()=>setFeedBackForm(false)}>
+            <div
+              className="flex justify-end"
+              onClick={() => setFeedBackForm(false)}
+            >
               <span className="material-icons cursor-pointer text-xl">X</span>
             </div>
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-4">
                 <img
-                  src={feedback.profile_img_url}
+                  src={feedback?.profile_img_url}
                   alt={feedback.user_name}
                   className="w-12 h-12 rounded-full"
                 />
@@ -131,7 +171,7 @@ const Contact = () => {
                 onClick={handleSubmit}
                 className="bg-black text-white px-4 py-2 rounded-md"
               >
-                Submit Feedback
+                {feedback.feedback_id ? 'Update Feedback' : 'Submit Feedback'}
               </button>
             </div>
           </div>
@@ -179,9 +219,13 @@ const Contact = () => {
               +918328289090
             </p>
             {userDetails && (
-           <p className="flex items-center rounded-2xl text-white pb-2 cursor-pointer whitespace-nowrap" onClick={()=>setFeedBackForm(true)}>
-          <MessageSquare size={20}  /> <span className="pl-3">FeedBack Us</span> 
-         </p>
+              <p
+                className="flex items-center rounded-2xl text-white pb-2 cursor-pointer whitespace-nowrap"
+                onClick={() => setFeedBackForm(true)}
+              >
+                <MessageSquare size={20} />{" "}
+                <span className="pl-3">FeedBack Us</span>
+              </p>
             )}
           </div>
         </div>

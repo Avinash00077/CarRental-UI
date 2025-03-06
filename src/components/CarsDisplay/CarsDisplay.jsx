@@ -12,6 +12,7 @@ import Loader from "../Loader/Loader";
 import { useScreenSize } from "../../context/screenSizeContext";
 import Modal from "../Modal/Modal";
 import BookingModel from "../CarItem/BookingModel";
+import sad from "../../assets/sad.gif";
 
 const CarsDisplay = ({ category }) => {
   const [carList, setCarList] = useState([]);
@@ -217,10 +218,16 @@ const CarsDisplay = ({ category }) => {
               style={{ paddingLeft: "6%" }}
             >
               {!isLoaderOpen  && (
-                <img
-                  src="https://ideogram.ai/assets/progressive-image/balanced/response/9s0QYH0tSRy_M0ThsX0BPw"
-                  className="full  opacity-80"
-                />
+                // <img
+                //   src="https://ideogram.ai/assets/progressive-image/balanced/response/9s0QYH0tSRy_M0ThsX0BPw"
+                //   className="full  opacity-80"
+                // />
+                <div className="w-full h-screen  flex justify-center items-center">
+                          <h1 className="font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-3xl dark:text-white flex items-center gap-2">
+                            No Cars Found
+                            <img src={sad} className="h-10 w-10" alt="No Bookings" />
+                          </h1>
+                        </div>
               )}
             </div>
           )}

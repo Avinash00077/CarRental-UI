@@ -81,7 +81,8 @@ const Navbar = () => {
           onConfirm={handleLogout}
         />
       )}
-      <div className="logo ml-8 p-0 text-white text-[18px]">
+      <div className="logo ml-8 p-0 text-white text-[18px] hover:cursor-pointer"
+      onClick={() => {navigate('/')}}>
         {/* <img
           src="https://ideogram.ai/assets/image/lossless/response/QhwppK8wRL66uMwS4nY1ZQ"
           className={`${
