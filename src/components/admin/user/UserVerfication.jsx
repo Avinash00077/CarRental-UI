@@ -126,7 +126,7 @@ export default function UserVerification() {
                     </td>
                     <td className="px-6 py-4">{user.email} </td>
                     <td className="px-6 py-4">
-                      {user.aadhar_verified === "N" ? (
+                      {user.aadhar_verified === "P" ? (
                         <a
                           href="#"
                           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -151,7 +151,7 @@ export default function UserVerification() {
                       )}
                     </td>
                     <td className="px-6 py-4">
-                      {user.driving_license_verified === "N" ? (
+                      {user.driving_license_verified === "P" ? (
                         <a
                           href="#"
                           className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -241,7 +241,7 @@ export default function UserVerification() {
                 <button
                   className="mt-4 w-full bg-red-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition"
                   onClick={() =>
-                    handleVerify(selectedDoc.userId, "N", "aadhar")
+                    handleVerify(selectedDoc.userId, "R", "aadhar")
                   }
                 >
                   Reject
@@ -312,7 +312,7 @@ export default function UserVerification() {
                 <button
                   className="mt-4 w-full bg-red-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition"
                   onClick={() =>
-                    handleVerify(selectedDoc.userId, "N", "driving_license")
+                    handleVerify(selectedDoc.userId, "R", "driving_license")
                   }
                 >
                   Reject
