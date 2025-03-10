@@ -129,8 +129,8 @@ const Navbar = () => {
               src={userImage}
               alt="Profile"
               className="w-10 h-10 rounded-full cursor-pointer border-2 border-gray-300 hover:shadow-lg"
-              //onClick={() => setOpen(!isOpen)}
-              onMouseEnter={() => setOpen(true)}
+              onClick={() => setOpen(!isOpen)}
+              //onMouseEnter={() => setOpen(true)}
               //onMouseLeave={() => setOpen(false)}
             />
 

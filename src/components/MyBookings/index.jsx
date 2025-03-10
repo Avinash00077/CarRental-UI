@@ -12,10 +12,14 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import bored from "../../assets/bored.gif";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
+
 
 const MyBookings = () => {
   const [loaderOpen, setLoaderOpen] = useState(true);
-  const [loaderMessage, setLoaderMessage] = useState(null)
+  const [loaderMessage, setLoaderMessage] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalFailureMessage, setModalFailureMessage] = useState(
     "Something went wrong"
@@ -47,7 +51,7 @@ const MyBookings = () => {
   const getUserBookings = async () => {
     if (getUserToken()) {
       try {
-        setLoaderMessage('Please wait we are fetching your bookings')
+        setLoaderMessage("Please wait we are fetching your bookings");
         const response = await axios.get(
           `${constants.API_BASE_URL}/user/bookings`,
           {
@@ -88,7 +92,7 @@ const MyBookings = () => {
 
   const handleCancelBooking = async (booking_id) => {
     try {
-      setLoaderMessage('Please wait we are cancelling your booking')
+      setLoaderMessage("Please wait we are cancelling your booking");
       setLoaderOpen(true);
       const response = await axios.put(
         `${constants.API_BASE_URL}/user/booking/cancel`,
@@ -103,12 +107,12 @@ const MyBookings = () => {
       );
 
       setModalOpen(false);
-      setLoaderMessage(null)
+      setLoaderMessage(null);
       setLoaderOpen(false);
       //location.reload();
     } catch (error) {
       console.error(error);
-      setLoaderMessage(null)
+      setLoaderMessage(null);
       setLoaderOpen(false);
       // setModalOpen(true);
       // setModalFailureMessage(
@@ -129,6 +133,93 @@ const MyBookings = () => {
     setRating(selectedRating);
   };
 
+  const generateInvoice = (booking) => {
+    const doc = new jsPDF();
+  
+    // **Set Font for Unicode Support**
+    doc.setFont("helvetica", "bold");
+  
+    // **Header**
+    doc.setFontSize(22);
+    doc.text("Car Rental Invoice", 14, 20);
+  
+    doc.setFontSize(12);
+    doc.setTextColor(100);
+    doc.text(`Invoice Date: ${new Date().toLocaleDateString()}`, 14, 28);
+  
+    doc.setTextColor(0);
+    doc.setFontSize(14);
+    doc.text(`Booking ID: #${booking.booking_id}`, 14, 36);
+  
+    // **Billing Information**
+    const userDetails = [
+      ["Name:", booking.name],
+      ["Email:", booking.user_email],
+      ["Phone:", booking.user_phone_number],
+      ["Payment Mode:", booking.payment_mode],
+      ["Booking Status:", booking.booking_status],
+      ["Transaction ID:", booking.transaction_id ? booking.transaction_id : "N/A"],
+    ];
+  
+    autoTable(doc, {
+      head: [["Details", "Information"]],
+      body: userDetails,
+      startY: 45,
+      styles: { fontSize: 10, cellPadding: 3 },
+      headStyles: { fillColor: [44, 62, 80], textColor: [255, 255, 255] },
+      alternateRowStyles: { fillColor: [240, 240, 240] },
+      margin: { left: 14, right: 14 },
+      font: "helvetica",
+    });
+  
+    // **Rental Details & Pricing**
+    const gstRate = 0.18;
+    const rentalTaxRate = 0.05;
+    const totalPayable = parseFloat(booking.total_price); // Get from API
+  
+    // Reverse Calculation for Accuracy
+    const baseRent = totalPayable / (1 + gstRate + rentalTaxRate);
+    const gstAmount = baseRent * gstRate;
+    const rentalTax = baseRent * rentalTaxRate;
+  
+    const pricingDetails = [
+      ["Car:", booking.car_name],
+      ["Brand:", booking.brand],
+      ["Start Date:", `${booking.start_date} (${booking.start_time})`],
+      ["End Date:", `${booking.end_date} (${booking.end_time})`],
+      ["Base Rent:", `₹${baseRent.toFixed(2)}`],
+      ["GST (18%):", `₹${gstAmount.toFixed(2)}`],
+      ["Rental Tax (5%):", `₹${rentalTax.toFixed(2)}`],
+      ["Total Payable:", `₹${totalPayable.toFixed(2)}`],
+    ];
+  
+    autoTable(doc, {
+      head: [["Rental Details", "Amount"]],
+      body: pricingDetails,
+      startY: doc.lastAutoTable ? doc.lastAutoTable.finalY + 10 : 70,
+      styles: { fontSize: 10, cellPadding: 3 },
+      headStyles: { fillColor: [26, 188, 156], textColor: [255, 255, 255] },
+      alternateRowStyles: { fillColor: [240, 240, 240] },
+      margin: { left: 14, right: 14 },
+      font: "helvetica",
+    });
+  
+    // **Footer Message**
+    doc.setFontSize(12);
+    doc.setTextColor(100);
+    doc.text(
+      "Thank you for choosing our car rental service! Safe travels!",
+      14,
+      doc.lastAutoTable.finalY + 15
+    );
+  
+    // **Save the PDF**
+    doc.save(`Invoice_${booking.booking_id}.pdf`);
+  };
+  
+  
+  
+
   const isWhichScreen = (booking, screen) => {
     if (screen === "RateNow" && booking.review_id) {
       setComment(booking.comment);
@@ -142,7 +233,9 @@ const MyBookings = () => {
     setIsWhichModal(screen);
   };
   const handleRatingSubmit = async (booking_id, review_id) => {
-    setLoaderMessage('Please wait while we are submitting your rating for booking')
+    setLoaderMessage(
+      "Please wait while we are submitting your rating for booking"
+    );
     setLoaderOpen(true);
     try {
       if (!review_id) {
@@ -176,7 +269,7 @@ const MyBookings = () => {
           }
         );
       }
-      setLoaderMessage(null)
+      setLoaderMessage(null);
       getUserBookings();
     } catch (error) {
       console.error(error);
@@ -447,6 +540,14 @@ const MyBookings = () => {
                   {selectedBooking.booking_status}{" "}
                 </strong>
               </p>
+              {selectedBooking && (
+                <button
+                  className="mt-4 w-full bg-black text-white px-4 py-2 rounded-md font-semibold hover:scale-105 transition"
+                  onClick={() => generateInvoice(selectedBooking)}
+                >
+                  Download Invoice
+                </button>
+              )}
 
               {selectedBooking.booking_status === "CONFIRMED" &&
                 selectedBooking.ride_status === "NOT_STARTED" && (

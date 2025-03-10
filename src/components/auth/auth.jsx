@@ -14,6 +14,7 @@ import { Calendar } from "primereact/calendar";
 import { Dropdown } from "primereact/dropdown";
 import available from "../../assets/available.png";
 import not_available from "../../assets/not_available.png";
+import { formatDateToYYYYMMDD2 } from "../../utils/dateUtils";
 
 const AuthModal = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -27,6 +28,8 @@ const AuthModal = () => {
   const [ispasswordReset, setPasswordReset] = useState(false);
   const [isUserAvailable, setUserAvailable] = useState("none");
   const [authStatus, setAuthStatus] = useState("auth");
+  const [isGetUserName, setIsGetUserName] = useState(false);
+  const [loaderMessage, setLoaderMessage] = useState('Loading...');
   const navigate = useNavigate();
   const location = useLocation();
   const { isScreenSmall } = useScreenSize();
@@ -196,14 +199,23 @@ const AuthModal = () => {
     setPasswordReset(true);
     setOpenResetPassword(false);
   };
+
+  const handleGetUserName = () => {
+    setAuthStatus("getUserName");
+    setIsGetUserName(true);
+    setPasswordReset(true);
+    setOpenResetPassword(false);
+  };
   const handlesubmitMail = async (e) => {
     e.preventDefault();
     console.log(authStatus);
     setIsLoaderOpen(true);
     if (authStatus === "verifyEmail") {
-      setAuthStatus("submitPassword");
-      setOpenResetPassword(!openResetPassword);
+      setLoaderMessage("Please wait, sending OTP to your email...");
+      
+    
       console.log(formData.email);
+
       try {
         const response = await axios.get(
           `${constants.API_BASE_URL}/user/password-reset/otp`,
@@ -213,17 +225,30 @@ const AuthModal = () => {
             },
           }
         );
-        console.log(response.data.data, " response value is ");
-        // setOtp(response.data.data)
+
+        if (response.status === 200) {
+          setLoaderMessage("OTP sent to your email.");
+          await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait 3 seconds
+          setLoaderMessage(null);
+        }
+        setAuthStatus("submitPassword");
+        setOpenResetPassword(!openResetPassword);
         setIsLoaderOpen(false);
       } catch (error) {
-        setIsModalOpen(true);
+        setLoaderMessage("User not found with given username");
+        await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait 3 seconds
+        setLoaderMessage(null);
+
+        //setIsModalOpen(true);
         setIsLoaderOpen(false);
-        setModalType("failure");
+        //setModalType("failure");
       }
     }
+
     if (authStatus === "submitPassword") {
+      setLoaderMessage("Resetting password, please wait...");
       console.log(resetformData);
+
       try {
         const response = await axios.put(
           `${constants.API_BASE_URL}/user/password-reset/confirm`,
@@ -233,8 +258,14 @@ const AuthModal = () => {
             password: resetformData.password,
           }
         );
+
+        if (response.status === 200) {
+          setLoaderMessage("Password reset successful.");
+          await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait 3 seconds
+          setLoaderMessage(null);
+        }
+
         setIsLoaderOpen(false);
-        console.log(response.data.data, " response value is ");
         setIsModalOpen(true);
         setModalType("success");
         setShowConfetti(true);
@@ -244,12 +275,53 @@ const AuthModal = () => {
           setPasswordReset(false);
         }, 2000);
       } catch (error) {
+        setLoaderMessage("OTP verification failed.");
+        await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait 3 seconds
+        setLoaderMessage(null);
+
         setIsLoaderOpen(false);
         setIsModalOpen(true);
         setModalType("failure");
       }
     }
     console.log("Hello ia m omwne");
+    if (authStatus === "getUserName") {
+      setLoaderMessage(
+        "Please wait, we are sending your username to your email..."
+      );
+
+      try {
+        const response = await axios.get(
+          `${constants.API_BASE_URL}/user/user-name/email`,
+          {
+            headers: {
+              email: formData.email, // Send email in headers
+              dob: formatDateToYYYYMMDD2(formData.dob),
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          setLoaderMessage("Email sent, please check your inbox.");
+          await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait for 3 seconds
+          setLoaderMessage(null);
+        }
+
+        setIsGetUserName(false);
+        setPasswordReset(false);
+        setOpenResetPassword(true);
+        setIsLoaderOpen(false);
+      } catch (error) {
+        setLoaderMessage("User not found with email and dob combination");
+        await new Promise((resolve) => setTimeout(resolve, 2000)); // Wait for 3 seconds
+        setLoaderMessage(null);
+
+        setIsGetUserName(true);
+        setPasswordReset(true);
+        setOpenResetPassword(false);
+        setIsLoaderOpen(false);
+      }
+    }
   };
 
   const restpasswordBack = () => {
@@ -260,6 +332,9 @@ const AuthModal = () => {
       setOpenResetPassword(false);
     } else if (authStatus == "verifyEmail") {
       setPasswordReset(false);
+    } else if (authStatus == "getUserName") {
+      setPasswordReset(false);
+      setIsGetUserName(false);
     }
     // setOpenResetPassword(!openResetPassword)
   };
@@ -320,7 +395,7 @@ const AuthModal = () => {
           closeModal={closeModal}
         />
       )}
-      {isLoaderOpen && <Loader message="Loading..." />}
+      {isLoaderOpen && <Loader message={loaderMessage} />}
       <div
         className="absolute inset-0 "
         style={{
@@ -589,12 +664,21 @@ const AuthModal = () => {
                     />
                   </div>
                 )}
-                <p
-                  className="text-xs text-gray-500 cursor-pointer hover:text-blue-400 mb-4"
-                  onClick={() => handleResetPassword()}
-                >
-                  {isLogin ? "Forgot your password?" : ""}
-                </p>
+                <div className="flex justify-between">
+                  <p
+                    className="text-xs text-gray-500 cursor-pointer hover:text-blue-400 mb-4"
+                    onClick={() => handleResetPassword()}
+                  >
+                    {isLogin ? "Forgot your password?" : ""}
+                  </p>
+                  <p
+                    className="text-xs text-gray-500 cursor-pointer hover:text-blue-400 mb-4"
+                    onClick={() => handleGetUserName()}
+                  >
+                    {isLogin ? "Forgot your username?" : ""}
+                  </p>
+                </div>
+
                 <button
                   style={{ padding: "8px", margin: "10px 0px" }}
                   type="submit"
@@ -630,7 +714,9 @@ const AuthModal = () => {
                 className="text-lg font-semibold text-gray-800 text-center"
                 style={{ marginTop: "60px", marginBottom: "30px" }}
               >
-                Reset Your Password !
+                {isGetUserName
+                  ? "Get Your Username !!!"
+                  : " Reset Your Password !"}
               </h2>
               <form
                 className="flex  w-full"
@@ -641,21 +727,65 @@ const AuthModal = () => {
                   className=" shadow-lg rounded-xl w-full "
                   style={{ padding: "10px" }}
                 >
-                  <div
-                    className="flex items-center justify-start space-x-1"
-                    style={{ marginLeft: "3%", marginBottom: "10px" }}
-                  >
-                    <label className="text-sm w-24 text-black">UserName:</label>
-                    <input
-                      type="text"
-                      name="userName"
-                      value={formData.userName}
-                      onChange={handleInputChange}
-                      placeholder="Type your user name"
-                      className="text-sm  h-10  bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none w-full"
-                      disabled={authStatus !== "verifyEmail"}
-                    />
-                  </div>
+                  {!isGetUserName && (
+                    <div
+                      className="flex items-center justify-start space-x-1"
+                      style={{ marginLeft: "3%", marginBottom: "10px" }}
+                    >
+                      <label className="text-sm w-24 text-black">
+                        UserName:
+                      </label>
+                      <input
+                        type="text"
+                        name="userName"
+                        value={formData.userName}
+                        onChange={handleInputChange}
+                        placeholder="Type your user name"
+                        className="text-sm  h-10  bg-white rounded-lg border border-gray-300 px-2 py-1 focus:outline-none w-full"
+                        disabled={authStatus !== "verifyEmail"}
+                      />
+                    </div>
+                  )}
+                  {isGetUserName && (
+                    <>
+                      <div className={`${isLogin ? "w-full" : "w-1/2"}`}>
+                        <label className="block text-sm mb-1">Email</label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          placeholder="Type your email"
+                          className={`w-full text-sm  ${
+                            isScreenSmall
+                              ? "border-b-2"
+                              : "border bg-white rounded-lg hover:bg-gray-50"
+                          }  border-gray-300  px-2 py-1 focus:outline-none hover:-translate-y-0.5 hover:h-[38px]  hover:text-[15px]`}
+                          style={{ padding: "8px", margin: "4px 0px" }}
+                        />
+                      </div>
+                      <div className="w-1/2">
+                        <label className="block text-sm mb-1">
+                          Date Of Birth
+                        </label>
+                        <Calendar
+                          value={formData.dob}
+                          className={`w-full h-9 text-[12px] border-gray-300 focus:outline-none 
+    hover:-translate-y-0.5 hover:h-[38px] hover:text-[15px] 
+    ${
+      isScreenSmall
+        ? "border-b-2"
+        : "border bg-transparent rounded-lg hover:bg-gray-50"
+    }`}
+                          id="buttondisplay"
+                          placeholder="Select your DOB"
+                          onChange={(e) => handleDOB(e)}
+                          //style={{ padding: "1px", backgroundColor: "beige" }}
+                          showIcon
+                        />
+                      </div>
+                    </>
+                  )}
                   {openResetPassword && (
                     <div>
                       <div
