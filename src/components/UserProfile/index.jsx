@@ -11,6 +11,7 @@ const UserProfile = () => {
   const [activeTab, setActiveTab] = useState("details");
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
+  const [loaderMessage, setLoaderMessage] = useState(null);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [overallAccountStatus, setOverallAccountStatus] = useState(null);
   const isScreenSize = useScreenSize().isScreenSmall;
@@ -27,6 +28,7 @@ const UserProfile = () => {
   const userDetails = localStorage.getItem("userDetails");
   const { driving_license_expiry } = JSON.parse(userDetails);
   const fetchUserData = async () => {
+    setLoaderMessage('Please wait we are fetching you data')
     setIsLoaderOpen(true);
 
     try {
@@ -37,6 +39,7 @@ const UserProfile = () => {
         },
       });
       setIsLoaderOpen(false);
+      setLoaderMessage(null)
       let userData = response?.data?.data[0];
       setUserDeatils(response?.data?.data[0]);
       setEditFormInfo({
@@ -58,6 +61,7 @@ const UserProfile = () => {
       setOverallAccountStatus(overallStatus);
     } catch (error) {
       setIsLoaderOpen(false);
+      setLoaderMessage(null)
       console.error("Error fetching user data:", error);
     }
   };
@@ -74,6 +78,7 @@ const UserProfile = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoaderMessage('Please wait we are updating you data')
     setIsLoaderOpen(true);
     try {
       const response = await axios.put(
@@ -96,13 +101,16 @@ const UserProfile = () => {
       setIsEditOpen(false);
       fetchUserData();
       setIsLoaderOpen(false);
+      setLoaderMessage(null)
     } catch (error) {
       setIsLoaderOpen(false);
+      setLoaderMessage(null)
       console.error("Error fetching user data:", error);
     }
   };
 
   const handleUploadImage = async (data, img_type, profile_type) => {
+    setLoaderMessage('Please wait we are updating you data')
     setIsLoaderOpen(true);
     if (!data) {
       alert("No file selected.");
@@ -138,6 +146,7 @@ const UserProfile = () => {
     } catch (error) {
       console.error("Error:", error);
       setIsLoaderOpen(false);
+      setLoaderMessage(null)
       alert("Image upload failed.");
     }
   };
@@ -151,7 +160,7 @@ const UserProfile = () => {
       }}
       className="rounded-lg w-full"
     >
-      {isLoaderOpen && <Loader />}
+      {isLoaderOpen && <Loader message= {loaderMessage} />}
       {isEditOpen && (
         <div className="fixed inset-0  flex items-center justify-center z-50">
           <div
@@ -539,7 +548,7 @@ const UserProfile = () => {
                     Driving Licence Status :{" "}
                     {userDeatils?.driving_license_verified === "Y"
                       ? "Verfied"
-                      : "Not Verfied"}{" "}
+                      :userDeatils?.driving_license_verified === 'P' ? "Pending" : "Not Verfied"}{" "}
                   </h2>
                 </div>
                 <div>
@@ -547,7 +556,7 @@ const UserProfile = () => {
                     Aadhar Verified :{" "}
                     {userDeatils?.aadhar_verified === "Y"
                       ? "Verfied"
-                      : "Not Verfied"}{" "}
+                      :userDeatils?.driving_license_verified === 'P' ? "Pending" :  "Not Verfied"}{" "}
                   </h2>
                 </div>
               </div>

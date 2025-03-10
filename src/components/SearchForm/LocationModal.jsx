@@ -7,14 +7,16 @@ import gujarat from "../../assets/gujarat.png";
 import { useScreenSize } from "../../context/screenSizeContext";
 import kolkata from "../../assets/kolkata.png";
 import constants from "../../config/constants";
+import Loader from "../Loader/Loader";
 import axios from "axios";
 
 const LocationModal = ({ closeModal, onSelectLocation }) => {
   const isScreenSize = useScreenSize().isScreenSmall;
+   const [isLoaderOpen, setIsLoderOpen] = useState(false);
   const [locationsData, setLocationsData] = useState([]);
   const fetchLocations = async () => {
     try {
-      console.log("i am called");
+      setIsLoderOpen(true)
       const response = await axios.get(
         `${constants.API_BASE_URL}/user/locations`
       );
@@ -27,6 +29,7 @@ const LocationModal = ({ closeModal, onSelectLocation }) => {
       });
 
       setLocationsData(locationData);
+      setIsLoderOpen(false)
     } catch (error) {
       console.error(error)
     }
@@ -80,6 +83,8 @@ const LocationModal = ({ closeModal, onSelectLocation }) => {
   };
   return (
     <div>
+      {isLoaderOpen && <Loader message="Please wait Locations are loading"/> }
+      { locationsData.length > 0 &&
       <div className="fixed inset-0 flex items-center justify-center  z-50">
         <div
           className={`relative rounded-lg shadow-2xl bg-white  ${
@@ -116,7 +121,7 @@ const LocationModal = ({ closeModal, onSelectLocation }) => {
             )}
           </div>
         </div>
-      </div>
+      </div>}
     </div>
   );
 };

@@ -15,6 +15,7 @@ import bored from "../../assets/bored.gif";
 
 const MyBookings = () => {
   const [loaderOpen, setLoaderOpen] = useState(true);
+  const [loaderMessage, setLoaderMessage] = useState(null)
   const [modalOpen, setModalOpen] = useState(false);
   const [modalFailureMessage, setModalFailureMessage] = useState(
     "Something went wrong"
@@ -46,6 +47,7 @@ const MyBookings = () => {
   const getUserBookings = async () => {
     if (getUserToken()) {
       try {
+        setLoaderMessage('Please wait we are fetching your bookings')
         const response = await axios.get(
           `${constants.API_BASE_URL}/user/bookings`,
           {
@@ -58,14 +60,15 @@ const MyBookings = () => {
         if (response.status === 200) {
           setBookingsData(response.data.data);
           setLoaderOpen(false);
+          setLoaderMessage(null);
           setModalOpen(false);
         }
       } catch (error) {
         console.error(error);
-        setModalOpen(true);
-        setModalFailureMessage(
-          error.response?.data?.message || "Something went wrong"
-        );
+        // setModalOpen(true);
+        // setModalFailureMessage(
+        //   error.response?.data?.message || "Something went wrong"
+        // );
         if (error.response?.data?.message === "InValid Token") {
           setTimeout(() => {
             localStorage.clear();
@@ -85,6 +88,7 @@ const MyBookings = () => {
 
   const handleCancelBooking = async (booking_id) => {
     try {
+      setLoaderMessage('Please wait we are cancelling your booking')
       setLoaderOpen(true);
       const response = await axios.put(
         `${constants.API_BASE_URL}/user/booking/cancel`,
@@ -99,15 +103,17 @@ const MyBookings = () => {
       );
 
       setModalOpen(false);
+      setLoaderMessage(null)
       setLoaderOpen(false);
-      location.reload();
+      //location.reload();
     } catch (error) {
       console.error(error);
+      setLoaderMessage(null)
       setLoaderOpen(false);
-      setModalOpen(true);
-      setModalFailureMessage(
-        error.response?.data?.message || "Something went wrong"
-      );
+      // setModalOpen(true);
+      // setModalFailureMessage(
+      //   error.response?.data?.message || "Something went wrong"
+      // );
 
       if (error.response?.data?.message === "InValid Token") {
         setTimeout(() => {
@@ -136,6 +142,7 @@ const MyBookings = () => {
     setIsWhichModal(screen);
   };
   const handleRatingSubmit = async (booking_id, review_id) => {
+    setLoaderMessage('Please wait while we are submitting your rating for booking')
     setLoaderOpen(true);
     try {
       if (!review_id) {
@@ -169,13 +176,14 @@ const MyBookings = () => {
           }
         );
       }
+      setLoaderMessage(null)
       getUserBookings();
     } catch (error) {
       console.error(error);
-      setModalOpen(true);
-      setModalFailureMessage(
-        error.response?.data?.message || "Something went wrong"
-      );
+      // setModalOpen(true);
+      // setModalFailureMessage(
+      //   error.response?.data?.message || "Something went wrong"
+      // );
     }
   };
   console.log(
@@ -195,15 +203,15 @@ const MyBookings = () => {
       //   padding: "16px",
       // }}
     >
-      {loaderOpen && <Loader />}
+      {loaderOpen && <Loader message={loaderMessage} />}
 
-      {modalOpen && (
+      {/* {modalOpen && (
         <Modal
           typeOfModal="failure"
           message={modalFailureMessage}
           closeModal={() => setModalOpen(false)}
         />
-      )}
+      )} */}
 
       {bookingsData.length > 0 ? (
         <div className="space-y-4 justify-items-center mt-16">

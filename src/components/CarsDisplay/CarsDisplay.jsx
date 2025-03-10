@@ -126,27 +126,7 @@ const CarsDisplay = ({ category }) => {
             closeModal={() => setIsBookingOpen(false)}
           />
         )}
-        {isLoaderOpen && (
-          <div
-            className="fixed inset- w-full flex items-center justify-center z-10"
-            style={{ marginTop: "10%", marginLeft: "5%" }}
-          >
-            <div
-              className="bg-white dark:bg-neutral-950 relative rounded-lg shadow-2xl w-full max-w-[240px] h-[150px] mx-4 md:mx-0 p-8 space-y-8"
-              style={{ padding: "40px 40px" }}
-            >
-              <div className="inset-0 flex flex-col items-center justify-center z-10">
-                <div className="w-12 h-12 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
-                <div
-                  className="text-lg font-semibold"
-                  style={{ marginTop: "20px" }}
-                >
-                  <h1>Loading</h1>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+                {isLoaderOpen && <Loader message="Please wait we are fetching cars for you" />}
         {isModalOpen && (
           <div>
             <Modal

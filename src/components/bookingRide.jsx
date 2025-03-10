@@ -26,6 +26,7 @@ const BookRide = () => {
   const startTime = searchParams.get("startTime");
   const endTime = searchParams.get("endTime");
   const [isLoaderOpen, setLoaderOpen] = useState(true);
+  const [loaderMessage, setLoaderMessage] = useState('Please wait we are fetching the car details');
   const [carDetailsTab, setCarDetailsTab] = useState("Reviews");
   const [car, setCar] = useState([]);
   const [baseAmount, setBaseAmount] = useState(0);
@@ -153,6 +154,7 @@ const BookRide = () => {
       ]);
       console.log(location);
       setLoaderOpen(false);
+      setLoaderMessage(null)
     } catch (error) {
       console.log(error);
     }
@@ -240,9 +242,11 @@ const BookRide = () => {
       image: "/logo.png",
       handler: async function (response) {
         console.log("Payment Successful:", response);
+        setLoaderMessage('Hurrah payment sucessfull we are updating your booking')
         setLoaderOpen(true);
         await updateBookingStatus(bookingId, response.razorpay_payment_id);
         setLoaderOpen(false);
+        setLoaderMessage(null)
         window.location.href = "/bookings";
       },
       prefill: {
@@ -261,6 +265,7 @@ const BookRide = () => {
 
   // Function to handle the booking API call
   const postBooking = async () => {
+    setLoaderMessage('Please wait we are Initiating booking...')
     setLoaderOpen(true);
     console.log("Initiating booking...");
 
@@ -292,6 +297,7 @@ const BookRide = () => {
           response.data.data
         );
         setLoaderOpen(false);
+        setLoaderMessage(null)
         startRazorpayPayment(response.data.data.booking_id, totalAmount);
       } else {
         console.error("Booking failed: Invalid response format", response);
@@ -302,7 +308,7 @@ const BookRide = () => {
   };
   return (
     <div className="  space-y-3  mt-[65px]">
-      {isLoaderOpen && <Loader />}
+      {isLoaderOpen && <Loader message={loaderMessage} />}
       {car.length > 0 && (
         <div>
           {/* Nav Bar Comes Here */}
