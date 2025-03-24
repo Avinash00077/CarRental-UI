@@ -34,7 +34,7 @@ const Reviews = () => {
       {loading ? (
         <p className="text-center text-gray-500 mt-6">Loading reviews...</p>
       ) : (
-        <div className="relative overflow-hidden mt-6">
+        <div className="relative overflow-hidden mt-6" id="Reviews">
           <div className="flex space-x-6 animate-scroll whitespace-nowrap">
             {reviews.concat(reviews).map((review, index) => (
               <div

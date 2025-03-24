@@ -161,7 +161,7 @@ const Filters = ({ cars, onFilter }) => {
           4 seats - {selectedSeatCapacity[1]} seats
         </p>
       </div>
-      <div className="flex items-center gap-4 p-1">
+      {/* <div className="flex items-center gap-4 p-1">
         <label className="flex items-center space-x-2">
           <input
             type="checkbox"
@@ -183,7 +183,7 @@ const Filters = ({ cars, onFilter }) => {
           />
           <p className="text-lg">New</p>
         </label>
-      </div>
+      </div> */}
 
       {/* Scrollable Filter Section */}
       <div className="no-scrollbar w-full flex h-full max-h-[600px] overflow-y-auto p-2 ">
@@ -193,12 +193,12 @@ const Filters = ({ cars, onFilter }) => {
           selected={selectedBrands}
           setSelected={setSelectedBrands}
         />
-        <FilterSection
+        {/* <FilterSection
           title="Car Models"
           options={carModels}
           selected={selectedModels}
           setSelected={setSelectedModels}
-        />
+        /> */}
         {/* <FilterSection title="Seating Capacity" options={seaters} selected={selectedSeaters} setSelected={setSelectedSeaters} /> */}
         {/* <FilterSection title="Car Condition" options={conditions} selected={selectedCondition} setSelected={setSelectedCondition} /> */}
       </div>
@@ -227,7 +227,7 @@ const FilterSection = ({ title, options, selected, setSelected }) => {
   return (
     <div className="flex flex-col space-y-2 rounded-lg shadow-2xs pb-3">
       <p className="text-start text-lg font-semibold mx-2">{title}</p>
-      <div className="no-scrollbar m-1 min-h-[300px] overflow-scroll bg-gray-50 rounded-lg  shadow-xl p-1">
+      <div className="no-scrollbar m-1 min-h-[300px] w-[300px] overflow-scroll bg-gray-50 rounded-lg  shadow-xl p-1">
         {options.map((option, index) => (
           <label key={index} className="flex items-center m-2">
             <input

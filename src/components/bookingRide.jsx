@@ -67,8 +67,8 @@ const BookRide = () => {
     // if(selectedDate && selectedTime){
     //     fetchBookingSlots()
     // }
-    if (selectedDate && selectedToDate && selectedTime && selectedToTime) {
-      const duration = calculateDaysBetween(selectedDate, selectedToDate);
+    if (startDate && endDate && startTime && endTime) {
+      const duration = calculateDaysBetween(startDate, endDate);
       setTotalDays(duration);
       let rent = car[0]?.daily_rent;
       const rentPerDay = parseFloat(rent);
@@ -271,10 +271,10 @@ const BookRide = () => {
 
     const payload = {
       car_id: carId,
-      start_date: formatDateToYYYYMMDD(selectedDate),
-      end_date: formatDateToYYYYMMDD(selectedToDate),
-      start_time: selectedTime || "10:00",
-      end_time: selectedToTime || "11:00",
+      start_date: formatDateToYYYYMMDD(startDate),
+      end_date: formatDateToYYYYMMDD(endDate),
+      start_time: startTime || "10:00",
+      end_time: endTime || "11:00",
       payment_mode: "ONLINE",
       total_price: totalAmount,
     };
@@ -312,8 +312,8 @@ const BookRide = () => {
       {car.length > 0 && (
         <div>
           {/* Nav Bar Comes Here */}
-          <div className="bg-gray-100 fixed h-20 flex items-center px-4 space-x-4 rounded-lg shadow-md">
-            {/* Start Date */}
+          {/* <div className="bg-gray-100 fixed h-20 flex items-center px-4 space-x-4 rounded-lg shadow-md">
+
             <div className="bg-white px-4 py-2 rounded-lg flex flex-col">
               <label className="text-sm font-semibold">Start Date</label>
               <select
@@ -331,8 +331,6 @@ const BookRide = () => {
                 ))}
               </select>
             </div>
-
-            {/* Start Time */}
             <div className="bg-white px-4 py-2 rounded-lg flex flex-col">
               <label className="text-sm font-semibold">Start Time</label>
               <select
@@ -350,8 +348,6 @@ const BookRide = () => {
                 ))}
               </select>
             </div>
-
-            {/* End Date */}
             <div className="bg-white px-4 py-2 rounded-lg flex flex-col">
               <label className="text-sm font-semibold">End Date</label>
               <select
@@ -370,8 +366,6 @@ const BookRide = () => {
                 ))}
               </select>
             </div>
-
-            {/* End Time */}
             <div className="bg-white px-4 py-2 rounded-lg flex flex-col">
               <label className="text-sm font-semibold">End Time</label>
               <select
@@ -388,15 +382,15 @@ const BookRide = () => {
                 ))}
               </select>
             </div>
-          </div>
+          </div> */}
           {/*Cars Content comes here */}
-          <div className="w-full flex justify-center   p-2 pt-24">
+          <div className="w-full flex justify-center   p-2 ">
             {/*car Image review comes here */}
             <div className="w-[70%]  p-4 flex flex-col mr-3 shadow-2xl rounded-3xl">
               <div>
                 <img
                   src={car[0].car_cover_img_url}
-                  className="w-[60%] h-[300px] rounded-lg"
+                  className="w-[60%] h-[300px] rounded-lg object-cover"
                 ></img>
               </div>
               <div className="py-2">
@@ -522,6 +516,64 @@ const BookRide = () => {
                     isScreenSize ? { marginTop: "20px" } : { marginTop: "5px" }
                   }
                 >
+                  <div className="flex justify-between items-start space-y-3">
+                    <p
+                      className="font-semibold text-sm "
+                      style={
+                        isScreenSize
+                          ? { marginTop: "5px" }
+                          : { marginTop: "5px" }
+                      }
+                    >
+                      <span className="text-[16px] text-gray-700 px-1">
+                        From Date:{" "}
+                      </span>
+                      {startDate}
+                    </p>
+                    <p
+                      className="font-semibold text-sm "
+                      style={
+                        isScreenSize
+                          ? { marginTop: "5px" }
+                          : { marginTop: "5px" }
+                      }
+                    >
+                      <span className="text-[16px] text-gray-700 px-3">
+                        StartTime:{" "}
+                      </span>
+                      {startTime}
+                    </p>
+                  </div>
+                  <div className="flex justify-between items-start space-y-3 pr-12">
+                  <p
+                      className="font-semibold text-sm"
+                      style={
+                        isScreenSize
+                          ? { marginTop: "5px" }
+                          : { marginTop: "5px" }
+                      }
+                    >
+                      <span className="text-[16px] text-gray-700 px-1">
+                        {" "}
+                        To Date :{" "}
+                      </span>
+                      {endDate}
+                    </p>
+                    <p
+                      className="font-semibold text-sm"
+                      style={
+                        isScreenSize
+                          ? { marginTop: "5px" }
+                          : { marginTop: "5px" }
+                      }
+                    >
+                      <span className="text-[16px] text-gray-700 px-3 pl-7">
+                        {" "}
+                        End Time :{" "}
+                      </span>
+                      {endTime}
+                    </p>
+                  </div>
                   <div className="flex justify-between items-center pr-10">
                     <p
                       className="font-semibold text-lg"
@@ -685,7 +737,7 @@ const BookRide = () => {
                 Reject
               </button>
               <button
-                className="bg-black text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
+                className="bg-black text-white px-6 py-2 rounded-lg  transition"
                 onClick={() => handleAcceptButton("accept")}
               >
                 Accept

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext,useRef } from "react";
 import "./CarsDisplay.css";
 import { StoreContext } from "../../context/StoreContext";
 import CarItem from "../CarItem/CarItem";
@@ -13,6 +13,7 @@ import { useScreenSize } from "../../context/screenSizeContext";
 import Modal from "../Modal/Modal";
 import BookingModel from "../CarItem/BookingModel";
 import sad from "../../assets/sad.gif";
+import { TbRuler } from "react-icons/tb";
 
 const CarsDisplay = ({ category }) => {
   const [carList, setCarList] = useState([]);
@@ -31,6 +32,7 @@ const CarsDisplay = ({ category }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(true);
   const [selectedCar, setSelectedCar] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState([]);
+  const reloadRef = useRef(false);
   const [filteredCars, setFilteredCars] = useState([]);
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
@@ -38,6 +40,18 @@ const CarsDisplay = ({ category }) => {
       setIsLogin(true);
     }
   }, []);
+  useEffect(() => {
+    if (sessionStorage.getItem("reloaded") !== "true") {
+      sessionStorage.setItem("reloaded", "true");
+      location.reload();
+    } else {
+      setTimeout(() => {
+        sessionStorage.removeItem("reloaded");
+        localStorage.removeItem("initialSelectedDate")
+      }, 5000);
+    }
+  }, []);
+  
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(

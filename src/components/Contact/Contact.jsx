@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import constants from "../../config/constants";
 import axios from "axios";
-import { Star } from "lucide-react";
+import { Star, JoystickIcon } from "lucide-react";
 import { getUserToken } from "../../utils/getToken";
 import Modal from "../Modal/Modal";
 import { MessageSquare } from "lucide-react";
@@ -10,6 +10,7 @@ import user from "../../assets/boy.png";
 
 const Contact = () => {
   const [openFeedBackForm, setFeedBackForm] = useState(false);
+  const [openRequestForm, setOpenRequestForm] = useState(false)
   const [isloader, setIsLoader] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
@@ -24,6 +25,15 @@ const Contact = () => {
     first_name: "",
     last_name: "",
   });
+
+  const [requestDetails, setRequestDetails] = useState({
+    first_name: "",
+    last_name: "",
+    email: "",
+    phone: "",
+    additional_info: "",
+  });
+
   const handleChange = (e) => {
     setFeedback({ ...feedback, [e.target.name]: e.target.value });
   };
@@ -39,19 +49,17 @@ const Contact = () => {
           },
         }
       );
-      console.log(response.data.data, 'feedback issssssssssssss')
-      if(response.data.data.length > 0){
-      setFeedback(response.data.data[0])}
+      if (response.data.data.length > 0) {
+        setFeedback(response.data.data[0]);
+      }
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
-    
     if (!userDetails) {
       const userDetails = JSON?.parse(localStorage.getItem("userDetails"));
       setUserDeatils(userDetails);
-      console.log(userDetails, " User Deatils hello is ");
       if (userDetails) {
         setFeedback((prev) => ({
           ...prev,
@@ -62,31 +70,52 @@ const Contact = () => {
           profile_img_url: userDetails.profile_img_url || user,
         }));
       }
-    }else{
-      GetUserFeedback()
+      if(userDetails){
+        setRequestDetails((prev) => ({
+          ...prev,
+          user_id: userDetails.user_id,
+          first_name: userDetails.first_name,
+          last_name: userDetails.last_name,
+          email: userDetails.email,
+          phone: userDetails.phone_number
+        })); 
+      }
+    } else {
+      GetUserFeedback();
     }
   }, [userDetails]);
   console.log(userDetails, " Use Deatils are ");
+
+  
+  const handleJoinChange = (e) => {
+    const { name, value } = e.target;
+    setRequestDetails({ ...requestDetails, [name]: value });
+  };
+
+  const handleJoinSubmit = () => {
+    console.log("Submitted Request:", requestDetails);
+    setFeedBackForm(false);
+  };
 
   const handleSubmit = async (e) => {
     setIsLoader(true);
     e.preventDefault();
     try {
-      if(!feedback.feedback_id){
-      const response = await axios.post(
-        `${constants.API_BASE_URL}/user/feedback`,
-        {
-          comments: feedback.comments,
-          rating: feedback.rating || 3,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${getUserToken()}`,
+      if (!feedback.feedback_id) {
+        const response = await axios.post(
+          `${constants.API_BASE_URL}/user/feedback`,
+          {
+            comments: feedback.comments,
+            rating: feedback.rating || 3,
           },
-        }
-      )}
-      else{
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${getUserToken()}`,
+            },
+          }
+        );
+      } else {
         const response = await axios.put(
           `${constants.API_BASE_URL}/user/feedback`,
           {
@@ -99,8 +128,8 @@ const Contact = () => {
               Authorization: `Bearer ${getUserToken()}`,
             },
           }
-        )
-      };
+        );
+      }
       setIsLoader(false);
       setFeedBackForm(!openFeedBackForm);
       setModalMessage("Review Submited succesfully");
@@ -173,13 +202,87 @@ const Contact = () => {
                 onClick={handleSubmit}
                 className="bg-black text-white px-4 py-2 rounded-md"
               >
-                {feedback.feedback_id ? 'Update Feedback' : 'Submit Feedback'}
+                {feedback.feedback_id ? "Update Feedback" : "Submit Feedback"}
               </button>
             </div>
           </div>
         </div>
       )}
-      <div className="flex justify-center items-center">
+      {openRequestForm && (
+      <div className="fixed inset-0 flex items-center justify-center z-10">
+        <div className="w-lg mx-auto p-4 shadow-lg rounded-2xl border border-gray-200 bg-white">
+          <div
+            className="flex justify-end cursor-pointer"
+            onClick={() => setOpenRequestForm(false)}
+          >
+            <span className="material-icons text-xl">X</span>
+          </div>
+
+          <div className="flex flex-col gap-0.5">
+            <h3 className="text-lg font-semibold text-center">
+              Request to Join Our Car Rental Service
+            </h3>
+
+            <label className="font-medium">First Name</label>
+            <input
+              type="text"
+              name="first_name"
+              value={requestDetails.first_name}
+              onChange={handleJoinChange}
+              placeholder="First Name"
+              className="w-full p-2 border rounded-md"
+            />
+
+            <label className="font-medium">Last Name</label>
+            <input
+              type="text"
+              name="last_name"
+              value={requestDetails.last_name}
+              onChange={handleJoinChange}
+              placeholder="Last Name"
+              className="w-full p-2 border rounded-md"
+            />
+
+            <label className="font-medium">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={requestDetails.email}
+              onChange={handleJoinChange}
+              placeholder="Email"
+              className="w-full p-2 border rounded-md"
+            />
+
+            <label className="font-medium">Phone Number</label>
+            <input
+              type="tel"
+              name="phone"
+              value={requestDetails.phone}
+              onChange={handleJoinChange}
+              placeholder="Phone Number"
+              className="w-full p-2 border rounded-md"
+            />
+
+            <label className="font-medium">Additional Information</label>
+            <textarea
+              name="additional_info"
+              value={requestDetails.additional_info}
+              onChange={handleJoinChange}
+              placeholder="Tell us why you want to join..."
+              className="w-full p-2 border rounded-md"
+            />
+
+            <button
+              onClick={handleJoinSubmit}
+              className="bg-black text-white px-4 py-2 mt-6 rounded-md"
+            >
+              Submit Request
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+      <div className="flex justify-center items-center" >
         <div
           className="bg-[#121212] rounded-[15px] flex flex-col items-center w-full h-[22vh] p-24"
           style={{ padding: "20px" }}
@@ -188,7 +291,7 @@ const Contact = () => {
             <h1 direction="right">Contact Us</h1>
           </h2>
           <div
-            className="mt-4  rounded-lg px-2 py-1 w-[480px] flex justify-between items-center space-x-5"
+            className="mt-4  rounded-lg px-2 py-1 w-[480px] flex justify-center items-center space-x-5"
             style={{ padding: "20px" }}
           >
             {/* Email */}
@@ -229,7 +332,17 @@ const Contact = () => {
                 <span className="pl-3">FeedBack Us</span>
               </p>
             )}
+            {userDetails && (
+              <p
+                className="flex items-center rounded-2xl pb-2 text-white cursor-pointer whitespace-nowrap"
+                onClick={() => setOpenRequestForm(true)}
+              >
+                <JoystickIcon size={20} /> <span className="pl-3">Join Us</span>
+              </p>
+             
+            )}
           </div>
+         
         </div>
       </div>
     </div>

@@ -29,7 +29,7 @@ const AuthModal = () => {
   const [isUserAvailable, setUserAvailable] = useState("none");
   const [authStatus, setAuthStatus] = useState("auth");
   const [isGetUserName, setIsGetUserName] = useState(false);
-  const [loaderMessage, setLoaderMessage] = useState('Loading...');
+  const [loaderMessage, setLoaderMessage] = useState("Loading...");
   const navigate = useNavigate();
   const location = useLocation();
   const { isScreenSmall } = useScreenSize();
@@ -127,13 +127,29 @@ const AuthModal = () => {
         const { token, userDetails } = response.data.data;
         localStorage.setItem("authToken", token);
         localStorage.setItem("userDetails", JSON.stringify(userDetails));
-        setIsLoaderOpen(false);
-        setIsModalOpen(true);
-        setModalType("success");
-        setModalMessage("Login successful!");
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 4000);
+        const storedDates = localStorage.getItem("initialSelectedDate");
+        if (storedDates) {
+          setIsLoaderOpen(false);
+          setIsModalOpen(true);
+          setModalType("success");
+          setModalMessage("Login successful!");
+          const { pickUpDate, dropOffDate,dropOffTime,pickUpTime ,selectedLocation} = JSON.parse(storedDates);
+          setTimeout(()=>{
+            navigate(
+              `/viewCars?pickUpDate=${pickUpDate}&toDate=${dropOffDate}&location=${selectedLocation}&pickupTime=${pickUpTime}&dropoffTime=${dropOffTime}`
+            );
+          },4000)
+          
+        } else {
+          console.log("No dates found in localStorage.");
+          setIsLoaderOpen(false);
+          setIsModalOpen(true);
+          setModalType("success");
+          setModalMessage("Login successful!");
+          setTimeout(() => {
+            window.location.href = "/";
+          }, 4000);
+        }
       } catch (error) {
         console.error("Login failed", error.response?.data || error.message);
         setIsModalOpen(true);
@@ -212,8 +228,7 @@ const AuthModal = () => {
     setIsLoaderOpen(true);
     if (authStatus === "verifyEmail") {
       setLoaderMessage("Please wait, sending OTP to your email...");
-      
-    
+
       console.log(formData.email);
 
       try {

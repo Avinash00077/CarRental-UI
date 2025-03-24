@@ -15,12 +15,11 @@ import bored from "../../assets/bored.gif";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-
-
 const MyBookings = () => {
   const [loaderOpen, setLoaderOpen] = useState(true);
   const [loaderMessage, setLoaderMessage] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [currentTabState, setCurrentTab] = useState("current");
   const [modalFailureMessage, setModalFailureMessage] = useState(
     "Something went wrong"
   );
@@ -48,47 +47,73 @@ const MyBookings = () => {
     return null;
   };
 
-  const getUserBookings = async () => {
-    if (getUserToken()) {
+  // const getUserBookings = async () => {
+  //   if (getUserToken()) {
+  //     try {
+  //       setLoaderMessage("Please wait we are fetching your bookings");
+  //       const response = await axios.get(
+  //         `${constants.API_BASE_URL}/user/bookings`,
+  //         {
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Authorization: `Bearer ${getUserToken()}`,
+  //           },
+  //         }
+  //       );
+  //       if (response.status === 200) {
+  //         setBookingsData(response.data.data);
+  //         setLoaderOpen(false);
+  //         setLoaderMessage(null);
+  //         setModalOpen(false);
+  //       }
+  //     } catch (error) {
+  //       console.error(error);
+  //       // setModalOpen(true);
+  //       // setModalFailureMessage(
+  //       //   error.response?.data?.message || "Something went wrong"
+  //       // );
+  //       if (error.response?.data?.message === "InValid Token") {
+  //         setTimeout(() => {
+  //           localStorage.clear();
+  //           navigate("/");
+  //           location.reload();
+  //         }, 2000);
+  //       }
+  //     } finally {
+  //       setLoaderOpen(false);
+  //     }
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getUserBookings();
+  // }, []);
+
+  useEffect(()=>{
+    const fetchBookings = async () => {
+      setLoaderOpen(true)
       try {
-        setLoaderMessage("Please wait we are fetching your bookings");
-        const response = await axios.get(
-          `${constants.API_BASE_URL}/user/bookings`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${getUserToken()}`,
-            },
+        const response = await axios.get(`${constants.API_BASE_URL}/user/bookings`,{
+          headers:{
+            type: currentTabState,
+            booking_status: `${currentTabState === "failure" ? 'false' : 'true'}`,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getUserToken()}`,
           }
-        );
+        })
         if (response.status === 200) {
+          console.log(response.data.data)
           setBookingsData(response.data.data);
           setLoaderOpen(false);
           setLoaderMessage(null);
           setModalOpen(false);
         }
       } catch (error) {
-        console.error(error);
-        // setModalOpen(true);
-        // setModalFailureMessage(
-        //   error.response?.data?.message || "Something went wrong"
-        // );
-        if (error.response?.data?.message === "InValid Token") {
-          setTimeout(() => {
-            localStorage.clear();
-            navigate("/");
-            location.reload();
-          }, 2000);
-        }
-      } finally {
-        setLoaderOpen(false);
+        console.error(error)
       }
     }
-  };
-
-  useEffect(() => {
-    getUserBookings();
-  }, []);
+    fetchBookings();
+  },[currentTabState])
 
   const handleCancelBooking = async (booking_id) => {
     try {
@@ -135,22 +160,22 @@ const MyBookings = () => {
 
   const generateInvoice = (booking) => {
     const doc = new jsPDF();
-  
+
     // **Set Font for Unicode Support**
     doc.setFont("helvetica", "bold");
-  
+
     // **Header**
     doc.setFontSize(22);
     doc.text("Car Rental Invoice", 14, 20);
-  
+
     doc.setFontSize(12);
     doc.setTextColor(100);
     doc.text(`Invoice Date: ${new Date().toLocaleDateString()}`, 14, 28);
-  
+
     doc.setTextColor(0);
     doc.setFontSize(14);
     doc.text(`Booking ID: #${booking.booking_id}`, 14, 36);
-  
+
     // **Billing Information**
     const userDetails = [
       ["Name:", booking.name],
@@ -158,9 +183,12 @@ const MyBookings = () => {
       ["Phone:", booking.user_phone_number],
       ["Payment Mode:", booking.payment_mode],
       ["Booking Status:", booking.booking_status],
-      ["Transaction ID:", booking.transaction_id ? booking.transaction_id : "N/A"],
+      [
+        "Transaction ID:",
+        booking.transaction_id ? booking.transaction_id : "N/A",
+      ],
     ];
-  
+
     autoTable(doc, {
       head: [["Details", "Information"]],
       body: userDetails,
@@ -171,17 +199,17 @@ const MyBookings = () => {
       margin: { left: 14, right: 14 },
       font: "helvetica",
     });
-  
+
     // **Rental Details & Pricing**
     const gstRate = 0.18;
     const rentalTaxRate = 0.05;
     const totalPayable = parseFloat(booking.total_price); // Get from API
-  
+
     // Reverse Calculation for Accuracy
     const baseRent = totalPayable / (1 + gstRate + rentalTaxRate);
     const gstAmount = baseRent * gstRate;
     const rentalTax = baseRent * rentalTaxRate;
-  
+
     const pricingDetails = [
       ["Car:", booking.car_name],
       ["Brand:", booking.brand],
@@ -192,7 +220,7 @@ const MyBookings = () => {
       ["Rental Tax (5%):", `₹${rentalTax.toFixed(2)}`],
       ["Total Payable:", `₹${totalPayable.toFixed(2)}`],
     ];
-  
+
     autoTable(doc, {
       head: [["Rental Details", "Amount"]],
       body: pricingDetails,
@@ -203,7 +231,7 @@ const MyBookings = () => {
       margin: { left: 14, right: 14 },
       font: "helvetica",
     });
-  
+
     // **Footer Message**
     doc.setFontSize(12);
     doc.setTextColor(100);
@@ -212,13 +240,10 @@ const MyBookings = () => {
       14,
       doc.lastAutoTable.finalY + 15
     );
-  
+
     // **Save the PDF**
     doc.save(`Invoice_${booking.booking_id}.pdf`);
   };
-  
-  
-  
 
   const isWhichScreen = (booking, screen) => {
     if (screen === "RateNow" && booking.review_id) {
@@ -270,7 +295,7 @@ const MyBookings = () => {
         );
       }
       setLoaderMessage(null);
-      getUserBookings();
+      // getUserBookings();
     } catch (error) {
       console.error(error);
       // setModalOpen(true);
@@ -305,12 +330,24 @@ const MyBookings = () => {
           closeModal={() => setModalOpen(false)}
         />
       )} */}
-
-      {bookingsData.length > 0 ? (
-        <div className="space-y-4 justify-items-center mt-16">
-          <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white mt-20 align-middle">
+                <h1 className="mb-4 text-xl font-semibold leading-none tracking-tight text-center  text-gray-900 md:text-5xl lg:text-3xl dark:text-white mt-20 ">
             My bookings
           </h1>
+          <div className="mt-6 flex justify-center items-center space-x-3">
+        {["current","future","past","failure"].map((item) => (
+          <button
+            className={`text-lg font-semibold ${
+              currentTabState == item ? " border-b-2" : " text-gray-600"
+            } cursor-pointer  `}
+            onClick={() => setCurrentTab(item)}
+          >
+            {item}
+          </button>
+        ))}
+      </div>
+
+      {bookingsData.length > 0 ? (
+        <div className="space-y-4 mt-8 flex flex-col justify-center items-center">
           {bookingsData.map((booking) => (
             <div
               key={booking.booking_id}
@@ -417,7 +454,7 @@ const MyBookings = () => {
         </div>
       ) : (
         <div className="w-full h-screen  flex justify-center items-center">
-          <h1 className="font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-3xl dark:text-white mt-20 flex items-center gap-2">
+          <h1 className="font-semibold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-3xl dark:text-white mt-20 flex items-center gap-2">
             No Bookings Found
             <img src={bored} className="h-10 w-10" alt="No Bookings" />
           </h1>

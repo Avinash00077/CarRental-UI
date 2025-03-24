@@ -66,6 +66,7 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
         `/viewCars?pickUpDate=${pickUpDate}&toDate=${dropOffDate}&location=${selectedLocation}&pickupTime=${pickUpTime}&dropoffTime=${dropOffTime}`
       );
     }else{
+      localStorage.setItem("initialSelectedDate", JSON.stringify({ pickUpDate, dropOffDate,pickUpTime,dropOffTime,selectedLocation }));
       window.location.href = "/auth";
     }
   };

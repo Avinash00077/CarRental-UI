@@ -3,14 +3,42 @@ import constants from "../../../config/constants";
 import { useScreenSize } from "../../../context/screenSizeContext";
 import Loader from "../../Loader/Loader";
 import axios from "axios";
-
+import CarUploadModal from "../componnets/CarUploadModal";
 const { isScreenSize } = useScreenSize;
 
 const CurrentBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [uploadCarDeatilsOpen, setOpenUploadCarDetails] = useState(false);
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
   const [otp, setOtp] = useState(null);
+  const [startKm, setStartKm] = useState("");
+  const [images, setImages] = useState({
+    car_image_front: {
+      file: null,
+      preview:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1zwhySGCEBxRRFYIcQgvOLOpRGqrT3d7Qng&s",
+      status: "default",
+    },
+    car_image_back: {
+      file: null,
+      preview:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1zwhySGCEBxRRFYIcQgvOLOpRGqrT3d7Qng&s",
+      status: "default",
+    },
+    car_image_side_1: {
+      file: null,
+      preview:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1zwhySGCEBxRRFYIcQgvOLOpRGqrT3d7Qng&s",
+      status: "default",
+    },
+    car_image_side_2: {
+      file: null,
+      preview:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1zwhySGCEBxRRFYIcQgvOLOpRGqrT3d7Qng&s",
+      status: "default",
+    },
+  });
   const adminAuthToken = localStorage.getItem("adminAuthToken");
 
   useEffect(() => {
@@ -40,14 +68,30 @@ const CurrentBookings = () => {
   const handlePickup = async (bookingId) => {
     try {
       setIsLoaderOpen(true);
+
+      // Create a FormData object
+      const formData = new FormData();
+      formData.append("booking_id", bookingId);
+      formData.append("startKm", startKm);
+
+      // Append images if they exist
+      Object.entries(images).forEach(([key, value]) => {
+        if (value.file) {
+          formData.append(key, value.file); // Attach actual file, not object
+        }
+      });
+
+      // Make API call with FormData
       await axios.put(
         `${constants.API_BASE_URL}/admin/booking/pickup`,
-        { booking_id: bookingId },
+        formData,
         {
-          headers: { Authorization: `Bearer ${adminAuthToken}` },
+          headers: {
+            Authorization: `Bearer ${adminAuthToken}`,
+            "Content-Type": "multipart/form-data", // Ensure correct content type
+          },
         }
       );
-      alert("Pickup successful!");
       setIsLoaderOpen(false);
       setSelectedBooking(null);
       fetchCurrentBookings();
@@ -77,9 +121,42 @@ const CurrentBookings = () => {
     }
   };
 
+  const removeImage = (key) => {
+    setImages((prev) => ({
+      ...prev,
+      [key]: { file: null, preview: `/default-${key}.jpg`, status: "default" },
+    }));
+  };
+  const handleFileChange = (event) => {
+    const { name, files } = event.target;
+    if (files.length > 0) {
+      const file = files[0];
+      setImages((prev) => ({
+        ...prev,
+        [name]: { file, preview: URL.createObjectURL(file), status: "pending" },
+      }));
+    }
+  };
+
   return (
     <div className="flex items-center justify-center ml-[10%]">
       {isLoaderOpen && <Loader />}
+      {uploadCarDeatilsOpen && (
+        <div className="fixed inset-0   flex items-center justify-center z-[999]">
+          <div
+            className="bg-white  relative rounded-2xl shadow-2xl w-full max-w-xs h-auto mx-4 md:mx-0 p-8 space-y-8"
+            style={{ padding: "20px" }}
+          >
+            {/* onClick={closeModal}> */}
+            <div className="flex justify-end">
+              <span className="material-icons cursor-pointer">X</span>
+            </div>
+            <div className="inset-0 flex text-medium items-center justify-center text-center z-10">
+              Hello SUhdeer
+            </div>
+          </div>
+        </div>
+      )}
       {bookings?.length > 0 ? (
         <div
           className={`${
@@ -185,11 +262,45 @@ const CurrentBookings = () => {
 
             {/* Left: Car Image */}
             <div className="w-full md:w-1/2">
-              <img
+              {/* <img
                 src={selectedBooking.car_cover_img_url}
                 alt={selectedBooking.car_name}
                 className="w-full h-[300px] md:h-full object-cover rounded-lg shadow-md"
-              />
+              /> */}
+
+              <div className="grid grid-cols-2 gap-4 mt-4">
+                {Object.keys(images).map((key) => (
+                  <div key={key} className="relative">
+                    <label className="block text-gray-700 font-medium mb-1">
+                      {key.replace(/_/g, " ").toUpperCase()}
+                    </label>
+
+                    <input
+                      type="file"
+                      name={key}
+                      className="hidden"
+                      id={key}
+                      onChange={handleFileChange}
+                    />
+                    <label htmlFor={key} className="cursor-pointer block">
+                      <img
+                        src={images[key].preview}
+                        alt={key}
+                        className="w-full h-40 object-cover rounded-md border"
+                      />
+                    </label>
+
+                    {images[key].status !== "default" && (
+                      <button
+                        onClick={() => removeImage(key)}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 text-xs"
+                      >
+                        ✕
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Right: Booking Details */}
@@ -212,21 +323,46 @@ const CurrentBookings = () => {
                 <p className="text-gray-700 ">
                   <strong>Car Description:</strong>{" "}
                   <span className="text-center">
-                    {selectedBooking.model_year} Helloejeeeeeeeeeeeeee
+                    {selectedBooking.model_year}
                   </span>
                 </p>
+                <div className="w-full">
+                  <label className="block text-sm mb-1">Start KiloMeters</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={startKm}
+                    onChange={(e) => setStartKm(e.target.value)}
+                    placeholder="Enter Start Km"
+                    className={`w-full text-sm  ${"border bg-white rounded-lg hover:bg-gray-50"}  border-gray-300  px-2 py-1 focus:outline-none hover:-translate-y-0.5 hover:h-[38px]  hover:text-[15px]`}
+                    style={{ padding: "8px", margin: "4px 0px" }}
+                  />
+                </div>
               </div>
 
               <div className=" space-x-6 flex justify-center items-center">
-                {selectedBooking.booking_status === "CONFIRMED" &&
-                  selectedBooking.ride_status === "NOT_STARTED" && (
-                    <button
-                      className="mt-4 w-full bg-black text-white px-4 py-2 rounded-md font-semibold hover:scale-105 transition"
-                      onClick={() => handlePickup(selectedBooking.booking_id)}
-                    >
-                      Confirm Pickup
-                    </button>
-                  )}
+                <button
+                  className={`mt-4 w-full px-4 py-2 rounded-md font-semibold transition
+    ${
+      images.car_image_back.file &&
+      images.car_image_front.file &&
+      images.car_image_side_1.file &&
+      images.car_image_side_2.file&&
+      !startKm ==""
+        ? "bg-black text-white hover:scale-105 cursor-pointer"
+        : "bg-gray-400 text-gray-700 cursor-not-allowed"
+    }`}
+                  onClick={() => handlePickup(selectedBooking.booking_id)}
+                  disabled={
+                    !images.car_image_back.file ||
+                    !images.car_image_front.file ||
+                    !images.car_image_side_1.file ||
+                    !images.car_image_side_2.file||
+                    !startKm==""
+                  }
+                >
+                  Confirm Pickup
+                </button>
                 {selectedBooking.booking_status === "CONFIRMED" &&
                   selectedBooking.ride_status === "ON_GOING" && (
                     <button
