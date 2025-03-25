@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import Loader from "./Loader/Loader";
 import { getUserToken } from "../utils/getToken";
 import {
-  calculateDaysBetween,
+  calculateDaysAndHoursBetween,
   formatDateToYYYYMMDD,
   formatDateToYYYYMMDD2,
 } from "../utils/dateUtils";
@@ -33,7 +33,7 @@ const BookRide = () => {
   const [totalAmount, setTotalAmount] = useState(0);
   const [gstAmount, setGstAmount] = useState(0);
   const [rentalTaxAmount, setRentalTaxAmount] = useState(0);
-  const [totalDays, setTotalDays] = useState(0);
+  const [totalDays, setTotalDays] = useState({days:0,hours :0});
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedToDate, setSelectedToDate] = useState("");
   const [selectedToTime, setSelectedToTime] = useState("12:00");
@@ -68,18 +68,19 @@ const BookRide = () => {
     //     fetchBookingSlots()
     // }
     if (startDate && endDate && startTime && endTime) {
-      const duration = calculateDaysBetween(startDate, endDate);
-      setTotalDays(duration);
+      const duration = calculateDaysAndHoursBetween(startDate, endDate,startTime,endTime);
+      setTotalDays({days:duration.days,hours:duration.hours});
       let rent = car[0]?.daily_rent;
-      const rentPerDay = parseFloat(rent);
+      let rentPerHour  = (rent / 24).toFixed(0);
+      const rentPerDay = parseFloat(car[0]?.daily_rent);
+      const totalRent = parseFloat((rentPerDay * duration.days) + (rentPerHour * duration.hours));
 
-      const totalRent = parseFloat(rentPerDay * duration);
       const gstAmount = parseFloat(totalRent * gstRate);
       const rentalTax = parseFloat(totalRent * rentalTaxRate);
       const totalPayable = parseFloat(totalRent + gstAmount + rentalTax);
       setBaseAmount(totalRent);
-      setGstAmount(gstAmount);
-      setRentalTaxAmount(rentalTax);
+      setGstAmount(gstAmount.toFixed(2));
+      setRentalTaxAmount(rentalTax.toFixed(2));
       setTotalAmount(totalPayable);
     }
   }, [selectedDate, selectedToDate, selectedTime, selectedToTime, car]);
@@ -506,10 +507,9 @@ const BookRide = () => {
             </div>
             {/*apyment info comes here */}
             <div className="w-[30%]  shadow-2xl rounded-4xl py-3 ">
-              <h2 className="text-xl font-bold text-center text-gray-800 mb-4">
+              <h2 className="text-xl font-bold text-center text-gray-800 my-7">
                 Payment Details
               </h2>
-              {totalDays >= 0 && (
                 <div
                   className={`mt-4 text-start w-full bg-white p-4 rounded-lg`}
                   style={
@@ -544,6 +544,7 @@ const BookRide = () => {
                       {startTime}
                     </p>
                   </div>
+                  
                   <div className="flex justify-between items-start space-y-3 pr-12">
                   <p
                       className="font-semibold text-sm"
@@ -574,6 +575,7 @@ const BookRide = () => {
                       {endTime}
                     </p>
                   </div>
+                 
                   <div className="flex justify-between items-center pr-10">
                     <p
                       className="font-semibold text-lg"
@@ -583,10 +585,10 @@ const BookRide = () => {
                           : { marginTop: "5px" }
                       }
                     >
-                      <span className="text-[16px] text-gray-700 px-3">
+                      <span className="text-[16px] text-gray-700">
                         Total Days :
                       </span>
-                      {totalDays}
+                      {totalDays.days} Days {totalDays.hours} Hr
                     </p>
                     <p
                       className="font-semibold text-lg"
@@ -602,6 +604,7 @@ const BookRide = () => {
                       {baseAmount}
                     </p>
                   </div>
+                 
                   <div className="flex justify-between items-center space-y-3 pr-10">
                     <p
                       className="font-semibold text-lg pt-4"
@@ -630,7 +633,9 @@ const BookRide = () => {
                       </span>
                       {rentalTaxAmount}
                     </p>
+
                   </div>
+                     
                   <p
                     className="font-semibold text-lg text-gray-700 py-4 dark:text-blue-400"
                     style={
@@ -650,9 +655,11 @@ const BookRide = () => {
                     <label style={{ paddingLeft: "5px" }}>
                       Terms and conditions
                     </label>{" "}
-                  </div>
+                  </div> 
                 </div>
-              )}
+
+
+
               <div
                 className="mt-6"
                 style={{ padding: "10px", paddingTop: "20px" }}

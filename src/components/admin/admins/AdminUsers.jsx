@@ -67,6 +67,7 @@ const Admins = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
     setFormData({
       ...formData,
       [name]: value,
@@ -76,12 +77,18 @@ const Admins = () => {
   const handleAddOrEditAdmin = async (e) => {
     e.preventDefault();
     try {
+      console.log(formData," FormData Vale is HHHHHHHHHHHHHHHHHHHhh")
       setIsLoaderOpen(true);
       let response;
       if (selectedAdmin) {
         // Editing existing admin
+        if(formData.user_type === 'super_user'){
+          formData.location = null
+        }
+        formData.admin_id = selectedAdmin.admin_id
         response = await axios.put(
-          `${constants.API_BASE_URL}/admin/${selectedAdmin.admin_id}`,
+          `${constants.API_BASE_URL}/admin/update`,
+
           formData,
           {
             headers: {
@@ -110,7 +117,7 @@ const Admins = () => {
         email: "",
         phone_number: "",
         password: "",
-        user_type: "regional_user",
+        user_type: "",
         location: "",
         active: "Y"
       }); // Reset form data
@@ -254,7 +261,7 @@ const Admins = () => {
                         Location:
                       </label>
                       <select
-                        name="user_type"
+                        name="location"
                         value={formData.location}
                         onChange={handleInputChange}
                         className="w-full px-3 py-2 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#121212]"
@@ -307,7 +314,7 @@ const Admins = () => {
                 email: "",
                 phone_number: "",
                 password: "",
-                user_type: "regional_user",
+                user_type: "",
                 location: "",
                 active: "Y"
               })}} // Toggle form visibility

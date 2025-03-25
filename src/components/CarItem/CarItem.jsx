@@ -28,8 +28,8 @@ const CarItem = ({ car, onBookNow }) => {
       driving_license_expiry !== "N"
     );
     if (
-      aadhar_verified !== "Y" &&
-      driving_license_verified !== "Y" &&
+      aadhar_verified !== "Y" ||
+      driving_license_verified !== "Y" ||
       driving_license_expiry !== "N"
     ) {
       console.log("opne warnjnjjjjjjjjjjjjjjjjj  ");

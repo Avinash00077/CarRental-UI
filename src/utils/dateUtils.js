@@ -10,6 +10,32 @@ export const calculateDaysBetween = (fromDate, toDate) => {
   
     return differenceInDays;
   };
+
+  export const calculateDaysAndHoursBetween = (fromDate, toDate, fromTime, toTime) => {
+    if (!fromDate || !toDate || !fromTime || !toTime) return { days: 0, hours: 0 };
+
+    // Convert date format from "YYYY/MM/DD" to "YYYY-MM-DD"
+    const formattedFromDate = fromDate.replace(/\//g, "-");
+    const formattedToDate = toDate.replace(/\//g, "-");
+
+    // Combine date and time to create full DateTime objects
+    const fromDateTime = new Date(`${formattedFromDate}T${fromTime}`);
+    const toDateTime = new Date(`${formattedToDate}T${toTime}`);
+
+    if (isNaN(fromDateTime.getTime()) || isNaN(toDateTime.getTime())) {
+        console.error("Invalid date or time format");
+        return { days: 0, hours: 0 };
+    }
+
+    const differenceInTime = toDateTime.getTime() - fromDateTime.getTime(); // Difference in milliseconds
+    const totalHours = differenceInTime / (1000 * 60 * 60); // Convert to hours
+
+    const days = Math.floor(totalHours / 24); // Extract whole days
+    const hours = Math.round(totalHours % 24); // Remaining hours
+
+    return { days, hours };
+};
+
    export const parseDate = (dateString) => {
         const [year, month, day] = dateString?.split("/").map(Number);
         return new Date(year, month - 1, day);

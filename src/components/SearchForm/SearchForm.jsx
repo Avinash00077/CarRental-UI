@@ -20,20 +20,38 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
   const authToken = localStorage.getItem("authToken");
   const [selectedLocation, setSelectedLocation] = useState(localStorage.getItem("location") || "Hyderabad");
   const [openModal, setOpenModal] = useState(false);
+  const [dropOffSlots,setDropOffSlots] = useState([]);
+  const [availableSlots, setAvailableSlots] = useState([]);
   const [pickUpDate, setPickUpDate] = useState(
     parseDate(userSelectedDates?.fromDate) || ""
   );
   const [pickUpTime, setPickUpTime] = useState(
-    userSelectedDates?.pickupTime || "10:00 AM"
+    userSelectedDates?.pickupTime ||""
   );
+
   const { isScreenSmall } = useScreenSize();
   const [dropOffDate, setDropOffDate] = useState(
     parseDate(userSelectedDates?.dropOffDate) || ""
   );
   const [dropOffTime, setDropOffTime] = useState(
-    userSelectedDates?.dropOffTime || "11:00 AM"
+    userSelectedDates?.dropOffTime || ""
   );
   const [rideDuration, setRideDuration] = useState("");
+
+
+  const convertTo24HourFormat = (time) => {
+    const [hours, minutes] = time.split(/[: ]/);
+    const period = time.includes("AM") ? "AM" : "PM";
+    let hour = parseInt(hours);
+  
+    if (period === "PM" && hour !== 12) {
+      hour += 12;
+    } else if (period === "AM" && hour === 12) {
+      hour = 0;
+    }
+  
+    return `${hour.toString().padStart(2, "0")}:${minutes}`;
+  };
 
   useEffect(() => {
     if (userSelectedDates) {
@@ -41,32 +59,96 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
         userSelectedDates.fromDate,
         userSelectedDates.dropOffDate
       );
-      console.log(duration, " Caliculated duration is ");
       setRideDuration(duration);
     }
   }, [userSelectedDates]);
   const navigate = useNavigate();
-  const timeSlots = [
-    "10:00 AM",
-    "11:00 AM",
-    "12:00 PM",
-    "01:00 PM",
-    "02:00 PM ",
-    "03:00 PM",
-    "04:00 PM",
-    "05:00 PM",
-  ];
-  console.log(!pickUpDate|| !dropOffDate || !pickUpTime || !dropOffTime )
+  const timeSlots = ['12:00 AM', '1:00 AM', '2:00 AM', '3:00 AM', '4:00 AM', '5:00 AM', '6:00 AM', '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM', '7:00 PM', '8:00 PM', '9:00 PM', '10:00 PM', '11:00 PM']
+
+  
+  const generateTimeSlots = (isToday) => {
+    let slots = [];
+  
+    // Get current IST time
+    const now = new Date();
+    const istTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+    let currentHour = istTime.getHours();
+  
+    const startHour = isToday ? currentHour + 1 : 0; // If today, start from next hour; else from 12:00 AM
+  
+    for (let hour = startHour; hour <= 23; hour++) {
+      let displayHour = hour % 12 || 12;
+      let ampm = hour >= 12 ? "PM" : "AM";
+      slots.push(`${displayHour}:00 ${ampm}`);
+    }
+  
+    return slots;
+  };
+  
+  const formatToYYYYMMDD = (date) => {
+    if (!date) return "";
+  
+    // Convert to IST manually to prevent timezone issues
+    const istOffset = 5.5 * 60 * 60 * 1000; // +5:30 in milliseconds
+    const istDate = new Date(date.getTime() + istOffset);
+    
+    return istDate.toISOString().split("T")[0]; // Extract YYYY-MM-DD
+  };
+  
+    useEffect(() => {
+      const today = formatToYYYYMMDD(new Date()); // Get today in correct format
+      const formattedPickUpDate = pickUpDate ? formatToYYYYMMDD(new Date(pickUpDate)) : "";
+      const isToday = formattedPickUpDate === today;
+      setAvailableSlots(generateTimeSlots(isToday));
+    }, [pickUpDate]);
+
+    const getAvailableDropOffTimes = () => {
+      // Ensure pickUpDate and dropOffDate are Date objects
+      const pickUp = new Date(pickUpDate);
+      const dropOff = new Date(dropOffDate);
+  
+      console.log(pickUp, dropOff, "Hello Sudheer, I am here. How are you?");
+  
+      // Compare only the date (ignoring time)
+      const isSameDate =
+          pickUp.getFullYear() === dropOff.getFullYear() &&
+          pickUp.getMonth() === dropOff.getMonth() &&
+          pickUp.getDate() === dropOff.getDate();
+  
+      console.log("Are dates the same?", isSameDate);
+  
+      if (!isSameDate) {
+          return timeSlots; // Return all time slots if different days
+      }
+  
+      const pickUpIndex = timeSlots.indexOf(pickUpTime);
+  
+      // Ensure pickUpTime exists in timeSlots before slicing
+      return pickUpIndex !== -1 ? timeSlots.slice(pickUpIndex + 1) : [];
+  };
+  
+  
+
+    useEffect(() => {
+      const availableTimes = getAvailableDropOffTimes();
+      setDropOffSlots(availableTimes)
+      if (!availableTimes.includes(dropOffTime)) {
+        // setDropOffTime(availableTimes[0]); // Set first available drop-off time
+      }
+    }, [pickUpTime, pickUpDate, dropOffDate]);
 
   const handleSubmit = (e) => {
-    console.log(pickUpDate)
     e.preventDefault();
+    const pickupTime = convertTo24HourFormat(pickUpTime)
+    const dropffTime = convertTo24HourFormat(dropOffTime)
     if (pickUpDate !== "" && pickUpTime !== "" && authToken) {
+
+      console.log(pickupTime,dropffTime,"HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHhh")
       navigate(
-        `/viewCars?pickUpDate=${pickUpDate}&toDate=${dropOffDate}&location=${selectedLocation}&pickupTime=${pickUpTime}&dropoffTime=${dropOffTime}`
+        `/viewCars?pickUpDate=${pickUpDate}&toDate=${dropOffDate}&location=${selectedLocation}&pickupTime=${pickupTime}&dropoffTime=${dropffTime}`
       );
     }else{
-      localStorage.setItem("initialSelectedDate", JSON.stringify({ pickUpDate, dropOffDate,pickUpTime,dropOffTime,selectedLocation }));
+      localStorage.setItem("initialSelectedDate", JSON.stringify({ pickUpDate, dropOffDate,pickupTime,dropffTime,selectedLocation }));
       window.location.href = "/auth";
     }
   };
@@ -74,7 +156,6 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
   useEffect(()=>{
     const loaction = localStorage?.getItem("location");
     if(!loaction){
-      console.log(loaction," Location modale isnnssssssssss")
       setOpenModal(true)
     }
   },[selectedLocation])
@@ -173,7 +254,7 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
                 <Dropdown
                   value={pickUpTime}
                   onChange={(e) => setPickUpTime(e.value)}
-                  options={timeSlots}
+                  options={availableSlots}
                   optionLabel="name"
                   placeholder="pickup Time"
                   className="w-full h-10 text-xs flex justify-center items-center"
@@ -239,7 +320,7 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
                 <Dropdown
                   value={dropOffTime}
                   onChange={(e) => setDropOffTime(e.value)}
-                  options={timeSlots}
+                  options={dropOffSlots}
                   optionLabel="name"
                   placeholder="Dropoff Time"
                   className="w-full h-10 text-xs flex justify-center items-center"

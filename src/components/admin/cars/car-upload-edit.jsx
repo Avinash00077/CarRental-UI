@@ -4,6 +4,7 @@ import { useScreenSize } from "../../../context/screenSizeContext";
 import constants from "../../../config/constants";
 import Loader from "../../Loader/Loader";
 import axios from "axios";
+import LocationPicker from "../../Location/location";
 
 const AdminCarUpload = () => {
   const isScreenSize = useScreenSize().isScreenSmall;
@@ -17,6 +18,17 @@ const AdminCarUpload = () => {
   const [isCarOpen, setIsCarOpen] = useState(false);
   const [locationsData, setlocationsData] = useState([]);
   const [isNew, setIsNew] = useState(true);
+  const [fullCarBrands, setFullCarBrands] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [selectedBrand, setSelectedBrand] = useState("");
+  const [filteredNames, setFilteredNames] = useState([]);
+  const [selectedName, setSelectedName] = useState("");
+  const [filteredTypes, setFilteredTypes] = useState([]);
+  const [selectedType, setSelectedType] = useState("");
+  const [filteredSeaters, setFilteredSeaters] = useState([]);
+  const [selectedSeater, setSelectedSeater] = useState("");
+  const [filteredYears, setFilteredYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState("");
 
   if (!authToken) {
     window.location.href = "/";
@@ -48,11 +60,122 @@ const AdminCarUpload = () => {
     }
   };
 
+  const fetchCarBrands = async () => {
+    try {
+      console.log("i am called");
+      setIsLoaderOpen(true);
+      const response = await axios.get(
+        `${constants.API_BASE_URL}/admin/car-brands`,
+        {
+          headers: {
+            Authorization: `Bearer ${constants?.ADMIN_AUTHTOKEN}`,
+          },
+        }
+      );
+      setFullCarBrands(response.data.data);
+      const uniqueBrands = Array.from(
+        new Set(response.data.data.map((car) => car?.car_brand))
+      );
+      setBrands(uniqueBrands);
+      setIsLoaderOpen(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoaderOpen(false);
+    }
+  };
+
+  const handleBrandChange = (brand) => {
+    setSelectedBrand(brand);
+    setSelectedName("");
+    setSelectedType("");
+    setSelectedSeater("");
+    setSelectedYear("");
+    setCarData((prev) => {
+      return { ...prev, name: "", car_type: "", seater: "", model_year: "" };
+    });
+    const names = [
+      ...new Set(
+        fullCarBrands
+          .filter((car) => car.car_brand === brand)
+          .map((car) => car.car_name)
+      ),
+    ];
+    setFilteredNames(names);
+  };
+
+  const handleNameChange = (name) => {
+    console.log(name);
+    setSelectedName(name);
+    setSelectedType("");
+    setSelectedSeater("");
+    setSelectedYear("");
+    console.log(brands);
+    setCarData((prev) => {
+      return { ...prev, car_type: "", seater: "", model_year: "" };
+    });
+    const types = [
+      ...new Set(
+        fullCarBrands
+          .filter(
+            (car) => car.car_brand === selectedBrand && car.car_name === name
+          )
+          .map((car) => car.car_type)
+      ),
+    ];
+    console.log(types);
+    setFilteredTypes(types);
+  };
+
+  const handleTypeChange = (type) => {
+    setSelectedType(type);
+    setSelectedSeater("");
+    setSelectedYear("");
+    setCarData((prev) => {
+      return { ...prev, seater: "", model_year: "" };
+    });
+    const seaters = [
+      ...new Set(
+        fullCarBrands
+          .filter(
+            (car) =>
+              car.car_brand === selectedBrand &&
+              car.car_name === selectedName &&
+              car.car_type === type
+          )
+          .map((car) => car.seater)
+      ),
+    ];
+    setFilteredSeaters(seaters);
+  };
+
+  const handleSeaterChange = (seater) => {
+    setSelectedSeater(seater);
+    setSelectedYear("");
+    setCarData((prev) => {
+      return { ...prev, model_year: "" };
+    });
+    const years = [
+      ...new Set(
+        fullCarBrands
+          .filter(
+            (car) =>
+              car.car_brand === selectedBrand &&
+              car.car_name === selectedName &&
+              car.car_type === selectedType &&
+              car.seater == seater
+          )
+          .map((car) => car.car_modal_year)
+      ),
+    ];
+    setFilteredYears(years);
+  };
+
   const onCarOpen = () => {
     try {
       console.log("ope carr");
       setIsLoaderOpen(true);
       fetchLocations();
+      fetchCarBrands();
       setIsCarOpen(true);
       setIsLoaderOpen(false);
     } catch (error) {
@@ -72,15 +195,16 @@ const AdminCarUpload = () => {
       console.log("ope carr");
       setIsLoaderOpen(true);
       fetchLocations();
+      fetchCarBrands();
       setIsCarOpen(true);
       setCarData(car);
       setPreview(car.car_cover_img_url);
       const imageFile = await fetchImageAsFile(car.car_cover_img_url);
-      console.log(imageFile)
+      console.log(imageFile);
       setCarImage(imageFile);
       setIsNew(false);
       setIsLoaderOpen(false);
-      console.log(carData)
+      console.log(carData);
     } catch (error) {
       console.log(error);
       setIsCarOpen(false);
@@ -131,13 +255,25 @@ const AdminCarUpload = () => {
 
   const handleChange = (e) => {
     setCarData({ ...carData, [e.target.name]: e.target.value });
+    if (e.target.name === "brand") {
+      handleBrandChange(e.target.value);
+    }
+    if (e.target.name === "name") {
+      handleNameChange(e.target.value);
+    }
+    if (e.target.name === "car_type") {
+      handleTypeChange(e.target.value);
+    }
+    if (e.target.name === "seater") {
+      handleSeaterChange(e.target.value);
+    }
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setCarImage(file);
-      console.log(file)
+      console.log(file);
       setPreview(URL.createObjectURL(file));
     }
   };
@@ -178,7 +314,7 @@ const AdminCarUpload = () => {
           body: formData,
         });
       } else {
-        formData.append("car_id", carData.car_id)
+        formData.append("car_id", carData.car_id);
         response = await fetch(`${constants.API_BASE_URL}/admin/car`, {
           method: "PUT",
           headers: {
@@ -214,7 +350,7 @@ const AdminCarUpload = () => {
       });
       setCarImage(null);
       setPreview("");
-      setIsCarOpen(false)
+      setIsCarOpen(false);
     } catch (err) {
       setError(err.message);
       console.error("Error uploading car:", err);
@@ -251,27 +387,12 @@ const AdminCarUpload = () => {
                         : "flex w-full space-x-6 justify-between place-content-evenly"
                     }`}
                   >
-                    <div className="w-3/12">
-                      <label className="block text-sm font-medium text-gray-700 mb-1 ">
-                        Car Name
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        placeholder="Enter car name"
-                        value={carData.name}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#121212]"
-                        required
-                      />
-                    </div>
-
                     {/* Brand */}
                     <div className="w-3/12">
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Brand
                       </label>
-                      <input
+                      {/* <input
                         type="text"
                         name="brand"
                         placeholder="Enter brand"
@@ -279,26 +400,49 @@ const AdminCarUpload = () => {
                         onChange={handleChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#121212]"
                         required
-                      />
-                    </div>
-
-                    {/* Model Year */}
-                    <div className="w-3/12">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Model Year
-                      </label>
-                      <input
-                        type="number"
-                        name="model_year"
-                        placeholder="Enter model year"
-                        value={carData.model_year}
+                      /> */}
+                      <select
+                        name="brand"
+                        value={carData.brand}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#121212]"
                         required
-                      />
+                      >
+                        <option value="">Select Car Brand</option>
+                        {brands.map((i) => (
+                          <option value={i}>{i}</option>
+                        ))}
+                      </select>
                     </div>
-                                       {/* Car Type */}
-                                       <div className="w-3/12">
+
+                    <div className="w-3/12">
+                      <label className="block text-sm font-medium text-gray-700 mb-1 ">
+                        Car Name
+                      </label>
+                      {/* <input
+                        type="text"
+                        name="name"
+                        placeholder="Enter car name"
+                        value={carData.name}
+                        onChange={handleChange}
+                        className="w-full px-3 py-2 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#121212]"
+                        required
+                      /> */}
+                      <select
+                        name="name"
+                        value={carData.name}
+                        onChange={handleChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#121212]"
+                        required
+                      >
+                        <option value="">Select Car Name</option>
+                        {filteredNames.map((i) => (
+                          <option value={i}>{i}</option>
+                        ))}
+                      </select>
+                    </div>
+                    {/* Car Type */}
+                    <div className="w-3/12">
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Car Type
                       </label>
@@ -306,13 +450,44 @@ const AdminCarUpload = () => {
                         name="car_type"
                         value={carData.car_type}
                         onChange={handleChange}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#121212]"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#121212]"
                         required
                       >
-                        <option value="">Select Car Type</option>
+                        {/* <option value="">Select Car Type</option>
                         <option value="Sedan">Sedan</option>
                         <option value="SUV">SUV</option>
-                        <option value="Hatchback">Hatchback</option>
+                        <option value="Hatchback">Hatchback</option> */}
+                        <option value="">Select Car Type</option>
+                        {filteredTypes.map((i) => (
+                          <option value={i}>{i}</option>
+                        ))}
+                      </select>
+                    </div>
+                    {/* Seater */}
+                    <div className="w-3/12">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Seater
+                      </label>
+                      {/* <input
+                        type="number"
+                        name="seater"
+                        placeholder="Enter number of seats"
+                        value={carData.seater}
+                        onChange={handleChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#121212]"
+                        required
+                      /> */}
+                      <select
+                        name="seater"
+                        value={carData.seater}
+                        onChange={handleChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#121212]"
+                        required
+                      >
+                        <option value="">Select seater</option>
+                        {filteredSeaters.map((i) => (
+                          <option value={i}>{i}</option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -323,6 +498,33 @@ const AdminCarUpload = () => {
                         : " w-full flex justify-between place-content-evenly space-x-6"
                     }`}
                   >
+                    {/* Model Year */}
+                    <div className="w-3/12">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Model Year
+                      </label>
+                      {/* <input
+                        type="number"
+                        name="model_year"
+                        placeholder="Enter model year"
+                        value={carData.model_year}
+                        onChange={handleChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#121212]"
+                        required
+                      /> */}
+                      <select
+                        name="model_year"
+                        value={carData.model_year}
+                        onChange={handleChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#121212]"
+                        required
+                      >
+                        <option value="">Select Model Year</option>
+                        {filteredYears.map((i) => (
+                          <option value={i}>{i}</option>
+                        ))}
+                      </select>
+                    </div>
                     {/* Registration Number */}
                     <div className="w-3/12">
                       <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -372,7 +574,15 @@ const AdminCarUpload = () => {
                         required
                       />
                     </div>
+                  </div>
 
+                  <div
+                    className={`${
+                      isScreenSize
+                        ? ""
+                        : " w-full space-x-6 flex justify-between place-content-evenly"
+                    }`}
+                  >
                     {/* Mileage */}
                     <div className="w-3/12">
                       <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -388,18 +598,9 @@ const AdminCarUpload = () => {
                         required
                       />
                     </div>
-                  </div>
 
-                  <div
-                    className={`${
-                      isScreenSize
-                        ? ""
-                        : " w-full space-x-6 flex justify-between place-content-evenly"
-                    }`}
-                  >
-
-                     {/* Daily Rent */}
-                     <div className="w-3/12">
+                    {/* Daily Rent */}
+                    <div className="w-3/12">
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Daily Rent
                       </label>
@@ -408,21 +609,6 @@ const AdminCarUpload = () => {
                         name="daily_rent"
                         placeholder="Enter daily rent"
                         value={carData.daily_rent}
-                        onChange={handleChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#121212]"
-                        required
-                      />
-                    </div>
-                    {/* Seater */}
-                    <div className="w-3/12">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Seater
-                      </label>
-                      <input
-                        type="number"
-                        name="seater"
-                        placeholder="Enter number of seats"
-                        value={carData.seater}
                         onChange={handleChange}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#121212]"
                         required
@@ -441,7 +627,9 @@ const AdminCarUpload = () => {
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#121212]"
                         required
                       >
-                        <option  defaultChecked value="">Select Location</option>
+                        <option defaultChecked value="">
+                          Select Location
+                        </option>
                         <option value="Y">Yes</option>
                         <option value="N">No</option>
                       </select>
@@ -469,6 +657,7 @@ const AdminCarUpload = () => {
                         : "flex justify-between place-content-evenly"
                     }`}
                   >
+
                     {/* Description */}
                     <div className="w-full">
                       <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -526,9 +715,9 @@ const AdminCarUpload = () => {
                       className="w-6/12  bg-[#121212] text-white py-2 rounded-md hover:bg-[#121212]"
                       onClick={() => {
                         setIsCarOpen(false);
-                        setCarData({})
-                        setPreview(null)
-                        setCarImage(null)
+                        setCarData({});
+                        setPreview(null);
+                        setCarImage(null);
                       }}
                     >
                       Cancel

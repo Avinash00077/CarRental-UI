@@ -121,7 +121,7 @@ const CarsDisplay = ({ category }) => {
         currentItems[0].car_id
       }&endDate=${formattedDropOffDate}&startTime=${
         pickupTime || "10:00"
-      }&endTime=${pickupTime || "10:00"}`
+      }&endTime=${dropOffTime || "11:00"}`
     );
     setIsBookingOpen(!isBookingOpen);
     setIsFilterOpen(false);
