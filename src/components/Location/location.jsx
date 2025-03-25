@@ -1,9 +1,12 @@
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import useLocationPicker from "./useLocationPicker";// Import hook
+import useLocationPicker from "./useLocationPicker"; // Import hook
 
 const LocationPicker = ({ setData, initialLatitude, initialLongitude }) => {
-  const { position, updatePosition } = useLocationPicker(initialLatitude, initialLongitude); // Pass existing location
+  const { position, updatePosition } = useLocationPicker(
+    initialLatitude,
+    initialLongitude
+  ); // Pass existing location
 
   const LocationMarker = () => {
     useMapEvents({
@@ -27,7 +30,10 @@ const LocationPicker = ({ setData, initialLatitude, initialLongitude }) => {
       style={{ height: "300px", width: "100%" }}
       className="rounded-md border border-gray-300"
     >
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      />
       <LocationMarker />
     </MapContainer>
   );
