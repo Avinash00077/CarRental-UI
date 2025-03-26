@@ -109,7 +109,7 @@ const CarBrands = () => {
           Car Brands
         </h1>
         <button
-          className="mb-4 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+          className="mb-4 bg-black text-white px-4 py-2 rounded-md hover:-translate-y-3"
           onClick={() => openModal()}
         >
           Add New Car
@@ -140,7 +140,7 @@ const CarBrands = () => {
                   </td>
                   <td className="px-6 py-4">
                     <button
-                      className="text-blue-600 hover:underline"
+                      className="text-black hover:underline"
                       onClick={() => openModal(car)}
                     >
                       Edit
@@ -156,11 +156,12 @@ const CarBrands = () => {
       {/* Modal */}
       {modalOpen && (
         <div className="fixed inset-0 flex items-center justify-center border-2 border-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-md w-96">
+          <div className="bg-white p-6 rounded-lg  shadow-md w-2xl">
             <h2 className="text-xl font-semibold mb-4">
               {editMode ? "Edit Car" : "Add Car"}
             </h2>
-            <form onSubmit={handleAddOrUpdateCar}>
+            <form onSubmit={handleAddOrUpdateCar} className="grid grid-cols-2 gap-2  space-x-3">
+              <div>
               <label className="block text-sm font-medium text-gray-700">
                 Car Brand
               </label>
@@ -173,6 +174,8 @@ const CarBrands = () => {
                 className="w-full px-3 py-2 border rounded-md mb-2"
                 required
               />
+              </div>
+              <div>
               <label className="block text-sm font-medium text-gray-700">
                 Name
               </label>
@@ -185,6 +188,8 @@ const CarBrands = () => {
                 className="w-full px-3 py-2 border rounded-md mb-2"
                 required
               />
+              </div>
+              <div>
               <label className="block text-sm font-medium text-gray-700">
                 Type
               </label>
@@ -196,6 +201,8 @@ const CarBrands = () => {
                 }
                 className="w-full px-3 py-2 border rounded-md mb-2"
               />
+              </div>
+              <div>
               <label className="block text-sm font-medium text-gray-700">
                 Model Year
               </label>
@@ -207,6 +214,8 @@ const CarBrands = () => {
                 }
                 className="w-full px-3 py-2 border rounded-md mb-2"
               />
+              </div>
+              <div>
               <label className="block text-sm font-medium text-gray-700">
                 Seater
               </label>
@@ -218,6 +227,8 @@ const CarBrands = () => {
                 }
                 className="w-full px-3 py-2 border rounded-md mb-2"
               />
+              </div>
+              <div>
               {editMode &&(
               <div>
                 <label className="block text-sm font-medium text-gray-700">
@@ -235,17 +246,19 @@ const CarBrands = () => {
                 </select>
               </div>
               )}
-              <div className="flex justify-between mt-4">
+              </div>
+
+              <div className="flex justify-between  mt-4">
                 <button
                   type="submit"
-                  className="bg-green-600 text-white px-4 py-2 rounded-md"
+                  className="bg-black text-white px-4 py-2 mr-[90%] rounded-md"
                 >
                   {editMode ? "Update" : "Add"}
                 </button>
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="bg-red-600 text-white px-4 py-2 rounded-md"
+                  className="bg-black text-white px-4 py-2 ml-[60%] rounded-md"
                 >
                   Cancel
                 </button>

@@ -162,11 +162,13 @@ const Locations = () => {
       {/* Modal for Add/Edit Location */}
       {modalOpen && (
         <div className="fixed inset-0 flex items-center justify-center  bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-md w-2xl mt-20">
+          <div className="bg-white p-6 rounded-lg shadow-md w-4xl mt-20">
             <h2 className="text-xl font-semibold mb-4">
               {editMode ? "Edit Location" : "Add Location"}
             </h2>
             <form onSubmit={handleAddOrUpdateLocation}>
+              <div className="flex w-[100%]  space-x-5">
+              <div className="w-[80%]">
               <label className="block text-sm font-medium text-gray-700">
                 Location
               </label>
@@ -206,12 +208,15 @@ const Locations = () => {
                 <option value="N">Inactive</option>
               </select>
               </div>)}
-              <div className="w-full mt-2">
+              </div>
+                       
+              <div className="w-full ">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Pick Location on Map
                 </label>
                 <LocationPicker setData={setFormData} initialLatitude={formData.latitude}
         initialLongitude={formData.longitude} />
+              </div>
               </div>
 
               <div className="flex justify-between mt-4">

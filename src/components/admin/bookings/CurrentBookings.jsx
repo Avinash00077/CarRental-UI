@@ -3,11 +3,13 @@ import constants from "../../../config/constants";
 import { useScreenSize } from "../../../context/screenSizeContext";
 import Loader from "../../Loader/Loader";
 import axios from "axios";
+import { getUserToken } from "../../../utils/getToken";
 import CarUploadModal from "../componnets/CarUploadModal";
 const { isScreenSize } = useScreenSize;
 
 const CurrentBookings = () => {
   const [bookings, setBookings] = useState([]);
+    const [currentTabState, setCurrentTab] = useState("ongoing");
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [uploadCarDeatilsOpen, setOpenUploadCarDetails] = useState(false);
   const [isLoaderOpen, setIsLoaderOpen] = useState(false);
@@ -40,30 +42,6 @@ const CurrentBookings = () => {
     },
   });
   const adminAuthToken = localStorage.getItem("adminAuthToken");
-
-  useEffect(() => {
-    fetchCurrentBookings();
-  }, []);
-
-  const fetchCurrentBookings = async () => {
-    try {
-      setIsLoaderOpen(true);
-      const response = await axios.get(
-        `${constants.API_BASE_URL}/admin/bookings/current`,
-        {
-          headers: {
-            Authorization: `Bearer ${adminAuthToken}`,
-          },
-        }
-      );
-
-      setBookings(response.data.data);
-      setIsLoaderOpen(false);
-    } catch (error) {
-      setIsLoaderOpen(false);
-    }
-  };
-  console.log(selectedBooking);
 
   const handlePickup = async (bookingId) => {
     try {
@@ -137,6 +115,27 @@ const CurrentBookings = () => {
       }));
     }
   };
+  const fetchBookings = async () => {
+    try {
+      const response = await axios.get(`${constants.API_BASE_URL}/admin/bookings`,{
+        headers:{
+          type: currentTabState,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${adminAuthToken}`,
+        }
+      })
+      if (response.status === 200) {
+        setBookings(response.data.data)
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  useEffect(()=>{
+    fetchBookings();
+  },[currentTabState])
+
 
   return (
     <div className="flex items-center justify-center ml-[10%]">
@@ -166,6 +165,18 @@ const CurrentBookings = () => {
           <h1 className=" text-4xl  font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white mt-20 mb-10 align-middle">
             Current Bookings
           </h1>
+          <div className="mt-6 flex justify-start items-center space-x-3">
+        {["ongoing","future","past"].map((item) => (
+          <button
+            className={`text-lg font-semibold ${
+              currentTabState == item ? " border-b-2" : " text-gray-600"
+            } cursor-pointer  `}
+            onClick={() => setCurrentTab(item)}
+          >
+            {item}
+          </button>
+        ))}
+      </div>
           <div className="relative overflow-x-auto shadow-md w-full sm:rounded-lg">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
