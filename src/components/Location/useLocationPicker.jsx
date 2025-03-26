@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
 
-const useLocationPicker = (initialLatitude = 17.385, initialLongitude = 78.4867) => {
-  const [position, setPosition] = useState([initialLatitude, initialLongitude]);
+const useLocationPicker = (initialLatitude, initialLongitude) => {
+  const [position, setPosition] = useState([
+    initialLatitude || 17.385,
+    initialLongitude || 78.4867,
+  ]);
 
-  // If position changes (e.g., when editing), update state
   useEffect(() => {
-    setPosition([initialLatitude, initialLongitude]);
+    // Update position when the initial values change (for edit mode)
+    if (initialLatitude && initialLongitude) {
+      setPosition([initialLatitude, initialLongitude]);
+    }
   }, [initialLatitude, initialLongitude]);
 
   const updatePosition = (lat, lng) => {

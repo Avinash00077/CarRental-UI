@@ -1,15 +1,24 @@
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import useLocationPicker from "./useLocationPicker"; // Import hook
+import useLocationPicker from "./useLocationPicker";
+import L from "leaflet";
+
+// Fix Leaflet icon issue
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+
+const customIcon = new L.Icon({
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
 
 const LocationPicker = ({ setData, initialLatitude, initialLongitude }) => {
-  const { position, updatePosition } = useLocationPicker(
-    initialLatitude,
-    initialLongitude
-  ); // Pass existing location
+  const { position, updatePosition } = useLocationPicker(initialLatitude, initialLongitude);
 
   const LocationMarker = () => {
-    useMapEvents({
+    const map = useMapEvents({
       click(e) {
         updatePosition(e.latlng.lat, e.latlng.lng);
         setData((prev) => ({
@@ -20,7 +29,7 @@ const LocationPicker = ({ setData, initialLatitude, initialLongitude }) => {
       },
     });
 
-    return position ? <Marker position={position}></Marker> : null;
+    return position ? <Marker position={position} icon={customIcon} /> : null;
   };
 
   return (
@@ -29,6 +38,7 @@ const LocationPicker = ({ setData, initialLatitude, initialLongitude }) => {
       zoom={13}
       style={{ height: "300px", width: "100%" }}
       className="rounded-md border border-gray-300"
+      key={position.toString()} // Force re-render when position updates
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"

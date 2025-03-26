@@ -76,6 +76,7 @@ const Locations = () => {
 
   const openEditModal = (location) => {
     setEditMode(true);
+    console.log(location)
     setFormData({
       location: location.location,
       address: location.address,
@@ -83,6 +84,7 @@ const Locations = () => {
       latitude: location.latitude || "",  // Store latitude from LocationPicker
   longitude: location.longitude || "",
     });
+    console.log(formData, '######################################')
     setSelectedLocationId(location.location_id);
     setModalOpen(true);
   };
