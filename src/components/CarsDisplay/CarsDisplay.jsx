@@ -52,6 +52,7 @@ const CarsDisplay = ({ category }) => {
     }
   }, []);
   
+  console.log(pickupTime,dropOffTime,")))))))))))))))))))))))))))))))))))))))))))00")
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.getFullYear()}/${String(date.getMonth() + 1).padStart(

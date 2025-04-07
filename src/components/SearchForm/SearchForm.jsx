@@ -63,7 +63,8 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
     }
   }, [userSelectedDates]);
   const navigate = useNavigate();
-  const timeSlots = ['12:00 AM', '1:00 AM', '2:00 AM', '3:00 AM', '4:00 AM', '5:00 AM', '6:00 AM', '7:00 AM', '8:00 AM', '9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM', '7:00 PM', '8:00 PM', '9:00 PM', '10:00 PM', '11:00 PM']
+  // ['12:00 AM', '1:00 AM', '2:00 AM', '3:00 AM', '4:00 AM', '5:00 AM', '6:00 AM', '7:00 AM', '8:00 AM', '9:00 AM',
+  const timeSlots = [ '10:00 AM', '11:00 AM', '12:00 PM', '1:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM', '6:00 PM', '7:00 PM', '8:00 PM', '9:00 PM', '10:00 PM']
 
   
   const generateTimeSlots = (isToday) => {
@@ -74,9 +75,12 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
     const istTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
     let currentHour = istTime.getHours();
   
-    const startHour = isToday ? currentHour + 1 : 0; // If today, start from next hour; else from 12:00 AM
+    const minHour = 10; // 10 AM
+    const maxHour = 22; // 10 PM
   
-    for (let hour = startHour; hour <= 23; hour++) {
+    let startHour = isToday ? Math.max(currentHour + 1, minHour) : minHour;
+  
+    for (let hour = startHour; hour <= maxHour; hour++) {
       let displayHour = hour % 12 || 12;
       let ampm = hour >= 12 ? "PM" : "AM";
       slots.push(`${displayHour}:00 ${ampm}`);
@@ -84,6 +88,7 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
   
     return slots;
   };
+  
   
   const formatToYYYYMMDD = (date) => {
     if (!date) return "";
@@ -99,6 +104,7 @@ const SearchForm = ({ fromWhere, userSelectedDates }) => {
       const today = formatToYYYYMMDD(new Date()); // Get today in correct format
       const formattedPickUpDate = pickUpDate ? formatToYYYYMMDD(new Date(pickUpDate)) : "";
       const isToday = formattedPickUpDate === today;
+      console.log(isToday,"KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKk")
       setAvailableSlots(generateTimeSlots(isToday));
     }, [pickUpDate]);
 

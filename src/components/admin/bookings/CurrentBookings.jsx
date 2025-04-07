@@ -156,7 +156,6 @@ const CurrentBookings = () => {
           </div>
         </div>
       )}
-      {bookings?.length > 0 ? (
         <div
           className={`${
             isScreenSize ? "h-[90vh] " : "h-[98vh] "
@@ -177,6 +176,7 @@ const CurrentBookings = () => {
           </button>
         ))}
       </div>
+      {bookings?.length > 0 ? (
           <div className="relative overflow-x-auto shadow-md w-full sm:rounded-lg">
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -247,14 +247,14 @@ const CurrentBookings = () => {
               </tbody>
             </table>
           </div>
-        </div>
       ) : (
-        <div className="w-full h-screen  flex justify-center items-center">
-          <h1 className="font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-3xl dark:text-white mt-20 mb-10 align-middle">
+        <div className="w-full h-screen  flex justify-center mt-30">
+          <h1 className="font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-3xl dark:text-white mb-10 align-middle">
             Currently there are no bookings
           </h1>
         </div>
       )}
+       </div>
 
       {selectedBooking?.booking_id && (
         <div
