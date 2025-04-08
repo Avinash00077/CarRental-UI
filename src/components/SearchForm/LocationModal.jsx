@@ -6,6 +6,7 @@ import bangalore from "../../assets/bangalore.png";
 import gujarat from "../../assets/gujarat.png";
 import { useScreenSize } from "../../context/screenSizeContext";
 import kolkata from "../../assets/kolkata.png";
+import otherLocations from "../../assets/other-location.png"
 import constants from "../../config/constants";
 import Loader from "../Loader/Loader";
 import axios from "axios";
@@ -24,7 +25,7 @@ const LocationModal = ({ closeModal, onSelectLocation }) => {
       let locationData = response.data.data.map((i) => {
         return {
           name: i.location,
-          image: locationImages[i.location],
+          image: locationImages[i.location] ? locationImages[i.location] : otherLocations,
         };
       });
 
